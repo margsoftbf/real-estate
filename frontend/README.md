@@ -1,5 +1,3 @@
-Check ci/cd
-
 # RL Frontend
 
 A modern real estate platform frontend built with Next.js, TypeScript, and Tailwind CSS.
