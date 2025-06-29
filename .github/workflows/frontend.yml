@@ -1,29 +1,18 @@
-name: CI/CD Backend
+name: CI/CD Frontend
 
 on:
   push:
     branches: [main, staging]
+    paths:
+      - 'frontend/**'
   pull_request:
     branches: [main, staging]
+    paths:
+      - 'frontend/**'
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
 
     strategy:
       matrix:
@@ -40,19 +29,20 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: yarn install --frozen-lockfile
 
+      - name: Run linting
+        working-directory: ./frontend
+        run: yarn lint
+
+      - name: Run type check
+        working-directory: ./frontend
+        run: yarn type-check
+
       - name: Build project
+        working-directory: ./frontend
         run: yarn build
-
-      - name: Run unit tests
-        run: yarn test
-
-      - name: Run e2e tests
-        run: yarn test:e2e
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-          NODE_ENV: test
 
   deploy:
     needs: test
