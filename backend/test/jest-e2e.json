@@ -1,0 +1,19 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleNameMapper": {
+    "^@decorators/(.*)$": "<rootDir>/src/shared/decorators/$1",
+    "@share/(.*)$": ["<rootDir>/src/shared/$1"],
+    "@/(.*)$": ["<rootDir>/src/$1"],
+    "@mod/(.*)$": ["<rootDir>/src/modules/$1"],
+    "@decorators/(.*)$": ["<rootDir>/src/shared/decorators/$1"],
+    "@util/(.*)$": ["<rootDir>/src/utils/$1"]
+  },
+  "rootDir": "../",
+  "setupFilesAfterEnv": ["<rootDir>/test/jest.test.setup.ts"],
+  "testEnvironment": "node",
+  "testRegex": "\\.(e2e-spec|spec)\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "testTimeout": 30000
+}
