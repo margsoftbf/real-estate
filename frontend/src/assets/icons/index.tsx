@@ -1,6 +1,10 @@
+export { default as HouseOutline } from './HouseOutline';
+export { default as ApartmentOutline } from './ApartmentOutline';
+export { default as KeyOutline } from './KeyOutline';
+
+// TODO: Create .tsx components for remaining icons
 export { default as AddOutline } from './add-outline.svg';
 export { default as ApartmentBold } from './apartment-bold.svg';
-export { default as ApartmentOutline } from './apartment-outline.svg';
 export { default as ArchiveOutline } from './archive-outline.svg';
 export { default as BathOutline } from './bath-outline.svg';
 export { default as BedOutline } from './bed-outline.svg';
@@ -45,7 +49,6 @@ export { default as FilterOutline } from './filter-outline.svg';
 export { default as GasStationOutlien } from './gas-station-outlien.svg';
 export { default as HelpOutline } from './help-outline.svg';
 export { default as HouseBold } from './house-bold.svg';
-export { default as HouseOutline } from './house-outline.svg';
 export { default as ImageOutline } from './image-outline.svg';
 export { default as IncomeRentBold } from './income-rent-bold.svg';
 export { default as IncomeToRentOutline } from './income-to-rent-outline.svg';
@@ -55,7 +58,6 @@ export { default as InsightBold } from './insight-bold.svg';
 export { default as InsightOutline } from './insight-outline.svg';
 export { default as ItalicOutline } from './italic-outline.svg';
 export { default as KeyBold } from './key-bold.svg';
-export { default as KeyOutline } from './key-outline.svg';
 export { default as LinkOutline } from './link-outline.svg';
 export { default as LocationControlBold } from './location-control-bold.svg';
 export { default as LocationControlOutline } from './location-control-outline.svg';
