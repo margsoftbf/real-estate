@@ -3,7 +3,11 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { HouseOutline, ApartmentOutline, KeyOutline } from '@/assets/icons';
+import {
+  HouseOutline,
+  ApartmentOutline,
+  IncomeToRentOutline,
+} from '@/assets/icons';
 import logoImage from '@/assets/logo.png';
 import Button from './common/Button';
 
@@ -13,7 +17,7 @@ const Header = () => {
   const navigationItems = [
     { name: 'Rent', href: '/rent', icon: HouseOutline },
     { name: 'Buy', href: '/buy', icon: ApartmentOutline },
-    { name: 'Sell', href: '/sell', icon: KeyOutline },
+    { name: 'Sell', href: '/sell', icon: IncomeToRentOutline },
   ];
 
   const toggleMobileMenu = () => {
@@ -23,9 +27,9 @@ const Header = () => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 relative z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center h-20">
+        <div className="flex justify-between items-center h-20 md:relative">
           <Link href="/" className="flex-shrink-0">
-            <div className="flex items-center space-x-1 w-6 h-6">
+            <div className="flex items-center space-x-1 w-8 h-8">
               <Image
                 src={logoImage}
                 alt="Rentsmart"
@@ -40,20 +44,24 @@ const Header = () => {
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-primary-black hover:text-primary-violet hover:bg-purple-200 transition-all duration-200 font-medium px-4 py-2 rounded-md"
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navigationItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="flex items-center space-x-2 text-primary-black hover:text-primary-violet hover:bg-purple-200 transition-all duration-200 font-medium px-4 py-2 rounded-md"
+                >
+                  <IconComponent size={18} />
+                  <span>{item.name}</span>
+                </Link>
+              );
+            })}
           </nav>
 
-          <div className="hidden md:flex items-center space-x-4 ml-auto">
+          <div className="hidden md:flex items-center space-x-4">
             <Link href="/login">
-              <Button variant="outline" size="md">
+              <Button variant="outline" size="md" className="text-black">
                 Login
               </Button>
             </Link>
@@ -97,7 +105,7 @@ const Header = () => {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="flex items-center space-x-3 text-secondary-violet opacity-50 hover:text-primary-violet hover:opacity-100 hover:bg-purple-50 transition-all duration-200 font-medium py-3 px-3 rounded-lg"
+                      className="flex items-center space-x-3 text-secondary-violet opacity-50 hover:text-primary-violet hover:opacity-100 hover:bg-purple-50 transition-all duration-200 font-medium py-3 px-3 rounded-md"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <IconComponent size={20} />

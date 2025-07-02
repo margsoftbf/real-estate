@@ -11,6 +11,17 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        <title>RentSmart - Find Your Perfect Property</title>
+        <meta
+          name="description"
+          content="Discover your dream home with RentSmart. Browse thousands of properties for rent and sale. Professional real estate platform with advanced search and virtual tours."
+        />
+        <meta
+          name="keywords"
+          content="real estate, property, rent, buy, sell, apartments, houses, homes"
+        />
+        <meta name="author" content="RentSmart" />
+
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

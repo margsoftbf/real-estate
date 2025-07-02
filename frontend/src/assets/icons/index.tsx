@@ -1,6 +1,7 @@
 export { default as HouseOutline } from './HouseOutline';
 export { default as ApartmentOutline } from './ApartmentOutline';
 export { default as KeyOutline } from './KeyOutline';
+export { default as IncomeToRentOutline } from './IncomeToRentOutline';
 
 // TODO: Create .tsx components for remaining icons
 export { default as AddOutline } from './add-outline.svg';
@@ -51,7 +52,6 @@ export { default as HelpOutline } from './help-outline.svg';
 export { default as HouseBold } from './house-bold.svg';
 export { default as ImageOutline } from './image-outline.svg';
 export { default as IncomeRentBold } from './income-rent-bold.svg';
-export { default as IncomeToRentOutline } from './income-to-rent-outline.svg';
 export { default as InfoBulk } from './info-bulk.svg';
 export { default as InfoOutline } from './info-outline.svg';
 export { default as InsightBold } from './insight-bold.svg';
