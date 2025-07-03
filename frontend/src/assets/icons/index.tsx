@@ -2,10 +2,16 @@ export { default as HouseOutline } from './HouseOutline';
 export { default as ApartmentOutline } from './ApartmentOutline';
 export { default as KeyOutline } from './KeyOutline';
 export { default as IncomeToRentOutline } from './IncomeToRentOutline';
+export { default as SearchOutline } from './SearchOutline';
+export { default as ApartmentBold } from './ApartmentBold';
+export { default as KeyBold } from './KeyBold';
+export { default as TenantsBold } from './TenantsBold';
+export { default as DotOutlineInsideBold } from './DotOutlineInsideBold';
+export { default as HouseDot } from './HouseDot';
+export { default as LineAToB } from './LineAToB';
 
 // TODO: Create .tsx components for remaining icons
 export { default as AddOutline } from './add-outline.svg';
-export { default as ApartmentBold } from './apartment-bold.svg';
 export { default as ArchiveOutline } from './archive-outline.svg';
 export { default as BathOutline } from './bath-outline.svg';
 export { default as BedOutline } from './bed-outline.svg';
@@ -57,7 +63,6 @@ export { default as InfoOutline } from './info-outline.svg';
 export { default as InsightBold } from './insight-bold.svg';
 export { default as InsightOutline } from './insight-outline.svg';
 export { default as ItalicOutline } from './italic-outline.svg';
-export { default as KeyBold } from './key-bold.svg';
 export { default as LinkOutline } from './link-outline.svg';
 export { default as LocationControlBold } from './location-control-bold.svg';
 export { default as LocationControlOutline } from './location-control-outline.svg';
@@ -90,7 +95,6 @@ export { default as RecentActivityOutline } from './recent-activity-outline.svg'
 export { default as RentPaymentBold } from './rent-payment-bold.svg';
 export { default as RentPaymentOutline } from './rent-payment-outline.svg';
 export { default as RepairOutline } from './repair-outline.svg';
-export { default as SearchOutline } from './search-outline.svg';
 export { default as SendBold } from './send-bold.svg';
 export { default as SettingOutline } from './setting-outline.svg';
 export { default as ShareBold } from './share-bold.svg';
@@ -101,7 +105,6 @@ export { default as SortOutline } from './sort-outline.svg';
 export { default as SquareMetersOutline } from './square-meters-outline.svg';
 export { default as StarOutline } from './star-outline.svg';
 export { default as TenantApplicationOutline } from './tenant-application-outline.svg';
-export { default as TenantsOutline } from './tenants-outline.svg';
 export { default as TipsOutline } from './tips-outline.svg';
 export { default as TourInPersonOutline } from './tour-in-person-outline.svg';
 export { default as TourVerticalOutline } from './tour-vertical-outline.svg';
@@ -111,3 +114,4 @@ export { default as UnorderedListOutline } from './unordered-list-outline.svg';
 export { default as UserOutline } from './user-outline.svg';
 export { default as VideoVirtualOutline } from './video-virtual-outline.svg';
 export { default as WifiOutline } from './wifi-outline.svg';
+
