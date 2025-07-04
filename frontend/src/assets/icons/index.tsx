@@ -9,6 +9,8 @@ export { default as TenantsBold } from './TenantsBold';
 export { default as DotOutlineInsideBold } from './DotOutlineInsideBold';
 export { default as HouseDot } from './HouseDot';
 export { default as LineAToB } from './LineAToB';
+export { default as VideoVirtualOutline } from './VideoVirtualOutline';
+export { default as PropertyInsuranceOutline } from './PropertyInsuranceOutline';
 
 // TODO: Create .tsx components for remaining icons
 export { default as AddOutline } from './add-outline.svg';
@@ -90,7 +92,6 @@ export { default as PaperclipOutline } from './paperclip-outline.svg';
 export { default as PropertiesBold } from './properties-bold.svg';
 export { default as PropertiesOutline } from './properties-outline.svg';
 export { default as PropertyInsuranceBold } from './property-insurance-bold.svg';
-export { default as PropertyInsuranceOutline } from './property-insurance-outline.svg';
 export { default as RecentActivityOutline } from './recent-activity-outline.svg';
 export { default as RentPaymentBold } from './rent-payment-bold.svg';
 export { default as RentPaymentOutline } from './rent-payment-outline.svg';
@@ -112,6 +113,5 @@ export { default as TownhouseOutline } from './townhouse-outline.svg';
 export { default as TrashOutline } from './trash-outline.svg';
 export { default as UnorderedListOutline } from './unordered-list-outline.svg';
 export { default as UserOutline } from './user-outline.svg';
-export { default as VideoVirtualOutline } from './video-virtual-outline.svg';
-export { default as WifiOutline } from './wifi-outline.svg';
 
+export { default as WifiOutline } from './wifi-outline.svg';
