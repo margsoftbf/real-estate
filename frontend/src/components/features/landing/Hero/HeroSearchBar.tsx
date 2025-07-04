@@ -24,8 +24,8 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
               lg:text-body-md-medium cursor-pointer lg:bg-white
               ${
                 activeTab === tab
-                  ? 'text-primary-violet'
-                  : 'text-primary-black hover:text-primary-violet lg:text-gray-600'
+                  ? 'text-primary-violet-dark'
+                  : 'text-primary-black hover:text-primary-violet lg:text-gray-800'
               }
             `}
           >
@@ -62,7 +62,7 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
               type="text"
               placeholder="Search location"
               className="
-                w-full py-3 pr-14 bg-transparent text-gray-500 text-body-md
+                w-full py-3 pr-14 bg-transparent text-gray-700 text-body-md
                 focus:outline-none transition-all text-body-md-medium
                 border-0
               "
@@ -73,6 +73,7 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
                 bg-primary-violet w-10 h-10 flex items-center justify-center
                 rounded-md hover:brightness-110 transition-all cursor-pointer
               "
+              aria-label="Search"
             >
               <SearchOutline className="w-4 h-4" color="white" />
             </button>
