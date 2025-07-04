@@ -1,5 +1,6 @@
 import Header from '@/components/features/landing/Header';
 import Hero from '@/components/features/landing/Hero';
+import NewWay from '@/components/features/landing/NewWay';
 import Offer from '@/components/features/landing/Offer';
 
 export default function HomePage() {
@@ -8,6 +9,7 @@ export default function HomePage() {
       <Header />
       <Hero />
       <Offer />
+      <NewWay />
     </div>
   );
 }

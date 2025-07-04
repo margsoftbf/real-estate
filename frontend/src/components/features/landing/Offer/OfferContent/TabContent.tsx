@@ -17,7 +17,7 @@ const TabContent = ({ content }: TabContentProps) => {
       <p className="text-gray-500 mb-6 text-sm lg:text-lg lg:py-3">
         {content.description}
       </p>
-      <button className="w-full bg-primary-violet-dark text-white font-semibold py-3 rounded-lg transition hover:bg-primary-violet/90 md:w-auto md:px-8">
+      <button className="w-full bg-primary-violet-dark text-white font-semibold py-3 rounded-lg transition hover:bg-primary-violet/90 md:w-auto md:px-8 cursor-pointer">
         {content.button}
       </button>
     </div>

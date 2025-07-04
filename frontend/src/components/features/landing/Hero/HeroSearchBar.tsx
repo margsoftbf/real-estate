@@ -37,7 +37,7 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
         ))}
       </div>
 
-      <div className="py-2 px-4 lg:p-0 lg:pr-2 lg:bg-white lg:flex lg:items-center lg:justify-between lg:w-[600px]">
+      <div className="py-2 px-4 lg:p-0 lg:pr-2 lg:h-20 lg:bg-white lg:flex lg:items-center lg:justify-between lg:w-[600px]">
         <div className="relative flex-1 lg:mr-4">
           <div className="hidden lg:block">
             <div className="rounded-md bg-white px-3 pt-3 pb-3 ">
@@ -52,7 +52,7 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
                 name="location"
                 type="text"
                 placeholder="Search location"
-                className="block w-full text-gray-900 placeholder:text-gray-400 focus:outline-none text-sm border-0 p-0 bg-transparent"
+                className="block w-full text-gray-900 placeholder:text-gray-400 focus:outline-none text-sm border-0 p-0 h-8 bg-transparent"
               />
             </div>
           </div>
@@ -71,7 +71,7 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
               className="
                 absolute right-2 top-1/2 transform -translate-y-1/2
                 bg-primary-violet w-10 h-10 flex items-center justify-center
-                rounded-md hover:brightness-110 transition-all cursor-pointer
+                rounded-md hover:brightness-120 transition-all cursor-pointer
               "
               aria-label="Search"
             >
