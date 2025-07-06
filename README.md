@@ -223,7 +223,17 @@ cd backend && yarn build
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under a restrictive license. See the [LICENSE](./LICENSE) file for more details.
+
+All Rights Reserved.
+
+The code in this repository is provided for portfolio and demonstration purposes only. No part of this code may be copied, modified, distributed, or used in any way without the explicit prior written permission of the author.
+
+## ⚠️ Portfolio Project - Not for Reuse
+
+This project was created for portfolio purposes to showcase my skills and experience. It is not intended for commercial use, distribution, or copying. Please do not reuse or reproduce this code without explicit permission.
+
+I encourage you to get inspired by the project, but please create your own unique solutions.
 
 ## 🙏 Acknowledgments
 
