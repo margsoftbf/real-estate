@@ -39,7 +39,7 @@ const OfferContentSection = ({
   return (
     <motion.div
       className="w-full max-w-lg lg:max-w-lg mx-auto mt-8 lg:mt-0"
-      initial={{ opacity: 0, x: 40 }}
+      initial={{ opacity: 0, x: 0 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}

@@ -4,6 +4,7 @@ import { HomeIllustration } from '@/assets/icons';
 import dailyCompleted from '@/assets/icons-picture/daily-completed.png';
 import propertySell from '@/assets/icons-picture/property-sell.png';
 import propertyReturn from '@/assets/icons-picture/property-return.png';
+import NewWayHeader from './NewWay/NewWayHeader';
 
 const stats = [
   {
@@ -35,15 +36,7 @@ const NewWay = () => {
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="flex flex-col gap-6 lg:gap-10 order-1 lg:px-12">
-            <div className="space-y-3 text-center lg:text-left lg:px-8">
-              <h2 className="text-h3 font-bold text-secondary-violet">
-                The new way to find your new home
-              </h2>
-              <p className="text-gray-500 text-body-md sm:text-lg max-w-md mx-auto lg:mx-0">
-                Find your dream place to live in with more than 10k+ properties
-                listed.
-              </p>
-            </div>
+            <NewWayHeader />
             <div className="w-fit mx-auto lg:w-full lg:mx-0">
               <div className="flex flex-col lg:flex-row lg:justify-between gap-y-8 lg:gap-x-8">
                 {stats.map((stat, index) => (

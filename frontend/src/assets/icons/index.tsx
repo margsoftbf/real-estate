@@ -17,12 +17,17 @@ export { default as InsightBold } from './InsightBold';
 export { default as DollarSquareBold } from './DollarSquareBold';
 export { default as ApartmentsProcent } from './ApartmentsProcent';
 export { default as CheckBold } from './CheckBold';
+export { default as BedOutline } from './BedOutline';
+export { default as BathOutline } from './BathOutline';
+export { default as AreaIcon } from './AreaIcon';
+export { default as HeartOutline } from './HeartOutline';
+export { default as StarIcon } from './StarIcon';
+export { default as StarIconPopular } from './StarIconPopular';
+export { default as DocumentOutline } from './DocumentOutline';
 
 // TODO: Create .tsx components for remaining icons
 export { default as AddOutline } from './add-outline.svg';
 export { default as ArchiveOutline } from './archive-outline.svg';
-export { default as BathOutline } from './bath-outline.svg';
-export { default as BedOutline } from './bed-outline.svg';
 export { default as BestPriceBold } from './best-price-bold.svg';
 export { default as BestPriceOutline } from './best-price-outline.svg';
 export { default as BoldOutline } from './bold-outline.svg';
@@ -41,7 +46,6 @@ export { default as DashboardBold } from './dashboard-bold.svg';
 export { default as DashboardOutline } from './dashboard-outline.svg';
 export { default as DebtOutline } from './debt-outline.svg';
 export { default as DocumentBold } from './document-bold.svg';
-export { default as DocumentOutline } from './document-outline.svg';
 export { default as DocumentRequestOutline } from './document-request-outline.svg';
 export { default as DocumentTwoTen } from './document-two-ten.svg';
 export { default as DotHorizontalOutline } from './dot-horizontal-outline.svg';
