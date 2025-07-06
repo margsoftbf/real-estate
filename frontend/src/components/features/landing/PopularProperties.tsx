@@ -85,7 +85,7 @@ const properties: Property[] = [
 
 const PopularProperties = () => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gradient-to-t from-purple-50 via-purple-50 via-80% lg:via-90% to-white to-95% lg:to-100%">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center lg:flex lg:justify-between lg:items-center mb-8">
           <div className="lg:text-left">
