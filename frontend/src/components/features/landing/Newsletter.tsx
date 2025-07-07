@@ -28,7 +28,7 @@ const Newsletter = () => {
               Submit
             </Button>
           </div>
-          <div className="lg:block relative w-full max-w-lg">
+          <div className="lg:block relative w-full max-w-lg my-4">
             <input
               type="text"
               placeholder="Enter your email address"

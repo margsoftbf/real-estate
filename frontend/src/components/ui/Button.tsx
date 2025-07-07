@@ -32,7 +32,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const primaryStyles =
       variant === 'primary'
         ? {
-            backgroundColor: 'var(--color-primary-violet)',
+            backgroundColor: 'var(--color-primary-violet-dark)',
             borderColor: 'var(--color-primary-violet-dark)',
             color: 'white',
           }
