@@ -28,12 +28,12 @@ const Newsletter = () => {
               Submit
             </Button>
           </div>
-          <div className="lg:block relative w-full max-w-lg">
+          <div className="lg:block relative w-full max-w-lg my-4">
             <input
               type="text"
               placeholder="Enter your email address"
               className="
-                w-full py-3 px-2 bg-white text-gray-700 text-body-md
+                w-full py-4 px-6 bg-white text-gray-700 text-body-md
                 focus:outline-none transition-all text-body-md-medium
                 border-0 rounded-md
               "
@@ -41,7 +41,7 @@ const Newsletter = () => {
             <Button
               variant="primary"
               size="md"
-              className="w-full max-w-28 absolute right-2 top-1/2 transform -translate-y-1/2"
+              className="w-full max-w-28 absolute right-3 top-1/2 transform -translate-y-1/2"
             >
               Submit
             </Button>

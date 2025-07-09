@@ -11,7 +11,11 @@ import {
 import logoImage from '@/assets/logo.png';
 import Button from '@/components/ui/Button';
 
-const Header = () => {
+type HeaderProps = {
+  variant?: 'default' | 'auth';
+};
+
+const Header = ({ variant = 'default' }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigationItems = [
@@ -43,53 +47,59 @@ const Header = () => {
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
-            {navigationItems.map((item) => {
-              const IconComponent = item.icon;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="flex items-center space-x-2 text-primary-black hover:text-primary-violet hover:bg-purple-200 transition-all duration-200 font-medium px-4 py-2 rounded-md"
-                >
-                  <IconComponent size={18} />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
+          {variant === 'default' && (
+            <nav className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
+              {navigationItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-center space-x-2 text-primary-black hover:text-primary-violet hover:bg-purple-200 transition-all duration-200 font-medium px-4 py-2 rounded-md"
+                  >
+                    <IconComponent size={18} />
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          )}
 
-          <div className="hidden md:flex items-center space-x-4">
-            <Link href="/login">
-              <Button variant="outline" size="md" className="text-black">
-                Login
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button variant="primary" size="md">
-                Sign up
-              </Button>
-            </Link>
-          </div>
+          {variant === 'default' && (
+            <div className="hidden md:flex items-center space-x-4">
+              <Link href="/login">
+                <Button variant="outline" size="md" className="text-black">
+                  Login
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button variant="primary" size="md">
+                  Sign up
+                </Button>
+              </Link>
+            </div>
+          )}
 
-          <div className="md:hidden">
-            <button
-              onClick={toggleMobileMenu}
-              className="text-gray-700 hover:text-primary transition-colors duration-200"
-              aria-label="Toggle mobile menu"
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6 cursor-pointer" />
-              ) : (
-                <Menu className="w-6 h-6 cursor-pointer" />
-              )}
-            </button>
-          </div>
+          {variant === 'default' && (
+            <div className="md:hidden">
+              <button
+                onClick={toggleMobileMenu}
+                className="text-gray-700 hover:text-primary transition-colors duration-200"
+                aria-label="Toggle mobile menu"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-6 h-6 cursor-pointer" />
+                ) : (
+                  <Menu className="w-6 h-6 cursor-pointer" />
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       <AnimatePresence>
-        {isMobileMenuOpen && (
+        {isMobileMenuOpen && variant === 'default' && (
           <>
             <motion.div
               initial={{ opacity: 0 }}

@@ -1,4 +1,5 @@
 import CustomerOffer from '@/components/features/landing/CustomerOffer';
+import Footer from '@/components/features/landing/Footer';
 import Header from '@/components/features/landing/Header';
 import Hero from '@/components/features/landing/Hero';
 import Newsletter from '@/components/features/landing/Newsletter';
@@ -16,6 +17,7 @@ export default function HomePage() {
       <PopularProperties />
       <CustomerOffer />
       <Newsletter />
+      <Footer />
     </div>
   );
 }

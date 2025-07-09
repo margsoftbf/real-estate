@@ -40,7 +40,7 @@ const customerOffer = [
     title: 'Get ready to apply',
     description:
       'Find your dream house? You just need to do a little to no effort and you can start move in to your new dream home!',
-    cardBgColor: 'bg-primary-violet',
+    cardBgColor: 'bg-primary-violet-dark',
     iconBorderColor: 'bg-white',
     iconMainBgColor: 'bg-white',
     iconBgColor: 'bg-white',

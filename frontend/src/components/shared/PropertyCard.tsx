@@ -31,10 +31,11 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
           src={property.imageUrl}
           alt={property.name}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
         />
         {property.popular && (
-          <div className="absolute top-2 left-2 bg-primary-violet text-white border border-primary-violet-dark text-xs font-bold px-3 py-2 rounded-md flex items-center gap-1.5 z-10">
+          <div className="absolute top-2 left-2 bg-primary-violet-dark text-white border border-primary-violet-dark text-xs font-bold px-3 py-2 rounded-md flex items-center gap-1.5 z-10">
             <StarIconPopular className="w-4 h-4 text-white" />
             POPULAR
           </div>
@@ -43,9 +44,9 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
       <div className="p-4">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-primary-violet font-semibold text-body-xl">
+            <p className="text-primary-violet-dark font-semibold text-body-xl">
               ${property.price}
-              <span className="text-primary-black opacity-50 text-body-sm font-normal">
+              <span className="text-primary-black opacity-70 text-body-sm font-normal">
                 /month
               </span>
             </p>
@@ -57,7 +58,10 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             </p>
           </div>
           <button className="p-2 rounded-full border border-gray-200 hover:bg-primary-violet hover:cursor-pointer transition-all duration-300 group">
-            <HeartOutline className="w-5 h-5 text-primary-violet group-hover:text-white transition-all duration-300" />
+            <HeartOutline
+              className="w-5 h-5 text-primary-violet group-hover:text-white transition-all duration-300"
+              aria-label="Add to favorites"
+            />
           </button>
         </div>
         <div className="flex justify-between items-center gap-4 mt-4 pt-4 border-t border-gray-200">

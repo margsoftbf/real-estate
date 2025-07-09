@@ -55,6 +55,7 @@ const Hero = () => {
               src={heroMapImage}
               alt="Property locations map"
               className="absolute inset-0 w-full h-full object-cover rounded-none"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               priority
               fill
             />

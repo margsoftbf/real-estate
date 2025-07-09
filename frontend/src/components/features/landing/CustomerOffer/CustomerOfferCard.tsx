@@ -35,7 +35,7 @@ const CustomerOfferCard = ({
         </div>
       </div>
       <h3 className={`text-h4 my-3 ${titleColor}`}>{title}</h3>
-      <p className={`text-body-md opacity-70 mt-2 pr-6 ${descriptionColor}`}>
+      <p className={`text-body-md mt-2 pr-6 ${descriptionColor}`}>
         {description}
       </p>
     </div>

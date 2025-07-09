@@ -19,7 +19,7 @@ const TabSelector = <T extends string>({
           onClick={() => onTabChange(tab.key)}
           className={`flex-1 py-3 text-center font-semibold transition-all text-sm lg:text-base rounded-md cursor-pointer border-[1.5px] ${
             activeTab === tab.key
-              ? 'bg-primary-violet text-white border-purple-200'
+              ? 'bg-primary-violet-dark text-white border-purple-200'
               : 'text-gray-500 hover:text-primary-violet border-transparent'
           }`}
         >
