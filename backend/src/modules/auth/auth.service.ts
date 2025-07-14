@@ -11,6 +11,7 @@ import {
   ExceptionConstants,
   UnauthorizedException,
 } from '../../exceptions';
+import { generateRandomString } from '@/utils/utils';
 
 @Injectable()
 export class AuthService {
@@ -34,14 +35,14 @@ export class AuthService {
     const passwordHash = await bcrypt.hash(registerDto.password, 10);
 
     const user = this.userRepository.create({
-      firstName: registerDto.firstName,
-      lastName: registerDto.lastName,
+      firstName: registerDto.firstName || null,
+      lastName: registerDto.lastName || null,
       email: registerDto.email,
       passwordHash,
       role: registerDto.role,
       privacyConsent: registerDto.privacyConsent,
       marketingConsent: registerDto.marketingConsent || false,
-      slug: `${registerDto.firstName}-${registerDto.lastName}-${Date.now()}`.toLowerCase(),
+      slug: generateRandomString(12),
     });
 
     await this.userRepository.save(user);
