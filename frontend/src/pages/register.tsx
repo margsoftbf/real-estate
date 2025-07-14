@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import PropertyCard, { Property } from '@/components/shared/PropertyCard';
 import Button from '@/components/ui/Button';
 import Header from '@/components/features/landing/Header';
@@ -6,8 +8,26 @@ import propertyImage from '@/assets/home-hero-bg.webp';
 import EditableInput from '@/components/common/EditableInput';
 import googleImage from '@/assets/google.png';
 import Image from 'next/image';
+import { useRegister } from '@/hooks/auth';
+import { RegisterFormData, registerSchema } from '@/validation/registerValidation';
 
 const RegisterPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      role: 'tenant',
+      privacyConsent: false,
+      marketingConsent: false,
+    },
+  });
+
+  const registerMutation = useRegister();
+
   const mockProperty: Property = {
     id: 1,
     imageUrl: propertyImage.src,
@@ -19,7 +39,19 @@ const RegisterPage = () => {
     baths: 2,
     area: '6x7.5 m²',
   };
-  //TODO: Form validation, add property
+
+  const onSubmit = (data: RegisterFormData) => {
+    const payload = {
+      email: data.email,
+      password: data.password,
+      role: data.role,
+      privacyConsent: data.privacyConsent,
+      marketingConsent: data.marketingConsent || false,
+    };
+
+    registerMutation.mutate(payload);
+  };
+
   return (
     <div className="min-h-screen bg-white ">
       <Header variant="auth" />
@@ -33,38 +65,83 @@ const RegisterPage = () => {
               Create your account to access all our powerful tools.
             </p>
 
-            <form className="mt-8 space-y-4">
-              <EditableInput
-                fieldName="email"
-                label="Email"
-                placeholder="hi@example.com"
-                type="email"
-                required
-              />
-              <EditableInput
-                fieldName="password"
-                label="Password"
-                placeholder="Enter password"
-                type="password"
-                required
-                showPasswordToggle={true}
-              />
-              <EditableInput
-                fieldName="confirmPassword"
-                label="Confirm Password"
-                placeholder="Confirm password"
-                type="password"
-                required
-                showPasswordToggle={true}
-              />
+            {registerMutation.isError && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-sm text-red-600">
+                  {registerMutation.error?.message ||
+                    'Registration failed. Please try again.'}
+                </p>
+              </div>
+            )}
+
+            <form
+              onSubmit={(e) => {
+                handleSubmit(onSubmit)(e);
+              }}
+              className="mt-8 space-y-4"
+            >
+              <div>
+                <EditableInput
+                  fieldName="email"
+                  label="Email"
+                  placeholder="hi@example.com"
+                  type="email"
+                  required
+                  {...register('email')}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <EditableInput
+                  fieldName="password"
+                  label="Password"
+                  placeholder="Enter password"
+                  type="password"
+                  required
+                  showPasswordToggle={true}
+                  {...register('password')}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <EditableInput
+                  fieldName="confirmPassword"
+                  label="Confirm Password"
+                  placeholder="Confirm password"
+                  type="password"
+                  required
+                  showPasswordToggle={true}
+                  {...register('confirmPassword')}
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
 
               <div className="flex flex-col gap-2 items-center md:flex-row justify-between mt-4 lg:mt-8">
                 <div className="flex items-center">
                   <input
                     id="is_property_manager"
-                    name="is_property_manager"
                     type="checkbox"
                     className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded"
+                    onChange={(e) => {
+                      setValue(
+                        'role',
+                        e.target.checked ? 'landlord' : 'tenant'
+                      );
+                    }}
                   />
                   <label
                     htmlFor="is_property_manager"
@@ -83,14 +160,62 @@ const RegisterPage = () => {
                 </div>
               </div>
 
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <input
+                    {...register('privacyConsent')}
+                    id="privacyConsent"
+                    type="checkbox"
+                    className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="privacyConsent"
+                    className="ml-2 block text-sm text-gray-900"
+                  >
+                    I agree to the Terms of Service and Privacy Policy
+                  </label>
+                </div>
+                {errors.privacyConsent && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.privacyConsent.message}
+                  </p>
+                )}
+
+                <div className="flex items-center">
+                  <input
+                    {...register('marketingConsent')}
+                    id="marketingConsent"
+                    type="checkbox"
+                    className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="marketingConsent"
+                    className="ml-2 block text-sm text-gray-900"
+                  >
+                    Send me marketing emails and updates
+                  </label>
+                </div>
+              </div>
+
               <div>
-                <Button type="submit" variant="primary" className="w-full">
-                  Sign up
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="w-full"
+                  disabled={registerMutation.isPending}
+                >
+                  {registerMutation.isPending
+                    ? 'Creating account...'
+                    : 'Sign up'}
                 </Button>
               </div>
 
               <div>
-                <Button variant="outline" className="w-full flex gap-2">
+                <Button
+                  variant="outline"
+                  className="w-full flex gap-2"
+                  disabled
+                >
                   <Image
                     src={googleImage}
                     alt="Rentsmart"
@@ -114,9 +239,9 @@ const RegisterPage = () => {
             </p>
           </div>
         </div>
-        <div className="hidden lg:block w-1/2 bg-purple-50 p-12 rounded-md">
+        <div className="hidden lg:block w-1/2 bg-purple-50 rounded-md">
           <div className="flex flex-col items-center justify-center h-full">
-            <div className="max-w-sm">
+            <div className="max-w-md">
               <PropertyCard property={mockProperty} />
               <div className="mt-8 text-center text-xs text-gray-500">
                 <p>Powered by RentSmart</p>

@@ -64,7 +64,7 @@ The API will be available at `http://localhost:3000`
 
 ### Database & Migrations
 
-- `yarn migration:generate <MigrationName>` - Generate a new migration based on entity changes
+- `yarn migration:generate src/db/migrations/MigrationName` - Generate a new migration based on entity changes
 - `yarn migration:run` - Run pending migrations
 - `yarn migration:revert` - Revert the last migration
 - `yarn migration:show` - Show all migrations and their status

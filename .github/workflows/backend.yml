@@ -62,6 +62,9 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
           NODE_ENV: test
+          JWT_SECRET: test-secret-key-for-ci
+          SUPABASE_URL: https://test-supabase-url.com
+          SUPABASE_KEY: test-key-does-not-matter
 
   deploy:
     needs: test

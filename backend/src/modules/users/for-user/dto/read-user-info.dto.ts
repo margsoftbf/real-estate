@@ -1,6 +1,6 @@
-export type UserRole = 'admin' | 'landlord' | 'tenant';
+import { UserRole } from '../../entities/user.entity';
 
-export interface UserInfo {
+export class ReadUserInfoDto {
   slug: string;
   firstName: string | null;
   lastName: string | null;

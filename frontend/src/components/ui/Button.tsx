@@ -18,9 +18,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       'inline-flex items-center justify-center rounded-md transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-jakarta';
 
     const variants = {
-      primary: 'text-white border-2 hover:brightness-110',
+      primary:
+        'text-white border-2 border-primary-violet-dark hover:border-primary-violet-dark hover:brightness-120',
       outline:
-        'bg-transparent border-2 hover:border-[#7065f0] hover:text-[#7065f0] hover:bg-[#7065f020]',
+        'bg-transparent border-1 hover:border-[#7065f0] hover:text-[#7065f0] hover:bg-[#7065f020]',
     };
 
     const sizes = {
@@ -41,8 +42,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const outlineStyles =
       variant === 'outline'
         ? {
-            borderColor: 'var(--color-purple-300)',
             color: 'var(--color-primary-violet-dark)',
+            borderColor: 'var(--color-purple-300)',
           }
         : {};
 

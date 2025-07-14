@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import PropertyCard, { Property } from '@/components/shared/PropertyCard';
 import Button from '@/components/ui/Button';
 import Header from '@/components/features/landing/Header';
@@ -6,7 +8,20 @@ import propertyImage from '@/assets/home-hero-bg.webp';
 import EditableInput from '@/components/common/EditableInput';
 import googleImage from '@/assets/google.png';
 import Image from 'next/image';
+import { useLogin } from '@/hooks/auth';
+import { LoginFormData, loginSchema } from '@/validation/loginValidation';
+
 const LoginPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const loginMutation = useLogin();
+
   const mockProperty: Property = {
     id: 1,
     imageUrl: propertyImage.src,
@@ -19,7 +34,9 @@ const LoginPage = () => {
     area: '6x7.5 m²',
   };
 
-  //TODO: Form validation, add property
+  const onSubmit = (data: LoginFormData) => {
+    loginMutation.mutate(data);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -28,28 +45,49 @@ const LoginPage = () => {
         <div className="w-full lg:w-1/2 flex items-center lg:items-start lg:justify-start justify-center p-8">
           <div className="max-w-md w-full">
             <h1 className="text-h3 font-bold text-primary-black text-center">
-              Create your account
+              Welcome back
             </h1>
             <p className="mt-2 text-body-md text-primary-black/50 text-center">
-              Create your account to access all our powerful tools.
+              Sign in to access your account and manage your properties.
             </p>
 
-            <form className="mt-8 space-y-4">
-              <EditableInput
-                fieldName="email"
-                label="Email"
-                placeholder="hi@example.com"
-                type="email"
-                required
-              />
-              <EditableInput
-                fieldName="password"
-                label="Password"
-                placeholder="Enter password"
-                type="password"
-                required
-                showPasswordToggle={true}
-              />
+            {loginMutation.isError && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-sm text-red-600">
+                  {loginMutation.error?.message || 'Login failed. Please try again.'}
+                </p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
+              <div>
+                <EditableInput
+                  fieldName="email"
+                  label="Email"
+                  placeholder="hi@example.com"
+                  type="email"
+                  required
+                  {...register('email')}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                )}
+              </div>
+
+              <div>
+                <EditableInput
+                  fieldName="password"
+                  label="Password"
+                  placeholder="Enter password"
+                  type="password"
+                  required
+                  showPasswordToggle={true}
+                  {...register('password')}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                )}
+              </div>
 
               <div className="flex items-center justify-end text-sm mt-4 lg:mt-8">
                 <Link
@@ -61,8 +99,13 @@ const LoginPage = () => {
               </div>
 
               <div>
-                <Button type="submit" variant="primary" className="w-full">
-                  Login
+                <Button 
+                  type="submit" 
+                  variant="primary" 
+                  className="w-full"
+                  disabled={loginMutation.isPending}
+                >
+                  {loginMutation.isPending ? 'Signing in...' : 'Login'}
                 </Button>
               </div>
 
@@ -70,6 +113,7 @@ const LoginPage = () => {
                 <Button
                   variant="outline"
                   className="w-full text-black flex gap-2"
+                  disabled
                 >
                   <Image
                     src={googleImage}
