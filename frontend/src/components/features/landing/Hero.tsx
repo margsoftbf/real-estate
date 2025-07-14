@@ -13,8 +13,35 @@ import {
 import HeroText from './Hero/HeroText';
 import HeroSearchBar from './Hero/HeroSearchBar';
 import HeroIcon from './Hero/HeroIcon';
+import PropertyCard, { Property } from '@/components/shared/PropertyCard';
 
 const Hero = () => {
+  const mockProperty1: Property = {
+    id: 1,
+    imageUrl:
+      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=400',
+    popular: true,
+    price: 2700,
+    name: 'Beverly Springfield',
+    address: '2821 Sevilla, Palm Harbor, TX',
+    beds: 4,
+    baths: 2,
+    area: '6x7.5 m²',
+  };
+
+  const mockProperty2: Property = {
+    id: 2,
+    imageUrl:
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400',
+    popular: false,
+    price: 1900,
+    name: 'Sunset Gardens',
+    address: '1425 Oak Street, Miami, FL',
+    beds: 2,
+    baths: 1,
+    area: '4x5 m²',
+  };
+
   return (
     <section className="relative bg-gradient-to-b from-purple-50 via-purple-50 via-80% lg:via-90% to-white to-95% lg:to-100% overflow-hidden">
       <div className="max-w-7xl mx-auto">
@@ -62,6 +89,15 @@ const Hero = () => {
             <DotOutlineInsideBold className="absolute z-30 right-64 top-20 w-16 h-16" />
             <HouseDot className="absolute z-30 right-56 top-88 w-16 h-24" />
             <LineAToB className="absolute z-20 right-26 top-28 w-48 h-72" />
+
+            <div className="absolute top-40 left-2 z-40 transform scale-80">
+              <PropertyCard property={mockProperty1} />
+            </div>
+
+            <div className="absolute -bottom-10 right-4 z-40 transform scale-60">
+              <PropertyCard property={mockProperty2} />
+            </div>
+
             <div className="absolute z-10 left-[20%] top-[30%] w-4 h-4 bg-primary-violet rounded-full opacity-80" />
             <div className="absolute z-10 left-[60%] top-[60%] w-3 h-3 bg-primary-violet rounded-full opacity-60" />
             <div className="absolute z-10 left-[15%] bottom-[18%] w-2.5 h-2.5 bg-primary-violet rounded-full opacity-70" />
