@@ -11,7 +11,7 @@ import {
   ExceptionConstants,
   UnauthorizedException,
 } from '../../exceptions';
-import { generateRandomString } from '@/utils/utils';
+import { generateRandomString } from '../../utils/utils';
 
 @Injectable()
 export class AuthService {
