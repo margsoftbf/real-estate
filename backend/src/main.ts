@@ -9,7 +9,14 @@ async function bootstrap(): Promise<INestApplication> {
     app = await NestFactory.create(AppModule, {
       logger: ['error', 'warn', 'log'],
     });
-    app.enableCors();
+    app.enableCors({
+      origin: [
+        'https://real-estate-six-tawny-67.vercel.app',
+      ],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+      credentials: true,
+    });
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
   }
