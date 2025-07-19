@@ -65,6 +65,12 @@ The development server uses Turbopack for faster builds and hot reloading.
 - `yarn format` - Format code with Prettier
 - `yarn format:check` - Check code formatting
 
+### Testing
+
+- `yarn test` - Run tests
+- `yarn test:watch` - Run tests in watch mode
+- `yarn test:coverage` - Run tests with coverage report
+
 ## Project Structure
 
 ```
@@ -89,8 +95,9 @@ This project uses several tools to maintain code quality:
 - **lint-staged**: Runs linters on staged files
 - **ESLint**: JavaScript/TypeScript linting
 - **Prettier**: Code formatting
+- **Vitest**: Fast testing framework with React Testing Library
 
-Pre-commit hooks automatically run linting and formatting on staged files.
+Pre-commit hooks automatically run linting, formatting, and tests on staged files.
 
 ## Icons Usage
 
