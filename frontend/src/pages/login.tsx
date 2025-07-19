@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import PropertyCard, { Property } from '@/components/shared/PropertyCard';
 import Button from '@/components/ui/Button';
 import Header from '@/components/features/landing/Header';
@@ -12,6 +14,9 @@ import { useLogin } from '@/hooks/auth';
 import { LoginFormData, loginSchema } from '@/validation/loginValidation';
 
 const LoginPage = () => {
+  const router = useRouter();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -21,6 +26,15 @@ const LoginPage = () => {
   });
 
   const loginMutation = useLogin();
+
+  useEffect(() => {
+    if (router.query.message === 'registration-success') {
+      setSuccessMessage(
+        'Registration successful! Please sign in with your credentials.'
+      );
+      router.replace('/login', undefined, { shallow: true });
+    }
+  }, [router]);
 
   const mockProperty: Property = {
     id: 1,
@@ -51,10 +65,17 @@ const LoginPage = () => {
               Sign in to access your account and manage your properties.
             </p>
 
+            {successMessage && (
+              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-sm text-green-600">{successMessage}</p>
+              </div>
+            )}
+
             {loginMutation.isError && (
               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
                 <p className="text-sm text-red-600">
-                  {loginMutation.error?.message || 'Login failed. Please try again.'}
+                  {loginMutation.error?.message ||
+                    'Login failed. Please try again.'}
                 </p>
               </div>
             )}
@@ -70,7 +91,9 @@ const LoginPage = () => {
                   {...register('email')}
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
 
@@ -85,7 +108,9 @@ const LoginPage = () => {
                   {...register('password')}
                 />
                 {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
@@ -99,9 +124,9 @@ const LoginPage = () => {
               </div>
 
               <div>
-                <Button 
-                  type="submit" 
-                  variant="primary" 
+                <Button
+                  type="submit"
+                  variant="primary"
                   className="w-full"
                   disabled={loginMutation.isPending}
                 >

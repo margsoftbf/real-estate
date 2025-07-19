@@ -55,7 +55,6 @@ class ApiClient {
   }
 
   async register(data: RegisterRequest): Promise<void> {
-
     return this.request<void>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(data),

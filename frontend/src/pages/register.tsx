@@ -136,6 +136,8 @@ const RegisterPage = () => {
                     id="is_property_manager"
                     type="checkbox"
                     className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded"
+                    checked
+                    disabled
                     onChange={(e) => {
                       setValue(
                         'role',
