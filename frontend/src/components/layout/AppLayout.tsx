@@ -17,6 +17,7 @@ import {
 } from '@/assets/icons';
 import Image from 'next/image';
 import logoImage from '@/assets/logo-white.png';
+import { UserInfo } from '@/types/types';
 
 const menu = {
   landlord: [
@@ -97,21 +98,16 @@ const commonMenuItems = [
 
 interface AppLayoutProps {
   children: React.ReactNode;
-  userRole?: keyof typeof menu;
-  userInfo?: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    avatar?: string | null;
-  };
+  userRole: keyof typeof menu;
+  userInfo: UserInfo;
 }
 
-const Header = ({ 
-  onMenuToggle, 
-  userInfo 
-}: { 
+const Header = ({
+  onMenuToggle,
+  userInfo,
+}: {
   onMenuToggle: () => void;
-  userInfo?: AppLayoutProps['userInfo'];
+  userInfo: UserInfo;
 }) => (
   <header className="bg-white text-white h-16 flex items-center px-4 md:px-6 border-b border-purple-100">
     <button
@@ -127,7 +123,7 @@ const Header = ({
       <div className="flex items-center space-x-1 border-2 h-10 border-purple-100 rounded-md px-1.5 py-1 w-16 sm:w-fit">
         <UserOutline className="w-5 h-5" />
         <span className="font-medium hidden sm:block text-body-sm-medium text-primary-black">
-          {userInfo?.email}
+          {userInfo.email}
         </span>
         <ChevronDown className="w-4 h-4 text-black flex-shrink-0" />
       </div>
@@ -146,7 +142,7 @@ const Sidebar = ({
 }) => (
   <aside
     className={`
-      fixed md:static inset-y-0 left-0 z-50 w-full md:w-56 bg-gray-100 transform transition-transform duration-300 ease-in-out
+      fixed md:static inset-y-0 left-0 z-50 w-full md:w-64 bg-gray-100 transform transition-transform duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
     `}
   >
@@ -220,15 +216,10 @@ const Sidebar = ({
   </aside>
 );
 
-const AppLayout: React.FC<AppLayoutProps> = ({ 
-  children, 
-  userRole = 'landlord',
-  userInfo = {
-    firstName: 'Francis',
-    lastName: 'Reynolds',
-    email: 'francis@example.com',
-    avatar: null,
-  }
+const AppLayout: React.FC<AppLayoutProps> = ({
+  children,
+  userRole,
+  userInfo,
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -240,7 +231,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         onClose={() => setSidebarOpen(false)}
       />
       <div className="flex-1 flex flex-col">
-        <Header 
+        <Header
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
           userInfo={userInfo}
         />

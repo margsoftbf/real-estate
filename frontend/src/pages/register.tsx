@@ -10,6 +10,7 @@ import googleImage from '@/assets/google.png';
 import Image from 'next/image';
 import { useRegister } from '@/hooks/auth';
 import { RegisterFormData, registerSchema } from '@/validation/registerValidation';
+import { UserRole } from '@/types/types';
 
 const RegisterPage = () => {
   const {
@@ -17,14 +18,17 @@ const RegisterPage = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      role: 'tenant',
+      role: UserRole.TENANT,
       privacyConsent: false,
       marketingConsent: false,
     },
   });
+
+  const currentRole = watch('role');
 
   const registerMutation = useRegister();
 
@@ -49,6 +53,9 @@ const RegisterPage = () => {
       marketingConsent: data.marketingConsent || false,
     };
 
+    console.log('Register payload:', payload);
+    console.log('Role being sent:', payload.role);
+    
     registerMutation.mutate(payload);
   };
 
@@ -136,12 +143,11 @@ const RegisterPage = () => {
                     id="is_property_manager"
                     type="checkbox"
                     className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded"
-                    checked
-                    disabled
+                    checked={currentRole === UserRole.LANDLORD}
                     onChange={(e) => {
                       setValue(
                         'role',
-                        e.target.checked ? 'landlord' : 'tenant'
+                        e.target.checked ? UserRole.LANDLORD : UserRole.TENANT
                       );
                     }}
                   />

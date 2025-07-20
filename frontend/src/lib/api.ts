@@ -4,8 +4,8 @@ import type {
   RegisterRequest,
   ApiError,
 } from '@/types/api';
-import { createAuthHeaders } from './auth';
 import { UserInfo } from '@/types/types';
+import { getSession } from 'next-auth/react';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -15,8 +15,14 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
+    const session = await getSession();
+    
     const config: RequestInit = {
-      headers: createAuthHeaders(),
+      headers: {
+        'Content-Type': 'application/json',
+        ...(session?.accessToken && { Authorization: `Bearer ${session.accessToken}` }),
+        ...options.headers,
+      },
       ...options,
     };
 
