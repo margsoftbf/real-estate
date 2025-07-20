@@ -5,17 +5,20 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import PropertyCard, { Property } from '@/components/shared/PropertyCard';
 import Button from '@/components/ui/Button';
+import Toast from '@/components/ui/Toast';
 import Header from '@/components/features/landing/Header';
 import propertyImage from '@/assets/home-hero-bg.webp';
 import EditableInput from '@/components/common/EditableInput';
 import googleImage from '@/assets/google.png';
 import Image from 'next/image';
 import { useLogin } from '@/hooks/auth';
+import { useToast } from '@/hooks/useToast';
 import { LoginFormData, loginSchema } from '@/validation/loginValidation';
 
 const LoginPage = () => {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const { toasts, removeToast, showSuccess, showError } = useToast();
 
   const {
     register,
@@ -35,6 +38,18 @@ const LoginPage = () => {
       router.replace('/login', undefined, { shallow: true });
     }
   }, [router]);
+
+  useEffect(() => {
+    if (loginMutation.isSuccess) {
+      showSuccess('Successfully logged in! Redirecting to dashboard...');
+    }
+  }, [loginMutation.isSuccess, showSuccess]);
+
+  useEffect(() => {
+    if (loginMutation.isError) {
+      showError(loginMutation.error?.message || 'Login failed. Please try again.');
+    }
+  }, [loginMutation.isError, loginMutation.error, showError]);
 
   const mockProperty: Property = {
     id: 1,
@@ -180,6 +195,16 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => removeToast(toast.id)}
+        />
+      ))}
     </div>
   );
 };

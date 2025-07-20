@@ -1,25 +1,46 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { apiClient } from '@/lib/api';
-import { authStorage } from '@/lib/auth';
-import type { LoginRequest, ApiError } from '@/types/api';
+import { signIn, SignInResponse } from 'next-auth/react';
+import type { LoginRequest } from '@/types/api';
+
+interface LoginError extends Error {
+  message: string;
+}
 
 export const useLogin = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (credentials: LoginRequest) => apiClient.login(credentials),
-    onSuccess: (data) => {
-      authStorage.setToken(data.access_token);
+  return useMutation<SignInResponse, LoginError, LoginRequest>({
+    mutationFn: async (credentials: LoginRequest) => {
+      const result = await signIn('credentials', {
+        email: credentials.email,
+        password: credentials.password,
+        redirect: false,
+      });
 
-      queryClient.invalidateQueries({ queryKey: ['user'] });
+      if (result?.error) {
+        switch (result.error) {
+          case 'CredentialsSignin':
+            throw new Error('Invalid email or password. Please check your credentials and try again.');
+          case 'Callback':
+            throw new Error('Authentication service temporarily unavailable. Please try again later.');
+          default:
+            throw new Error('Login failed. Please try again.');
+        }
+      }
 
+      if (!result?.ok) {
+        throw new Error('Login failed. Please try again.');
+      }
+
+      return result;
+    },
+    onSuccess: () => {
       const returnTo = router.query.returnTo as string;
       router.push(returnTo || '/dashboard');
     },
-    onError: (error: ApiError) => {
-      console.error('Login failed:', error);
+    onError: (error: LoginError) => {
+      console.error('Login failed:', error.message);
     },
   });
 };

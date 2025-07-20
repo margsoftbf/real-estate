@@ -1,6 +1,13 @@
-export type UserRole = 'admin' | 'landlord' | 'tenant';
+// Synchronized with backend DTO - keep in sync with backend/src/modules/users/
 
-export interface UserInfo {
+export enum UserRole {
+  ADMIN = 'admin',
+  LANDLORD = 'landlord',
+  TENANT = 'tenant',
+}
+
+// Matches backend ReadUserInfoDto exactly
+export interface ReadUserInfoDto {
   slug: string;
   firstName: string | null;
   lastName: string | null;
@@ -15,7 +22,10 @@ export interface UserInfo {
   privacyConsent: boolean;
   marketingConsent: boolean;
   isActive: boolean;
-  lastLoginAt: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
+  lastLoginAt: string | null; // JSON serializes Date as string
+  createdAt: string; // JSON serializes Date as string
+  updatedAt: string; // JSON serializes Date as string
 }
+
+// Main type to use in app
+export type UserInfo = ReadUserInfoDto;

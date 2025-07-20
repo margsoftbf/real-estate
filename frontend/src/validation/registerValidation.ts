@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserRole } from '@/types/types';
 
 export const registerSchema = z
   .object({
@@ -13,7 +14,7 @@ export const registerSchema = z
       .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
       .regex(/[0-9]/, 'Password must contain at least one number'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
-    role: z.enum(['tenant', 'landlord'], {
+    role: z.nativeEnum(UserRole, {
       required_error: 'Role is required',
     }),
     privacyConsent: z.boolean().refine((val) => val === true, {

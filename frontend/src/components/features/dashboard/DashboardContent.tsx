@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface DashboardContentProps {
-  userFirstName: string;
+  userFirstName: string | null;
   userRole: string;
 }
 
@@ -13,7 +13,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
     <div className="max-w-7xl mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-          Welcome back, {userFirstName}!
+          Welcome back{userFirstName ? `, ${userFirstName}` : ''}!
         </h1>
         <p className="text-gray-600 mt-1">
           Role: <span className="capitalize font-semibold">{userRole}</span>
