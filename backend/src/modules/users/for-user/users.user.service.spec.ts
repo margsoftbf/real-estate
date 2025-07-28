@@ -4,38 +4,20 @@ import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { UsersUserService } from './users.user.service';
 import { User, UserRole } from '../entities/user.entity';
-import { ReadUserInfoDto } from './dto/read-user-info.dto';
+import { UserReadInfoDto } from './dto/user-read-info-response.dto';
+import { UpdateUserDto } from './dto/user-update-response.dto';
+import { createMockUser, createMinimalMockUser, createLandlordUser, createAdminUser } from '../../../../test/test-helpers';
 
 describe('UsersUserService', () => {
   let service: UsersUserService;
   let userRepository: jest.Mocked<Repository<User>>;
 
-  const mockUser: User = {
-    id: '123e4567-e89b-12d3-a456-426614174000',
-    slug: 'test-user-slug',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    passwordHash: '$2b$10$hashedPassword',
-    phoneNumber: '+48123456789',
-    avatarUrl: 'https://example.com/avatar.jpg',
-    role: UserRole.TENANT,
-    address: '123 Test Street',
-    city: 'Warsaw',
-    postalCode: '00-001',
-    emailVerified: true,
-    privacyConsent: true,
-    marketingConsent: false,
-    isActive: true,
-    lastLoginAt: new Date('2025-01-01T12:00:00Z'),
-    createdAt: new Date('2025-01-01T00:00:00Z'),
-    updatedAt: new Date('2025-01-01T12:00:00Z'),
-    deletedAt: null,
-  };
+  const mockUser = createMockUser();
 
   beforeEach(async () => {
     const mockUserRepository = {
       findOne: jest.fn(),
+      update: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -68,7 +50,7 @@ describe('UsersUserService', () => {
         where: { id: userId },
       });
 
-      const expectedResult: ReadUserInfoDto = {
+      const expectedResult: UserReadInfoDto = {
         slug: mockUser.slug!,
         firstName: mockUser.firstName,
         lastName: mockUser.lastName,
@@ -104,19 +86,7 @@ describe('UsersUserService', () => {
     });
 
     it('should handle user with minimal data', async () => {
-      const minimalUser: User = {
-        ...mockUser,
-        firstName: null,
-        lastName: null,
-        phoneNumber: null,
-        avatarUrl: null,
-        address: null,
-        city: null,
-        postalCode: null,
-        emailVerified: false,
-        marketingConsent: false,
-        lastLoginAt: null,
-      };
+      const minimalUser = createMinimalMockUser();
 
       userRepository.findOne.mockResolvedValue(minimalUser);
 
@@ -144,11 +114,7 @@ describe('UsersUserService', () => {
     });
 
     it('should handle different user roles', async () => {
-      const landlordUser = {
-        ...mockUser,
-        role: UserRole.LANDLORD,
-        email: 'landlord@example.com',
-      };
+      const landlordUser = createLandlordUser();
 
       userRepository.findOne.mockResolvedValue(landlordUser);
 
@@ -159,11 +125,7 @@ describe('UsersUserService', () => {
     });
 
     it('should handle admin user', async () => {
-      const adminUser = {
-        ...mockUser,
-        role: UserRole.ADMIN,
-        email: 'admin@example.com',
-      };
+      const adminUser = createAdminUser();
 
       userRepository.findOne.mockResolvedValue(adminUser);
 
@@ -184,17 +146,7 @@ describe('UsersUserService', () => {
     });
 
     it('should handle user with all nullable fields as null', async () => {
-      const userWithNulls: User = {
-        ...mockUser,
-        firstName: null,
-        lastName: null,
-        phoneNumber: null,
-        avatarUrl: null,
-        address: null,
-        city: null,
-        postalCode: null,
-        lastLoginAt: null,
-      };
+      const userWithNulls = createMinimalMockUser();
 
       userRepository.findOne.mockResolvedValue(userWithNulls);
 
@@ -208,6 +160,150 @@ describe('UsersUserService', () => {
       expect(result.city).toBeNull();
       expect(result.postalCode).toBeNull();
       expect(result.lastLoginAt).toBeNull();
+    });
+  });
+
+  describe('updateUser', () => {
+    const userId = '123e4567-e89b-12d3-a456-426614174000';
+
+    it('should update user info successfully', async () => {
+      const updateData: UpdateUserDto = {
+        firstName: 'Jane',
+        lastName: 'Smith',
+        phoneNumber: '+48987654321',
+        city: 'Krakow',
+      };
+
+      userRepository.findOne.mockResolvedValue(mockUser);
+      userRepository.update.mockResolvedValue({ affected: 1 } as any);
+
+      const updatedUser = createMockUser({
+        firstName: 'Jane',
+        lastName: 'Smith',
+        phoneNumber: '+48987654321',
+        city: 'Krakow',
+      });
+
+      userRepository.findOne.mockResolvedValueOnce(mockUser).mockResolvedValueOnce(updatedUser);
+
+      const result = await service.updateUser(userId, updateData);
+
+      expect(userRepository.findOne).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
+      expect(userRepository.update).toHaveBeenCalledWith(userId, updateData);
+      expect(result.firstName).toBe('Jane');
+      expect(result.lastName).toBe('Smith');
+      expect(result.phoneNumber).toBe('+48987654321');
+      expect(result.city).toBe('Krakow');
+    });
+
+    it('should throw NotFoundException when user does not exist', async () => {
+      const updateData: UpdateUserDto = {
+        firstName: 'Jane',
+      };
+
+      userRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.updateUser(userId, updateData)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(userRepository.findOne).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
+      expect(userRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should update only provided fields', async () => {
+      const updateData: UpdateUserDto = {
+        firstName: 'UpdatedName',
+        marketingConsent: true,
+      };
+
+      userRepository.findOne.mockResolvedValue(mockUser);
+      userRepository.update.mockResolvedValue({ affected: 1 } as any);
+
+      const updatedUser = createMockUser({
+        firstName: 'UpdatedName',
+        marketingConsent: true,
+      });
+
+      userRepository.findOne.mockResolvedValueOnce(mockUser).mockResolvedValueOnce(updatedUser);
+
+      const result = await service.updateUser(userId, updateData);
+
+      expect(userRepository.update).toHaveBeenCalledWith(userId, {
+        firstName: 'UpdatedName',
+        marketingConsent: true,
+      });
+      expect(result.firstName).toBe('UpdatedName');
+      expect(result.marketingConsent).toBe(true);
+      expect(result.email).toBe(mockUser.email);
+    });
+
+    it('should handle empty update data', async () => {
+      const updateData: UpdateUserDto = {};
+
+      userRepository.findOne.mockResolvedValue(mockUser);
+      userRepository.update.mockResolvedValue({ affected: 1 } as any);
+
+      userRepository.findOne.mockResolvedValueOnce(mockUser).mockResolvedValueOnce(mockUser);
+
+      const result = await service.updateUser(userId, updateData);
+
+      expect(userRepository.update).toHaveBeenCalledWith(userId, {});
+      expect(result).toEqual({
+        slug: mockUser.slug!,
+        firstName: mockUser.firstName,
+        lastName: mockUser.lastName,
+        email: mockUser.email,
+        phoneNumber: mockUser.phoneNumber,
+        avatarUrl: mockUser.avatarUrl,
+        role: mockUser.role,
+        address: mockUser.address,
+        city: mockUser.city,
+        postalCode: mockUser.postalCode,
+        emailVerified: mockUser.emailVerified,
+        privacyConsent: mockUser.privacyConsent,
+        marketingConsent: mockUser.marketingConsent,
+        isActive: mockUser.isActive,
+        lastLoginAt: mockUser.lastLoginAt,
+        createdAt: mockUser.createdAt,
+        updatedAt: mockUser.updatedAt,
+      });
+    });
+
+    it('should update all updatable fields', async () => {
+      const updateData: UpdateUserDto = {
+        firstName: 'NewFirst',
+        lastName: 'NewLast',
+        phoneNumber: '+48111222333',
+        avatarUrl: 'https://newavatar.com/image.jpg',
+        address: '456 New Street',
+        city: 'Gdansk',
+        postalCode: '80-001',
+        marketingConsent: true,
+      };
+
+      userRepository.findOne.mockResolvedValue(mockUser);
+      userRepository.update.mockResolvedValue({ affected: 1 } as any);
+
+      const updatedUser = createMockUser(updateData);
+
+      userRepository.findOne.mockResolvedValueOnce(mockUser).mockResolvedValueOnce(updatedUser);
+
+      const result = await service.updateUser(userId, updateData);
+
+      expect(userRepository.update).toHaveBeenCalledWith(userId, updateData);
+      expect(result.firstName).toBe('NewFirst');
+      expect(result.lastName).toBe('NewLast');
+      expect(result.phoneNumber).toBe('+48111222333');
+      expect(result.avatarUrl).toBe('https://newavatar.com/image.jpg');
+      expect(result.address).toBe('456 New Street');
+      expect(result.city).toBe('Gdansk');
+      expect(result.postalCode).toBe('80-001');
+      expect(result.marketingConsent).toBe(true);
     });
   });
 });

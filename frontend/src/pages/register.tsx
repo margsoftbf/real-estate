@@ -2,14 +2,17 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PropertyCard, { Property } from '@/components/shared/PropertyCard';
-import Button from '@/components/ui/Button';
+import Button from '@/components/ui/Button/Button';
 import Header from '@/components/features/landing/Header';
 import propertyImage from '@/assets/home-hero-bg.webp';
 import EditableInput from '@/components/common/EditableInput';
 import googleImage from '@/assets/google.png';
 import Image from 'next/image';
 import { useRegister } from '@/hooks/auth';
-import { RegisterFormData, registerSchema } from '@/validation/registerValidation';
+import {
+  RegisterFormData,
+  registerSchema,
+} from '@/validation/registerValidation';
 import { UserRole } from '@/types/types';
 
 const RegisterPage = () => {
@@ -53,9 +56,6 @@ const RegisterPage = () => {
       marketingConsent: data.marketingConsent || false,
     };
 
-    console.log('Register payload:', payload);
-    console.log('Role being sent:', payload.role);
-    
     registerMutation.mutate(payload);
   };
 

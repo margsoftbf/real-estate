@@ -9,7 +9,8 @@ import {
   IncomeToRentOutline,
 } from '@/assets/icons';
 import logoImage from '@/assets/logo.png';
-import Button from '@/components/ui/Button';
+import Button from '@/components/ui/Button/Button';
+import { useUser } from '@/hooks/auth/useUser';
 
 type HeaderProps = {
   variant?: 'default' | 'auth';
@@ -17,6 +18,7 @@ type HeaderProps = {
 
 const Header = ({ variant = 'default' }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: userInfo, isLoading } = useUser();
 
   const navigationItems = [
     { name: 'Rent', href: '/rent', icon: HouseOutline },
@@ -67,16 +69,26 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
 
           {variant === 'default' && (
             <div className="hidden md:flex items-center space-x-4">
-              <Link href="/login">
-                <Button variant="outline" size="md" className="text-black">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button variant="primary" size="md">
-                  Sign up
-                </Button>
-              </Link>
+              {!isLoading && userInfo ? (
+                <Link href="/dashboard">
+                  <Button variant="primary" size="md">
+                    My Account
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="outline" size="md" className="text-black">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button variant="primary" size="md">
+                      Sign up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           )}
 
@@ -136,22 +148,35 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
                 </div>
 
                 <div className="pt-6 border-t border-gray-100 flex flex-col gap-3">
-                  <Link
-                    href="/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Button variant="outline" size="md" className="w-full">
-                      Login
-                    </Button>
-                  </Link>
-                  <Link
-                    href="/register"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Button variant="primary" size="md" className="w-full">
-                      Sign up
-                    </Button>
-                  </Link>
+                  {!isLoading && userInfo ? (
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Button variant="primary" size="md" className="w-full">
+                        My Account
+                      </Button>
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        href="/login"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Button variant="outline" size="md" className="w-full">
+                          Login
+                        </Button>
+                      </Link>
+                      <Link
+                        href="/register"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Button variant="primary" size="md" className="w-full">
+                          Sign up
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>

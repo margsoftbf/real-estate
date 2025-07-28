@@ -2,7 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { ReadUserInfoDto } from './dto/read-user-info.dto';
+import { UserReadInfoDto } from './dto/user-read-info-response.dto';
+import { UpdateUserDto } from './dto/user-update-response.dto';
 import { ExceptionConstants } from '../../../exceptions';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class UsersUserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async readUserInfo(userId: string): Promise<ReadUserInfoDto> {
+  async readUserInfo(userId: string): Promise<UserReadInfoDto> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
     });
@@ -42,5 +43,24 @@ export class UsersUserService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
+  }
+
+  async updateUser(
+    userId: string,
+    updateData: UpdateUserDto,
+  ): Promise<UserReadInfoDto> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        ExceptionConstants.UsersErrors.userNotFound.message,
+      );
+    }
+
+    await this.userRepository.update(userId, updateData);
+
+    return this.readUserInfo(userId);
   }
 }

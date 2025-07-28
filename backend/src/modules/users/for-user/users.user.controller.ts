@@ -1,16 +1,29 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Patch, UseGuards, Query, Body } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { UsersUserService } from './users.user.service';
 import { JwtAuthGuard } from '../../auth/jwt';
-import { ReadUserInfoDto } from './dto/read-user-info.dto';
+import { UserReadInfoDto } from './dto/user-read-info-response.dto';
+import { UpdateUserDto } from './dto/user-update-response.dto';
 import { AuthUser } from '../../auth/decorator/auth-user.decorator';
 
+@ApiTags('Users')
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersUserController {
   constructor(private readonly usersUserService: UsersUserService) {}
 
   @Get('userinfo')
-  async readUserInfo(@AuthUser('id') userId: string): Promise<ReadUserInfoDto> {
+  @ApiOperation({ operationId: 'getUserInfo' })
+  async readUserInfo(@AuthUser('id') userId: string): Promise<UserReadInfoDto> {
     return this.usersUserService.readUserInfo(userId);
+  }
+
+  @Patch('userinfo')
+  @ApiOperation({ operationId: 'updateUserInfo' })
+  async updateUser(
+    @AuthUser('id') userId: string,
+    @Body() updateData: UpdateUserDto,
+  ): Promise<UserReadInfoDto> {
+    return this.usersUserService.updateUser(userId, updateData);
   }
 }

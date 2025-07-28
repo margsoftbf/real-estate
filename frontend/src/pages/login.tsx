@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import PropertyCard, { Property } from '@/components/shared/PropertyCard';
-import Button from '@/components/ui/Button';
-import Toast from '@/components/ui/Toast';
+import Button from '@/components/ui/Button/Button';
+import Toast from '@/components/ui/Toast/Toast';
 import Header from '@/components/features/landing/Header';
 import propertyImage from '@/assets/home-hero-bg.webp';
 import EditableInput from '@/components/common/EditableInput';
@@ -47,7 +47,9 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (loginMutation.isError) {
-      showError(loginMutation.error?.message || 'Login failed. Please try again.');
+      showError(
+        loginMutation.error?.message || 'Login failed. Please try again.'
+      );
     }
   }, [loginMutation.isError, loginMutation.error, showError]);
 
@@ -196,7 +198,6 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Toast Notifications */}
       {toasts.map((toast) => (
         <Toast
           key={toast.id}

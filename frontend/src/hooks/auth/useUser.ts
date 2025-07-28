@@ -1,6 +1,6 @@
 import { useSession, signOut } from 'next-auth/react';
-import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/lib/api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { userApi } from '@/lib/user/api';
 import { UserInfo } from '@/types/types';
 
 export const useUser = () => {
@@ -12,7 +12,7 @@ export const useUser = () => {
     error,
   } = useQuery<UserInfo>({
     queryKey: ['user'],
-    queryFn: () => apiClient.getUserInfo(),
+    queryFn: () => userApi.getUserInfo(),
     enabled: status === 'authenticated' && !!session?.accessToken,
     retry: (failureCount, error: unknown) => {
       if (error && typeof error === 'object' && 'code' in error && error.code === 401) {
@@ -31,6 +31,17 @@ export const useUser = () => {
     session,
     error,
   };
+};
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (data: Partial<UserInfo>) => userApi.updateUserInfo(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+  });
 };
 
 export const useLogout = () => {

@@ -49,7 +49,7 @@ const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
             type={inputType}
             placeholder={placeholder}
             required={required}
-            className="mt-1 block w-full px-4 py-3 border bg-purple-50 font-medium border-purple-300 rounded-md placeholder-primary-black/50 focus:outline-none focus:ring-primary-violet focus:border-primary-violet text-body-md focus:bg-white valid:bg-white pr-1"
+            className="mt-1 block w-full px-4 py-3 border bg-purple-50 font-medium border-purple-300 rounded-md placeholder-primary-black/50 focus:ring-1 focus:outline-none focus:ring-primary-violet focus:border-primary-violet text-body-md focus:bg-white valid:bg-white pr-1"
           />
           {showPasswordToggle && (
             <button

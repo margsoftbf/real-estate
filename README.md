@@ -1,4 +1,4 @@
-# Real Estate Platform 🏠
+# Real Estate Platform 🏠 (In progress)
 
 A modern full-stack real estate platform built with cutting-edge technologies. This monorepo contains both frontend and backend applications designed to provide a comprehensive property management and listing solution.
 
@@ -11,6 +11,14 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 - 🎨 **Modern UI** - Beautiful, intuitive interface with smooth animations
 - 📊 **Analytics Dashboard** - Insights and property statistics
 - 🔐 **Secure Authentication** - Powered by Supabase
+
+## 🌐 Live Demo
+
+**Live Application**: [https://real-estate-six-tawny-67.vercel.app/](https://real-estate-six-tawny-67.vercel.app/)
+
+### Test Credentials
+- **Email**: landlord@realestate.com
+- **Password**: I will add when finished
 
 ## 🚀 Tech Stack
 
@@ -229,40 +237,13 @@ All Rights Reserved.
 
 The code in this repository is provided for portfolio and demonstration purposes only. No part of this code may be copied, modified, distributed, or used in any way without the explicit prior written permission of the author.
 
-## 👨‍💻 For Recruiters & Employers
+## 👨‍💻 For Recruiters
 
-This project is designed to showcase my full-stack development skills. You are welcome to:
-
-- **Review the code** to assess my technical abilities
-- **Run the application** locally to see it in action
-- **Ask questions** about the implementation during interviews
-- **Use this as a reference** for my development capabilities
-
-### Quick Demo Setup
+Quick demo setup:
 ```bash
-# Clone and run the project
 git clone <repository-url>
 cd real-estate-fullstack
-
-# Backend
-cd backend && yarn install && yarn start:dev
-
-# Frontend (new terminal)
-cd frontend && yarn install && yarn dev
+docker-compose up
 ```
 
-## ⚠️ Portfolio Project - Not for Reuse
-
-This project was created for portfolio purposes to showcase my skills and experience. It is not intended for commercial use, distribution, or copying. Please do not reuse or reproduce this code without explicit permission.
-
-I encourage you to get inspired by the project, but please create your own unique solutions.
-
-## 🙏 Acknowledgments
-
-- Built with love using modern web technologies
-- Inspired by best practices in full-stack development
-- Thanks to the open-source community for amazing tools
-
----
-
-For detailed setup instructions for each part of the application, check the individual README files in the `frontend/` and `backend/` directories.
+This project showcases full-stack development skills with modern technologies.

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { apiClient } from '@/lib/api';
+import { authApi } from '@/lib/auth/api';
 import type { RegisterRequest, ApiError } from '@/types/api';
 
 export const useRegister = () => {
@@ -8,7 +8,7 @@ export const useRegister = () => {
 
   return useMutation({
     mutationFn: (data: RegisterRequest) => {
-      return apiClient.register(data);
+      return authApi.register(data);
     },
     onSuccess: () => {
       router.push('/login?message=registration-success');

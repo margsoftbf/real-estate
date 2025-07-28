@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import SearchOutline from '@/assets/icons/SearchOutline';
-import Button from '@/components/ui/Button';
+import Button from '@/components/ui/Button/Button';
 
 interface HeroSearchBarProps {
   className?: string;

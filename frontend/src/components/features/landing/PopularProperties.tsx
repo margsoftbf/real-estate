@@ -1,12 +1,9 @@
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
 import PropertyCard, { Property } from '@/components/shared/PropertyCard';
-import Button from '@/components/ui/Button';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel';
+import Button from '@/components/ui/Button/Button';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/Carousel/carousel';
+
 
 const properties: Property[] = [
   {

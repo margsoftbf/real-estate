@@ -1,6 +1,6 @@
 import { UserRole } from '../../entities/user.entity';
 
-export class ReadUserInfoDto {
+export class UserReadInfoDto {
   slug: string;
   firstName: string | null;
   lastName: string | null;
