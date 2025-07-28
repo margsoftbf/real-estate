@@ -8,7 +8,12 @@ interface ToastProps {
   duration?: number;
 }
 
-export const Toast = ({ message, type, onClose, duration = 5000 }: ToastProps) => {
+export const Toast = ({
+  message,
+  type,
+  onClose,
+  duration = 5000,
+}: ToastProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -25,14 +30,17 @@ export const Toast = ({ message, type, onClose, duration = 5000 }: ToastProps) =
     setTimeout(onClose, 300);
   };
 
-  const bgColor = type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+  const bgColor =
+    type === 'success'
+      ? 'bg-green-50 border-green-200'
+      : 'bg-red-50 border-red-200';
   const textColor = type === 'success' ? 'text-green-800' : 'text-red-800';
   const iconColor = type === 'success' ? 'text-green-600' : 'text-red-600';
   const Icon = type === 'success' ? CheckCircle : XCircle;
 
   return (
     <div
-      className={`fixed top-4 right-4 z-50 max-w-md w-full transform transition-all duration-300 ease-in-out ${
+      className={`fixed top-4 right-4 z-50 max-w-xs sm:max-w-md w-full transform transition-all duration-300 ease-in-out ${
         isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
       }`}
     >
@@ -40,9 +48,7 @@ export const Toast = ({ message, type, onClose, duration = 5000 }: ToastProps) =
         <div className="flex items-start">
           <Icon className={`h-5 w-5 mt-0.5 ${iconColor}`} />
           <div className="ml-3 flex-1">
-            <p className={`text-sm font-medium ${textColor}`}>
-              {message}
-            </p>
+            <p className={`text-sm font-medium ${textColor}`}>{message}</p>
           </div>
           <button
             onClick={handleClose}
