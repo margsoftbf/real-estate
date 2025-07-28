@@ -16,7 +16,7 @@ const Newsletter = () => {
       setError('Email is required');
       return;
     }
-    
+
     if (!validateEmail(email)) {
       setError('Please enter a valid email address');
       return;
@@ -38,11 +38,12 @@ const Newsletter = () => {
           <p className="text-body-md text-primary-black/50">
             Discover ways to increase your home value and get listed. No Spam.
           </p>
-          
+
           {isSubmitted ? (
             <div className="bg-green-50 border border-green-200 rounded-md p-4 max-w-lg w-full">
               <p className="text-green-800 text-body-md-medium">
-                Thank you! We've received your email and will keep you updated.
+                Thank you! We&apos;ve received your email and will keep you
+                updated.
               </p>
             </div>
           ) : (
@@ -70,9 +71,9 @@ const Newsletter = () => {
                   )}
                 </div>
 
-                <Button 
-                  variant="primary" 
-                  size="md" 
+                <Button
+                  variant="primary"
+                  size="md"
                   className="w-full max-w-sm"
                   onClick={handleSubmit}
                 >
@@ -115,7 +116,7 @@ const Newsletter = () => {
               </div>
             </>
           )}
-          
+
           <p className="text-body-md text-gray-400">
             Join <span className="text-primary-violet">10,000+</span> other
             landlords in our rent smart community.
