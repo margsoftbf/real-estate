@@ -69,6 +69,18 @@ export class ExceptionConstants {
       code: 50_003,
       message: 'Failed to create property',
     },
+    propertyUpdateFailed: {
+      code: 50_004,
+      message: 'Failed to update property',
+    },
+    propertyDeletionFailed: {
+      code: 50_005,
+      message: 'Failed to delete property',
+    },
+    propertyIsNotYours: {
+      code: 50_006,
+      message: 'Property is not yours',
+    },
   };
 
   public static readonly AuthErrors = {

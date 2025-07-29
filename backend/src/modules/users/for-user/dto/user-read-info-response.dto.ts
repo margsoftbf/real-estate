@@ -10,6 +10,7 @@ export class UserReadInfoDto {
   role: UserRole;
   address: string | null;
   city: string | null;
+  country: string | null;
   postalCode: string | null;
   emailVerified: boolean;
   privacyConsent: boolean;
