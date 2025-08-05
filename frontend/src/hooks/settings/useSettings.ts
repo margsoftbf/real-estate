@@ -21,7 +21,7 @@ export const useSettings = () => {
   const { data: userInfo, isLoading } = useUser();
   const { mutate: updateUser, isPending, isSuccess } = useUpdateUser();
   const { toasts, removeToast, showSuccess } = useToast();
-  
+
   const [activeTab, setActiveTab] = useState('profile');
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -32,7 +32,7 @@ export const useSettings = () => {
     city: '',
     postalCode: '',
   });
-  
+
   const [notifications, setNotifications] = useState<NotificationSettings>({
     emailNotifications: true,
     pushNotifications: false,
@@ -71,7 +71,6 @@ export const useSettings = () => {
   };
 
   return {
-
     userInfo,
     isLoading,
     isPending,
@@ -79,7 +78,6 @@ export const useSettings = () => {
     formData,
     notifications,
     toasts,
-    
 
     setActiveTab,
     handleInputChange,

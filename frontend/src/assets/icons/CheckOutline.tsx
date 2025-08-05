@@ -19,17 +19,17 @@ const CheckOutline: React.FC<CheckOutlineProps> = ({
       className={className}
     >
       <g clipPath="url(#clip0_119_2471)">
-        <path 
-          d="M5 12L10 17L20 7" 
-          stroke={color} 
-          strokeWidth="2" 
-          strokeLinecap="round" 
+        <path
+          d="M5 12L10 17L20 7"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
       </g>
       <defs>
         <clipPath id="clip0_119_2471">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

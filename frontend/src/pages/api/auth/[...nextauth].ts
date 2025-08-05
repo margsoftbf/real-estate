@@ -24,7 +24,10 @@ export const authOptions: NextAuthOptions = {
             password: credentials.password,
           };
 
-          console.log('NextAuth: Attempting login to:', `${API_BASE_URL}/auth/login`);
+          console.log(
+            'NextAuth: Attempting login to:',
+            `${API_BASE_URL}/auth/login`
+          );
           console.log('NextAuth: Login data:', { email: loginData.email });
 
           const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -47,7 +50,7 @@ export const authOptions: NextAuthOptions = {
 
           const userResponse = await fetch(`${API_BASE_URL}/users/userinfo`, {
             headers: {
-              'Authorization': `Bearer ${data.access_token}`,
+              Authorization: `Bearer ${data.access_token}`,
               'Content-Type': 'application/json',
             },
           });
@@ -58,7 +61,7 @@ export const authOptions: NextAuthOptions = {
 
           const userInfo = await userResponse.json();
 
-          const displayName = userInfo.firstName 
+          const displayName = userInfo.firstName
             ? `${userInfo.firstName}${userInfo.lastName ? ' ' + userInfo.lastName : ''}`
             : userInfo.email.split('@')[0];
 

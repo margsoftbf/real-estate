@@ -1,0 +1,414 @@
+import React from 'react';
+import { CloseOutline } from '@/assets/icons';
+import Button from '@/components/ui/Button/Button';
+import EditableInput from '@/components/common/EditableInput';
+import EditableSelect from '@/components/common/EditableSelect';
+import EditableNumberRange from '@/components/common/EditableNumberRange';
+
+interface Filters {
+  minPrice: string;
+  maxPrice: string;
+  city: string;
+
+  minBedrooms: string;
+  maxBedrooms: string;
+  minBathrooms: string;
+  maxBathrooms: string;
+  minArea: string;
+  maxArea: string;
+  minParkingSpaces: string;
+  maxParkingSpaces: string;
+  minYearBuilt: string;
+  maxYearBuilt: string;
+
+  homeType: string;
+  laundry: string;
+  heating: string;
+
+  furnished: boolean | null;
+  petsAllowed: boolean | null;
+  smokingAllowed: boolean | null;
+  balcony: boolean | null;
+  garden: boolean | null;
+  garage: boolean | null;
+  elevator: boolean | null;
+  airConditioning: boolean | null;
+  dishwasher: boolean | null;
+  washerDryer: boolean | null;
+  internet: boolean | null;
+  cable: boolean | null;
+}
+
+interface FilterModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  filters: Filters;
+  onFilterChange: (key: string, value: string | boolean | null) => void;
+  onApplyFilters: () => void;
+  onClearFilters: () => void;
+}
+
+const ToggleSwitch = ({
+  label,
+  value,
+  onFilterChange,
+  filterKey,
+}: {
+  label: string;
+  value: boolean | null;
+  onFilterChange: (key: string, value: boolean | null) => void;
+  filterKey: string;
+}) => (
+  <div className="flex items-center justify-between">
+    <label className="text-sm font-medium text-gray-700">{label}</label>
+    <div className="flex items-center space-x-2">
+      <button
+        onClick={() =>
+          onFilterChange(filterKey, value === false ? null : false)
+        }
+        className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+          value === false
+            ? 'bg-red-100 text-red-700 border-red-300'
+            : 'bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200'
+        }`}
+      >
+        No
+      </button>
+      <button
+        onClick={() => onFilterChange(filterKey, value === true ? null : true)}
+        className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+          value === true
+            ? 'bg-green-100 text-green-700 border-green-300'
+            : 'bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200'
+        }`}
+      >
+        Yes
+      </button>
+      <button
+        onClick={() => onFilterChange(filterKey, null)}
+        className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+          value === null
+            ? 'bg-primary-violet text-white border-primary-violet'
+            : 'bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200'
+        }`}
+      >
+        Any
+      </button>
+    </div>
+  </div>
+);
+
+const FilterModal = ({
+  isOpen,
+  onClose,
+  filters,
+  onFilterChange,
+  onApplyFilters,
+  onClearFilters,
+}: FilterModalProps) => {
+  if (!isOpen) return null;
+
+  const handleApply = () => {
+    onApplyFilters();
+    onClose();
+  };
+
+  const handleClear = () => {
+    onClearFilters();
+  };
+
+  const homeTypeOptions = [
+    { value: 'house', label: 'House' },
+    { value: 'condo', label: 'Condo' },
+    { value: 'apartment', label: 'Apartment' },
+    { value: 'townhouse', label: 'Townhouse' },
+    { value: 'studio', label: 'Studio' },
+  ];
+
+  const laundryOptions = [
+    { value: 'in-unit', label: 'In Unit' },
+    { value: 'shared', label: 'Shared' },
+    { value: 'none', label: 'None' },
+  ];
+
+  const heatingOptions = [
+    { value: 'central', label: 'Central' },
+    { value: 'electric', label: 'Electric' },
+    { value: 'gas', label: 'Gas' },
+    { value: 'oil', label: 'Oil' },
+    { value: 'none', label: 'None' },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div
+        className="fixed inset-0 bg-black/70 transition-opacity"
+        onClick={onClose}
+      />
+
+      <div className="flex min-h-full items-center justify-center p-4">
+        <div className="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">
+              Filter Properties
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <CloseOutline className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-900 border-b pb-2">
+                  Basic Filters
+                </h3>
+
+                <EditableNumberRange
+                  label="Price Range ($)"
+                  minFieldName="minPrice"
+                  maxFieldName="maxPrice"
+                  minValue={filters.minPrice}
+                  maxValue={filters.maxPrice}
+                  onMinChange={(value) => onFilterChange('minPrice', value)}
+                  onMaxChange={(value) => onFilterChange('maxPrice', value)}
+                  placeholder={{ min: 'Min Price', max: 'Max Price' }}
+                />
+
+                <EditableInput
+                  fieldName="city"
+                  label="City"
+                  placeholder="Enter city name"
+                  type="text"
+                  value={filters.city}
+                  onChange={(e) => onFilterChange('city', e.target.value)}
+                />
+
+                <EditableSelect
+                  fieldName="homeType"
+                  label="Home Type"
+                  placeholder="Any"
+                  options={homeTypeOptions}
+                  value={filters.homeType}
+                  onChange={(e) => onFilterChange('homeType', e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-900 border-b pb-2">
+                  Rooms & Space
+                </h3>
+
+                <EditableNumberRange
+                  label="Bedrooms"
+                  minFieldName="minBedrooms"
+                  maxFieldName="maxBedrooms"
+                  minValue={filters.minBedrooms}
+                  maxValue={filters.maxBedrooms}
+                  onMinChange={(value) => onFilterChange('minBedrooms', value)}
+                  onMaxChange={(value) => onFilterChange('maxBedrooms', value)}
+                  placeholder={{ min: 'Min', max: 'Max' }}
+                />
+
+                <EditableNumberRange
+                  label="Bathrooms"
+                  minFieldName="minBathrooms"
+                  maxFieldName="maxBathrooms"
+                  minValue={filters.minBathrooms}
+                  maxValue={filters.maxBathrooms}
+                  onMinChange={(value) => onFilterChange('minBathrooms', value)}
+                  onMaxChange={(value) => onFilterChange('maxBathrooms', value)}
+                  placeholder={{ min: 'Min', max: 'Max' }}
+                />
+
+                <EditableNumberRange
+                  label="Area (m²)"
+                  minFieldName="minArea"
+                  maxFieldName="maxArea"
+                  minValue={filters.minArea}
+                  maxValue={filters.maxArea}
+                  onMinChange={(value) => onFilterChange('minArea', value)}
+                  onMaxChange={(value) => onFilterChange('maxArea', value)}
+                  placeholder={{ min: 'Min Area', max: 'Max Area' }}
+                />
+
+                <EditableNumberRange
+                  label="Parking Spaces"
+                  minFieldName="minParkingSpaces"
+                  maxFieldName="maxParkingSpaces"
+                  minValue={filters.minParkingSpaces}
+                  maxValue={filters.maxParkingSpaces}
+                  onMinChange={(value) =>
+                    onFilterChange('minParkingSpaces', value)
+                  }
+                  onMaxChange={(value) =>
+                    onFilterChange('maxParkingSpaces', value)
+                  }
+                  placeholder={{ min: 'Min', max: 'Max' }}
+                />
+
+                <EditableNumberRange
+                  label="Year Built"
+                  minFieldName="minYearBuilt"
+                  maxFieldName="maxYearBuilt"
+                  minValue={filters.minYearBuilt}
+                  maxValue={filters.maxYearBuilt}
+                  onMinChange={(value) => onFilterChange('minYearBuilt', value)}
+                  onMaxChange={(value) => onFilterChange('maxYearBuilt', value)}
+                  placeholder={{ min: 'From Year', max: 'To Year' }}
+                />
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-900 border-b pb-2">
+                  Amenities & Features
+                </h3>
+
+                <EditableSelect
+                  fieldName="laundry"
+                  label="Laundry"
+                  placeholder="Any"
+                  options={laundryOptions}
+                  value={filters.laundry}
+                  onChange={(e) => onFilterChange('laundry', e.target.value)}
+                />
+
+                <EditableSelect
+                  fieldName="heating"
+                  label="Heating"
+                  placeholder="Any"
+                  options={heatingOptions}
+                  value={filters.heating}
+                  onChange={(e) => onFilterChange('heating', e.target.value)}
+                />
+
+                <div className="space-y-3">
+                  <ToggleSwitch
+                    label="Furnished"
+                    value={filters.furnished}
+                    onFilterChange={onFilterChange}
+                    filterKey="furnished"
+                  />
+                  <ToggleSwitch
+                    label="Pets Allowed"
+                    value={filters.petsAllowed}
+                    onFilterChange={onFilterChange}
+                    filterKey="petsAllowed"
+                  />
+                  <ToggleSwitch
+                    label="Smoking Allowed"
+                    value={filters.smokingAllowed}
+                    onFilterChange={onFilterChange}
+                    filterKey="smokingAllowed"
+                  />
+                  <ToggleSwitch
+                    label="Balcony"
+                    value={filters.balcony}
+                    onFilterChange={onFilterChange}
+                    filterKey="balcony"
+                  />
+                  <ToggleSwitch
+                    label="Garden"
+                    value={filters.garden}
+                    onFilterChange={onFilterChange}
+                    filterKey="garden"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-900 border-b pb-2">
+                  Building Features
+                </h3>
+                <div className="space-y-3">
+                  <ToggleSwitch
+                    label="Garage"
+                    value={filters.garage}
+                    onFilterChange={onFilterChange}
+                    filterKey="garage"
+                  />
+                  <ToggleSwitch
+                    label="Elevator"
+                    value={filters.elevator}
+                    onFilterChange={onFilterChange}
+                    filterKey="elevator"
+                  />
+                  <ToggleSwitch
+                    label="Air Conditioning"
+                    value={filters.airConditioning}
+                    onFilterChange={onFilterChange}
+                    filterKey="airConditioning"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-900 border-b pb-2">
+                  Appliances
+                </h3>
+                <div className="space-y-3">
+                  <ToggleSwitch
+                    label="Dishwasher"
+                    value={filters.dishwasher}
+                    onFilterChange={onFilterChange}
+                    filterKey="dishwasher"
+                  />
+                  <ToggleSwitch
+                    label="Washer/Dryer"
+                    value={filters.washerDryer}
+                    onFilterChange={onFilterChange}
+                    filterKey="washerDryer"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-900 border-b pb-2">
+                  Utilities
+                </h3>
+                <div className="space-y-3">
+                  <ToggleSwitch
+                    label="Internet"
+                    value={filters.internet}
+                    onFilterChange={onFilterChange}
+                    filterKey="internet"
+                  />
+                  <ToggleSwitch
+                    label="Cable TV"
+                    value={filters.cable}
+                    onFilterChange={onFilterChange}
+                    filterKey="cable"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-t px-6 py-4 flex gap-3">
+            <Button
+              variant="outline"
+              size="md"
+              onClick={handleClear}
+              className="flex-1"
+            >
+              Clear All
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleApply}
+              className="flex-1"
+            >
+              Apply Filters
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FilterModal;

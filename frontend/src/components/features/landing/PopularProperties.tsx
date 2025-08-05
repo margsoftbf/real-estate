@@ -1,82 +1,176 @@
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
-import PropertyCard, { Property } from '@/components/shared/PropertyCard';
+import PropertyCard from '@/components/shared/PropertyCard';
 import Button from '@/components/ui/Button/Button';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/Carousel/carousel';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/Carousel/carousel';
+import { PropertyPublicDto, PropertyType } from '@/types/properties';
 
-
-const properties: Property[] = [
+const properties: PropertyPublicDto[] = [
   {
-    id: 1,
-    imageUrl:
-      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=400',
-    popular: true,
+    slug: 'palm-harbor',
+    type: PropertyType.RENT,
     price: 2095,
-    name: 'Palm Harbor',
-    address: '2699 Green Valley, Highland Lake, FL',
-    beds: 3,
-    baths: 2,
-    area: '5x7 m²',
+    city: 'Highland Lake',
+    country: 'FL',
+    title: 'Palm Harbor',
+    photos: [
+      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=400',
+    ],
+    description: 'Beautiful property in Highland Lake',
+    features: {
+      bedrooms: 3,
+      bathrooms: 2,
+      area: 35,
+    },
+    isPopular: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    owner: {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@example.com',
+      phoneNumber: '+1234567890',
+      avatarUrl: null,
+    },
   },
   {
-    id: 2,
-    imageUrl:
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=400',
-    popular: true,
+    slug: 'beverly-springfield',
+    type: PropertyType.RENT,
     price: 2700,
-    name: 'Beverly Springfield',
-    address: '2821 Lake Sevilla, Palm Harbor, TX',
-    beds: 4,
-    baths: 2,
-    area: '6x7.5 m²',
+    city: 'Palm Harbor',
+    country: 'TX',
+    title: 'Beverly Springfield',
+    photos: [
+      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=400',
+    ],
+    description: 'Spacious property in Palm Harbor',
+    features: {
+      bedrooms: 4,
+      bathrooms: 2,
+      area: 45,
+    },
+    isPopular: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    owner: {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      email: 'jane@example.com',
+      phoneNumber: '+1234567891',
+      avatarUrl: null,
+    },
   },
   {
-    id: 3,
-    imageUrl:
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400',
-    popular: true,
+    slug: 'faulkner-ave',
+    type: PropertyType.RENT,
     price: 4550,
-    name: 'Faulkner Ave',
-    address: '909 Woodland St, Michigan, IN',
-    beds: 4,
-    baths: 3,
-    area: '8x10 m²',
+    city: 'Michigan',
+    country: 'IN',
+    title: 'Faulkner Ave',
+    photos: [
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400',
+    ],
+    description: 'Premium property in Michigan',
+    features: {
+      bedrooms: 4,
+      bathrooms: 3,
+      area: 80,
+    },
+    isPopular: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    owner: {
+      firstName: 'Mike',
+      lastName: 'Johnson',
+      email: 'mike@example.com',
+      phoneNumber: '+1234567892',
+      avatarUrl: null,
+    },
   },
   {
-    id: 4,
-    imageUrl:
-      'https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=400',
-    popular: false,
+    slug: 'st-crystal',
+    type: PropertyType.RENT,
     price: 2400,
-    name: 'St. Crystal',
-    address: '210 US Highway, Highland Lake, FL',
-    beds: 4,
-    baths: 2,
-    area: '6x8 m²',
+    city: 'Highland Lake',
+    country: 'FL',
+    title: 'St. Crystal',
+    photos: [
+      'https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=400',
+    ],
+    description: 'Comfortable property near the lake',
+    features: {
+      bedrooms: 4,
+      bathrooms: 2,
+      area: 48,
+    },
+    isPopular: false,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    owner: {
+      firstName: 'Sarah',
+      lastName: 'Wilson',
+      email: 'sarah@example.com',
+      phoneNumber: '+1234567893',
+      avatarUrl: null,
+    },
   },
   {
-    id: 5,
-    imageUrl:
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=400',
-    popular: false,
+    slug: 'cove-red',
+    type: PropertyType.RENT,
     price: 1500,
-    name: 'Cove Red',
-    address: '243 Curlew Road, Palm Harbor, TX',
-    beds: 2,
-    baths: 1,
-    area: '5x7.5 m²',
+    city: 'Palm Harbor',
+    country: 'TX',
+    title: 'Cove Red',
+    photos: [
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=400',
+    ],
+    description: 'Cozy property with great location',
+    features: {
+      bedrooms: 2,
+      bathrooms: 1,
+      area: 37,
+    },
+    isPopular: false,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    owner: {
+      firstName: 'Tom',
+      lastName: 'Brown',
+      email: 'tom@example.com',
+      phoneNumber: '+1234567894',
+      avatarUrl: null,
+    },
   },
   {
-    id: 6,
-    imageUrl:
-      'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=1748&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    popular: false,
+    slug: 'tarpon-bay',
+    type: PropertyType.RENT,
     price: 1600,
-    name: 'Tarpon Bay',
-    address: '103 Lake Shores, Michigan, IN',
-    beds: 3,
-    baths: 1,
-    area: '5x7 m²',
+    city: 'Michigan',
+    country: 'IN',
+    title: 'Tarpon Bay',
+    photos: [
+      'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=1748&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    ],
+    description: 'Modern property with bay views',
+    features: {
+      bedrooms: 3,
+      bathrooms: 1,
+      area: 35,
+    },
+    isPopular: false,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    owner: {
+      firstName: 'Lisa',
+      lastName: 'Davis',
+      email: 'lisa@example.com',
+      phoneNumber: '+1234567895',
+      avatarUrl: null,
+    },
   },
 ];
 
@@ -94,7 +188,7 @@ const PopularProperties = () => {
             </p>
           </div>
           <div className="hidden lg:block shrink-0">
-            <Link href="/properties">
+            <Link href="/rent">
               <Button variant="primary" size="lg" className="text-sm">
                 Browse more properties
               </Button>
@@ -118,7 +212,7 @@ const PopularProperties = () => {
             <CarouselContent className="-ml-4">
               {properties.map((property) => (
                 <CarouselItem
-                  key={property.id}
+                  key={property.slug}
                   className="pl-4 basis-full sm:basis-1/2"
                 >
                   <div className="p-1">
@@ -132,12 +226,12 @@ const PopularProperties = () => {
 
         <div className="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+            <PropertyCard key={property.slug} property={property} />
           ))}
         </div>
 
         <div className="mt-8 text-center lg:hidden">
-          <Link href="/properties">
+          <Link href="/rent">
             <Button variant="primary" size="lg" className="text-sm">
               Browse more properties
             </Button>

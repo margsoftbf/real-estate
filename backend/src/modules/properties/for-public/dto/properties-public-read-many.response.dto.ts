@@ -1,7 +1,11 @@
 import { PropertyType, PropertyFeatures } from '../../entities/property.entity';
 import { User } from '../../../users/entities/user.entity';
+import { BasePaginatedResponse } from '@/shared/types/base.dto';
 
-class PropertyPublicOwnerReadManyDto implements Pick<User, 'firstName' | 'lastName' | 'email' | 'phoneNumber' | 'avatarUrl'> {
+class PropertyPublicOwnerReadManyDto
+  implements
+    Pick<User, 'firstName' | 'lastName' | 'email' | 'phoneNumber' | 'avatarUrl'>
+{
   firstName: string | null;
   lastName: string | null;
   email: string;
@@ -10,7 +14,6 @@ class PropertyPublicOwnerReadManyDto implements Pick<User, 'firstName' | 'lastNa
 }
 
 export class PropertyPublicReadManyDto {
-  id: string;
   slug: string;
   type: PropertyType;
   price: number;
@@ -25,3 +28,5 @@ export class PropertyPublicReadManyDto {
   updatedAt: Date;
   owner: PropertyPublicOwnerReadManyDto;
 }
+
+export class PropertyPublicReadManyResponseDto extends BasePaginatedResponse<PropertyPublicReadManyDto> {}

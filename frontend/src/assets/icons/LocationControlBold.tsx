@@ -65,7 +65,7 @@ const LocationControlBold: React.FC<LocationControlBoldProps> = ({
       </g>
       <defs>
         <clipPath id="clip0_222_6026">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

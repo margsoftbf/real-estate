@@ -71,7 +71,7 @@ describe('PropertyPublicController (e2e)', () => {
     await app.close();
   });
 
-  describe('GET /public/properties', () => {
+  describe('GET /properties', () => {
     it('should return paginated properties', async () => {
       const mockPaginatedResult = {
         data: [mockProperty, mockProperty2],
@@ -82,29 +82,30 @@ describe('PropertyPublicController (e2e)', () => {
           totalPages: 1,
         },
         links: {
-          first: '/public/properties?page=1&limit=10',
+          first: '/properties?page=1&limit=10',
           previous: '',
           next: '',
-          last: '/public/properties?page=1&limit=10',
-          current: '/public/properties?page=1&limit=10',
+          last: '/properties?page=1&limit=10',
+          current: '/properties?page=1&limit=10',
         },
       };
 
       (paginate as jest.Mock).mockResolvedValue(mockPaginatedResult);
 
       const response = await request(app.getHttpServer())
-        .get('/public/properties')
+        .get('/properties')
         .expect(200);
 
       expect(response.body.data).toHaveLength(2);
       expect(response.body.data[0]).toEqual(
         expect.objectContaining({
-          id: mockProperty.id,
           slug: mockProperty.slug,
           title: mockProperty.title,
           price: mockProperty.price,
           city: mockProperty.city,
-          isActive: true,
+          owner: expect.objectContaining({
+            email: mockLandlord.email,
+          }),
         })
       );
       expect(response.body.meta.totalItems).toBe(2);
@@ -114,13 +115,13 @@ describe('PropertyPublicController (e2e)', () => {
       const searchResults = {
         data: [mockProperty],
         meta: { itemsPerPage: 10, totalItems: 1, currentPage: 1, totalPages: 1 },
-        links: { current: '/public/properties?search=Warsaw' },
+        links: { current: '/properties?search=Warsaw' },
       };
 
       (paginate as jest.Mock).mockResolvedValue(searchResults);
 
       await request(app.getHttpServer())
-        .get('/public/properties?search=Warsaw')
+        .get('/properties?search=Warsaw')
         .expect(200);
 
       expect(paginate).toHaveBeenCalled();
@@ -130,13 +131,13 @@ describe('PropertyPublicController (e2e)', () => {
       const filteredResults = {
         data: [mockProperty],
         meta: { itemsPerPage: 10, totalItems: 1, currentPage: 1, totalPages: 1 },
-        links: { current: '/public/properties?filter.type=rent&filter.city=Warsaw' },
+        links: { current: '/properties?filter.type=rent&filter.city=Warsaw' },
       };
 
       (paginate as jest.Mock).mockResolvedValue(filteredResults);
 
       await request(app.getHttpServer())
-        .get('/public/properties?filter.type=rent&filter.city=Warsaw')
+        .get('/properties?filter.type=rent&filter.city=Warsaw')
         .expect(200);
 
       expect(paginate).toHaveBeenCalled();
@@ -146,13 +147,13 @@ describe('PropertyPublicController (e2e)', () => {
       const paginatedResults = {
         data: [],
         meta: { itemsPerPage: 5, totalItems: 0, currentPage: 2, totalPages: 0 },
-        links: { current: '/public/properties?page=2&limit=5' },
+        links: { current: '/properties?page=2&limit=5' },
       };
 
       (paginate as jest.Mock).mockResolvedValue(paginatedResults);
 
       await request(app.getHttpServer())
-        .get('/public/properties?page=2&limit=5')
+        .get('/properties?page=2&limit=5')
         .expect(200);
 
       expect(paginate).toHaveBeenCalled();
@@ -162,101 +163,40 @@ describe('PropertyPublicController (e2e)', () => {
       const sortedResults = {
         data: [mockProperty2, mockProperty],
         meta: { itemsPerPage: 10, totalItems: 2, currentPage: 1, totalPages: 1 },
-        links: { current: '/public/properties?sortBy=price:ASC' },
+        links: { current: '/properties?sortBy=price:ASC' },
       };
 
       (paginate as jest.Mock).mockResolvedValue(sortedResults);
 
       await request(app.getHttpServer())
-        .get('/public/properties?sortBy=price:ASC')
+        .get('/properties?sortBy=price:ASC')
         .expect(200);
 
       expect(paginate).toHaveBeenCalled();
     });
   });
 
-  describe('GET /public/properties/popular', () => {
-    it('should return popular properties', async () => {
-      const popularProperties = [mockProperty]; // Only popular ones
-      propertyRepository.find.mockResolvedValue(popularProperties);
 
-      const response = await request(app.getHttpServer())
-        .get('/public/properties/popular')
-        .expect(200);
-
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0]).toEqual(
-        expect.objectContaining({
-          id: mockProperty.id,
-          slug: mockProperty.slug,
-          isPopular: true,
-          isActive: true,
-        })
-      );
-
-      expect(propertyRepository.find).toHaveBeenCalledWith({
-        where: { isActive: true, isPopular: true },
-        relations: ['owner'],
-        order: { createdAt: 'DESC' },
-        take: 8,
-      });
-    });
-
-    it('should return empty array when no popular properties', async () => {
-      propertyRepository.find.mockResolvedValue([]);
-
-      const response = await request(app.getHttpServer())
-        .get('/public/properties/popular')
-        .expect(200);
-
-      expect(response.body).toEqual([]);
-    });
-
-    it('should limit results to 8 properties', async () => {
-      // Create 10 popular properties but expect only 8
-      const manyPopularProperties = Array.from({ length: 10 }, (_, i) =>
-        createMockProperty({
-          id: `property-${i}`,
-          slug: `property-${i}-slug`,
-          owner: mockLandlord,
-          isActive: true,
-          isPopular: true,
-        })
-      );
-
-      propertyRepository.find.mockResolvedValue(manyPopularProperties.slice(0, 8));
-
-      const response = await request(app.getHttpServer())
-        .get('/public/properties/popular')
-        .expect(200);
-
-      expect(response.body).toHaveLength(8);
-      expect(propertyRepository.find).toHaveBeenCalledWith(
-        expect.objectContaining({
-          take: 8,
-        })
-      );
-    });
-  });
-
-  describe('GET /public/properties/slug/:slug', () => {
+  describe('GET /properties/:slug', () => {
     it('should return property by slug', async () => {
       propertyRepository.findOne.mockResolvedValue(mockProperty);
 
       const response = await request(app.getHttpServer())
-        .get(`/public/properties/slug/${mockProperty.slug}`)
+        .get(`/properties/${mockProperty.slug}`)
         .expect(200);
 
       expect(response.body).toEqual(
         expect.objectContaining({
-          id: mockProperty.id,
           slug: mockProperty.slug,
           title: mockProperty.title,
           description: mockProperty.description,
           price: mockProperty.price,
           owner: expect.objectContaining({
-            id: mockLandlord.id,
             email: mockLandlord.email,
+            firstName: mockLandlord.firstName,
+            lastName: mockLandlord.lastName,
+            phoneNumber: mockLandlord.phoneNumber,
+            avatarUrl: mockLandlord.avatarUrl,
           }),
         })
       );
@@ -271,7 +211,7 @@ describe('PropertyPublicController (e2e)', () => {
       propertyRepository.findOne.mockResolvedValue(null);
 
       const response = await request(app.getHttpServer())
-        .get('/public/properties/slug/non-existent-slug')
+        .get('/properties/non-existent-slug')
         .expect(200);
 
       expect(response.body).toEqual({});
@@ -286,7 +226,7 @@ describe('PropertyPublicController (e2e)', () => {
       propertyRepository.findOne.mockResolvedValue(null); // Service filters inactive
 
       const response = await request(app.getHttpServer())
-        .get(`/public/properties/slug/${inactiveProperty.slug}`)
+        .get(`/properties/${inactiveProperty.slug}`)
         .expect(200);
 
       expect(response.body).toEqual({});
@@ -300,13 +240,13 @@ describe('PropertyPublicController (e2e)', () => {
       propertyRepository.findOne.mockResolvedValue(mockProperty);
 
       const response = await request(app.getHttpServer())
-        .get(`/public/properties/slug/${mockProperty.slug}`)
+        .get(`/properties/${mockProperty.slug}`)
         .expect(200);
 
       expect(response.body.owner).toBeDefined();
-      expect(response.body.owner.id).toBe(mockLandlord.id);
       expect(response.body.owner.email).toBe(mockLandlord.email);
-      expect(response.body.owner.role).toBe(mockLandlord.role);
+      expect(response.body.owner.firstName).toBe(mockLandlord.firstName);
+      expect(response.body.owner.lastName).toBe(mockLandlord.lastName);
     });
   });
 });

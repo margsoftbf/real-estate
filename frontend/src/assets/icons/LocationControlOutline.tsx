@@ -64,7 +64,7 @@ const LocationControlOutline: React.FC<LocationControlOutlineProps> = ({
       </g>
       <defs>
         <clipPath id="clip0_86_2066">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

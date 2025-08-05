@@ -19,17 +19,17 @@ const ChevronDownOutline: React.FC<ChevronDownOutlineProps> = ({
       className={className}
     >
       <g clipPath="url(#clip0_86_1267)">
-        <path 
-          d="M5 8.5L12 15.5L19 8.5" 
-          stroke={color} 
-          strokeWidth="2" 
-          strokeLinecap="round" 
+        <path
+          d="M5 8.5L12 15.5L19 8.5"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
       </g>
       <defs>
         <clipPath id="clip0_86_1267">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

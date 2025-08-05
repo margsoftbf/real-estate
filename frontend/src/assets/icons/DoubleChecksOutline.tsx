@@ -36,7 +36,7 @@ const DoubleChecksOutline: React.FC<DoubleChecksOutlineProps> = ({
       </g>
       <defs>
         <clipPath id="clip0_165_2409">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

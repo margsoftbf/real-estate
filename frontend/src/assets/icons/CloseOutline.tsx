@@ -19,24 +19,24 @@ const CloseOutline: React.FC<CloseOutlineProps> = ({
       className={className}
     >
       <g clipPath="url(#clip0_90_2010)">
-        <path 
-          d="M18 6L6 18" 
-          stroke={color} 
-          strokeWidth="2" 
-          strokeLinecap="round" 
+        <path
+          d="M18 6L6 18"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <path 
-          d="M6 6L18 18" 
-          stroke={color} 
-          strokeWidth="2" 
-          strokeLinecap="round" 
+        <path
+          d="M6 6L18 18"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
       </g>
       <defs>
         <clipPath id="clip0_90_2010">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

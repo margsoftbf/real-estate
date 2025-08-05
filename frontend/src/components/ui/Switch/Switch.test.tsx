@@ -19,10 +19,10 @@ describe('Switch', () => {
   it('should call onCheckedChange when clicked', () => {
     const handleChange = vi.fn();
     render(<Switch onCheckedChange={handleChange} />);
-    
+
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-    
+
     expect(handleChange).toHaveBeenCalledTimes(1);
     expect(handleChange).toHaveBeenCalledWith(true);
   });
@@ -30,10 +30,10 @@ describe('Switch', () => {
   it('should toggle from checked to unchecked', () => {
     const handleChange = vi.fn();
     render(<Switch checked={true} onCheckedChange={handleChange} />);
-    
+
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-    
+
     expect(handleChange).toHaveBeenCalledWith(false);
   });
 
@@ -46,10 +46,10 @@ describe('Switch', () => {
   it('should not call onCheckedChange when disabled and clicked', () => {
     const handleChange = vi.fn();
     render(<Switch disabled onCheckedChange={handleChange} />);
-    
+
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-    
+
     expect(handleChange).not.toHaveBeenCalled();
   });
 

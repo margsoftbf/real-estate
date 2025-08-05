@@ -5,7 +5,7 @@ import { UserInfo } from '@/types/types';
 
 export const useUser = () => {
   const { data: session, status } = useSession();
-  
+
   const {
     data: userInfo,
     isLoading: userInfoLoading,
@@ -15,7 +15,12 @@ export const useUser = () => {
     queryFn: () => userApi.getUserInfo(),
     enabled: status === 'authenticated' && !!session?.accessToken,
     retry: (failureCount, error: unknown) => {
-      if (error && typeof error === 'object' && 'code' in error && error.code === 401) {
+      if (
+        error &&
+        typeof error === 'object' &&
+        'code' in error &&
+        error.code === 401
+      ) {
         signOut({ callbackUrl: '/login' });
         return false;
       }
@@ -35,7 +40,7 @@ export const useUser = () => {
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: Partial<UserInfo>) => userApi.updateUserInfo(data),
     onSuccess: () => {

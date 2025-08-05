@@ -43,7 +43,7 @@ const QuestionMarkOutline: React.FC<QuestionMarkOutlineProps> = ({
       </g>
       <defs>
         <clipPath id="clip0_418_14927">
-          <rect width="20" height="20" fill="white"/>
+          <rect width="20" height="20" fill="white" />
         </clipPath>
       </defs>
     </svg>

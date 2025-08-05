@@ -6,21 +6,32 @@ import { useState } from 'react';
 import '@/styles/globals.css';
 import Head from 'next/head';
 
-export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: (failureCount, error) => {
-          if (error && typeof error === 'object' && 'code' in error && error.code === 401) {
-            return false;
-          }
-          return failureCount < 3;
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: (failureCount, error) => {
+              if (
+                error &&
+                typeof error === 'object' &&
+                'code' in error &&
+                error.code === 401
+              ) {
+                return false;
+              }
+              return failureCount < 3;
+            },
+            staleTime: 5 * 60 * 1000,
+            refetchOnWindowFocus: false,
+          },
         },
-        staleTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
-      },
-    },
-  }));
+      })
+  );
 
   return (
     <>
