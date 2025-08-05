@@ -30,11 +30,11 @@ export interface PaginationMeta {
   itemsPerPage: number;
   totalPages?: number;
   currentPage?: number;
-  sortBy?: any;
-  searchBy?: any;
+  sortBy?: string;
+  searchBy?: string[];
   search?: string;
   select?: string[];
-  filter?: any;
+  filter?: Record<string, unknown>;
   cursor?: string;
 }
 
