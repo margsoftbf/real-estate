@@ -72,5 +72,25 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+          cache-dependency-path: 'backend/yarn.lock'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: yarn install --frozen-lockfile
+
+      - name: Run migrations
+        working-directory: ./backend
+        run: yarn migration:run
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
       - name: Deploy to Vercel
         run: echo "Auto-deploy via Vercel GitHub integration"
