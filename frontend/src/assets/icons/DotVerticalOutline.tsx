@@ -43,7 +43,7 @@ const DotVerticalOutline: React.FC<DotVerticalOutlineProps> = ({
       </g>
       <defs>
         <clipPath id="clip0_90_1803">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

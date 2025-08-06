@@ -40,7 +40,7 @@ const IncomeRentBold: React.FC<IncomeRentBoldProps> = ({
       </g>
       <defs>
         <clipPath id="clip0_253_5438">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

@@ -13,33 +13,64 @@ import {
 import HeroText from './Hero/HeroText';
 import HeroSearchBar from './Hero/HeroSearchBar';
 import HeroIcon from './Hero/HeroIcon';
-import PropertyCard, { Property } from '@/components/shared/PropertyCard';
+import PropertyCard from '@/components/shared/PropertyCard';
+import { PropertyPublicDto, PropertyType } from '@/types/properties';
 
 const Hero = () => {
-  const mockProperty1: Property = {
-    id: 1,
-    imageUrl:
-      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=400',
-    popular: true,
+  const mockProperty1: PropertyPublicDto = {
+    slug: 'beverly-springfield-hero',
+    type: PropertyType.RENT,
     price: 2700,
-    name: 'Beverly Springfield',
-    address: '2821 Sevilla, Palm Harbor, TX',
-    beds: 4,
-    baths: 2,
-    area: '6x7.5 m²',
+    city: 'Palm Harbor',
+    country: 'TX',
+    title: 'Beverly Springfield',
+    photos: [
+      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=400',
+    ],
+    description: 'Beautiful property in Palm Harbor',
+    features: {
+      bedrooms: 4,
+      bathrooms: 2,
+      area: 45,
+    },
+    isPopular: true,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    owner: {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@example.com',
+      phoneNumber: '+1234567890',
+      avatarUrl: null,
+    },
   };
 
-  const mockProperty2: Property = {
-    id: 2,
-    imageUrl:
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400',
-    popular: false,
+  const mockProperty2: PropertyPublicDto = {
+    slug: 'sunset-gardens-hero',
+    type: PropertyType.RENT,
     price: 1900,
-    name: 'Sunset Gardens',
-    address: '1425 Oak Street, Miami, FL',
-    beds: 2,
-    baths: 1,
-    area: '4x5 m²',
+    city: 'Miami',
+    country: 'FL',
+    title: 'Sunset Gardens',
+    photos: [
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400',
+    ],
+    description: 'Cozy property in Miami',
+    features: {
+      bedrooms: 2,
+      bathrooms: 1,
+      area: 20,
+    },
+    isPopular: false,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    owner: {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      email: 'jane@example.com',
+      phoneNumber: '+1234567891',
+      avatarUrl: null,
+    },
   };
 
   return (

@@ -5,9 +5,9 @@ interface DashboardContentProps {
   userRole: string;
 }
 
-const DashboardContent: React.FC<DashboardContentProps> = ({ 
-  userFirstName, 
-  userRole 
+const DashboardContent: React.FC<DashboardContentProps> = ({
+  userFirstName,
+  userRole,
 }) => {
   return (
     <div className="max-w-7xl mx-auto p-6">
@@ -41,9 +41,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
 
       <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm border">
         <h2 className="text-lg font-semibold mb-4">Dashboard Content</h2>
-        <p className="text-gray-600">
-          Your dashboard content will go here...
-        </p>
+        <p className="text-gray-600">Your dashboard content will go here...</p>
       </div>
     </div>
   );

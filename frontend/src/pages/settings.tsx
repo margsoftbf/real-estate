@@ -54,10 +54,7 @@ const SettingsPage = () => {
     switch (activeTab) {
       case 'profile':
         return (
-          <ProfileTab
-            formData={formData}
-            onInputChange={handleInputChange}
-          />
+          <ProfileTab formData={formData} onInputChange={handleInputChange} />
         );
       case 'account':
         return (

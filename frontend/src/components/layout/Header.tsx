@@ -38,15 +38,15 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, userInfo }) => {
       >
         <Menu className="w-6 h-6 cursor-pointer" />
       </button>
-      
+
       {getPageTitle() && (
         <div className="hidden md:block">
-          <h1 className="text-h4 text-primary-black font-bold">
+          <h1 className="text-body-xl text-primary-black font-bold">
             {getPageTitle()}
           </h1>
         </div>
       )}
-      
+
       <div className="ml-auto flex items-center space-x-4">
         <div className="relative">
           <button

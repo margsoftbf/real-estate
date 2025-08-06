@@ -21,9 +21,13 @@ export const useLogin = () => {
       if (result?.error) {
         switch (result.error) {
           case 'CredentialsSignin':
-            throw new Error('Invalid email or password. Please check your credentials and try again.');
+            throw new Error(
+              'Invalid email or password. Please check your credentials and try again.'
+            );
           case 'Callback':
-            throw new Error('Authentication service temporarily unavailable. Please try again later.');
+            throw new Error(
+              'Authentication service temporarily unavailable. Please try again later.'
+            );
           default:
             throw new Error('Login failed. Please try again.');
         }

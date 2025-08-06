@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
   HouseOutline,
   ApartmentOutline,
@@ -19,11 +20,12 @@ type HeaderProps = {
 const Header = ({ variant = 'default' }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: userInfo, isLoading } = useUser();
+  const router = useRouter();
 
   const navigationItems = [
     { name: 'Rent', href: '/rent', icon: HouseOutline },
     { name: 'Buy', href: '/buy', icon: ApartmentOutline },
-    { name: 'Sell', href: '/sell', icon: IncomeToRentOutline },
+    { name: 'Sell', href: '/dashboard', icon: IncomeToRentOutline },
   ];
 
   const toggleMobileMenu = () => {
@@ -53,11 +55,16 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
             <nav className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
               {navigationItems.map((item) => {
                 const IconComponent = item.icon;
+                const isActive = router.pathname === item.href;
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="flex items-center space-x-2 text-primary-black hover:text-primary-violet hover:bg-purple-200 transition-all duration-200 font-medium px-4 py-2 rounded-md"
+                    className={`flex items-center space-x-2 transition-all duration-200 font-medium px-4 py-2 rounded-md ${
+                      isActive
+                        ? 'text-primary-violet bg-purple-100'
+                        : 'text-primary-black hover:text-primary-violet hover:bg-purple-200'
+                    }`}
                   >
                     <IconComponent size={18} />
                     <span>{item.name}</span>
@@ -133,11 +140,16 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
                 <div className="space-y-2">
                   {navigationItems.map((item) => {
                     const IconComponent = item.icon;
+                    const isActive = router.pathname === item.href;
                     return (
                       <Link
                         key={item.name}
                         href={item.href}
-                        className="flex items-center space-x-3 text-secondary-violet opacity-50 hover:text-primary-violet hover:opacity-100 hover:bg-purple-50 transition-all duration-200 font-medium py-3 px-3 rounded-md"
+                        className={`flex items-center space-x-3 transition-all duration-200 font-medium py-3 px-3 rounded-md ${
+                          isActive
+                            ? 'text-primary-violet opacity-100 bg-purple-100'
+                            : 'text-secondary-violet opacity-50 hover:text-primary-violet hover:opacity-100 hover:bg-purple-50'
+                        }`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <IconComponent size={20} />

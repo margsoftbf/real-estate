@@ -19,24 +19,24 @@ const AddOutline: React.FC<AddOutlineProps> = ({
       className={className}
     >
       <g clipPath="url(#clip0_90_1713)">
-        <path 
-          d="M12 4V20" 
-          stroke={color} 
-          strokeWidth="2" 
-          strokeLinecap="round" 
+        <path
+          d="M12 4V20"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <path 
-          d="M4 12H20" 
-          stroke={color} 
-          strokeWidth="2" 
-          strokeLinecap="round" 
+        <path
+          d="M4 12H20"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
       </g>
       <defs>
         <clipPath id="clip0_90_1713">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

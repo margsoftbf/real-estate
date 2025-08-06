@@ -36,7 +36,7 @@ const DoubleChevronRightOutline: React.FC<DoubleChevronRightOutlineProps> = ({
       </g>
       <defs>
         <clipPath id="clip0_200_4634">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

@@ -43,7 +43,7 @@ const DotHorizontalOutline: React.FC<DotHorizontalOutlineProps> = ({
       </g>
       <defs>
         <clipPath id="clip0_120_2182">
-          <rect width="24" height="24" fill="white"/>
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

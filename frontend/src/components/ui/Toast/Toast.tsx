@@ -19,7 +19,7 @@ export const Toast = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);
-      setTimeout(onClose, 300); // Wait for animation to complete
+      setTimeout(onClose, 300);
     }, duration);
 
     return () => clearTimeout(timer);

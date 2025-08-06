@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Property } from '../../properties/entities/property.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -48,6 +50,9 @@ export class User {
   @Column('varchar', { length: 100, nullable: true })
   city: string | null;
 
+  @Column('varchar', { length: 100, nullable: true })
+  country: string | null;
+
   @Column('varchar', { length: 20, nullable: true })
   postalCode: string | null;
 
@@ -74,4 +79,7 @@ export class User {
 
   @DeleteDateColumn({ nullable: true, type: 'timestamp with time zone' })
   deletedAt: Date | null;
+
+  @OneToMany(() => Property, property => property.owner)
+  properties: Property[];
 }

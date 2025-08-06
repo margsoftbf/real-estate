@@ -12,21 +12,27 @@ export const useToast = () => {
   const addToast = useCallback((message: string, type: 'success' | 'error') => {
     const id = Math.random().toString(36).substring(2, 9);
     const newToast: ToastData = { id, message, type };
-    
-    setToasts(prev => [...prev, newToast]);
+
+    setToasts((prev) => [...prev, newToast]);
   }, []);
 
   const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
-  const showSuccess = useCallback((message: string) => {
-    addToast(message, 'success');
-  }, [addToast]);
+  const showSuccess = useCallback(
+    (message: string) => {
+      addToast(message, 'success');
+    },
+    [addToast]
+  );
 
-  const showError = useCallback((message: string) => {
-    addToast(message, 'error');
-  }, [addToast]);
+  const showError = useCallback(
+    (message: string) => {
+      addToast(message, 'error');
+    },
+    [addToast]
+  );
 
   return {
     toasts,

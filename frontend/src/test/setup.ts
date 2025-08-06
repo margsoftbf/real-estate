@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom'
-import { vi } from 'vitest'
+import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 vi.mock('next/router', () => ({
   useRouter() {
@@ -19,14 +19,14 @@ vi.mock('next/router', () => ({
         off: vi.fn(),
         emit: vi.fn(),
       },
-    }
+    };
   },
-}))
+}));
 
 vi.mock('next/image', () => ({
   default: () => null,
-}))
+}));
 
 vi.mock('next/head', () => ({
   default: () => null,
-}))
+}));

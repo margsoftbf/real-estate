@@ -2,7 +2,7 @@ import {
   DashboardBold,
   DocumentOutline,
   HeartOutline,
-  InsightOutline,
+  // InsightOutline,
   MessageOutline,
   PropertiesOutline,
   QuestionMarkOutline,
@@ -18,11 +18,11 @@ export const menu = {
       url: '/dashboard',
       icon: <DashboardBold className="w-5 h-5" />,
     },
-    {
-      title: 'Insight',
-      url: '/insight',
-      icon: <InsightOutline className="w-5 h-5" />,
-    },
+    // {
+    //   title: 'Insight',
+    //   url: '/insight',
+    //   icon: <InsightOutline className="w-5 h-5" />,
+    // },
     {
       title: 'My Listings',
       url: '/listings',

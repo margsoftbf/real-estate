@@ -34,6 +34,7 @@ export class UsersUserService {
       role: user.role,
       address: user.address,
       city: user.city,
+      country: user.country,
       postalCode: user.postalCode,
       emailVerified: user.emailVerified,
       privacyConsent: user.privacyConsent,

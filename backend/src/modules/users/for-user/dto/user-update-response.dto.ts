@@ -37,6 +37,12 @@ export class UpdateUserDto {
   @MaxLength(100)
   city?: string;
 
+  @ApiProperty({ description: 'Country', required: false, maxLength: 100 })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  country?: string;
+
   @ApiProperty({ description: 'Postal code', required: false, maxLength: 20 })
   @IsOptional()
   @IsString()

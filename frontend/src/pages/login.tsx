@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import PropertyCard, { Property } from '@/components/shared/PropertyCard';
+import PropertyCard from '@/components/shared/PropertyCard';
+import { PropertyPublicDto, PropertyType } from '@/types/properties';
 import Button from '@/components/ui/Button/Button';
 import Toast from '@/components/ui/Toast/Toast';
 import Header from '@/components/features/landing/Header';
@@ -53,16 +54,30 @@ const LoginPage = () => {
     }
   }, [loginMutation.isError, loginMutation.error, showError]);
 
-  const mockProperty: Property = {
-    id: 1,
-    imageUrl: propertyImage.src,
-    popular: true,
+  const mockProperty: PropertyPublicDto = {
+    slug: 'beverly-springfield',
+    type: PropertyType.RENT,
     price: 2700,
-    name: 'Beverly Springfield',
-    address: '2821 Sevilla, Palm Harbor, TX',
-    beds: 4,
-    baths: 2,
-    area: '6x7.5 m²',
+    city: 'Palm Harbor',
+    country: 'TX',
+    title: 'Beverly Springfield',
+    photos: [propertyImage.src],
+    description: 'Beautiful property in a great location',
+    features: {
+      bedrooms: 4,
+      bathrooms: 2,
+      area: 157.5, // 6x7.5 m² = 45 m²
+    },
+    isPopular: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    owner: {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      phoneNumber: '+1-555-0123',
+      avatarUrl: null,
+    },
   };
 
   const onSubmit = (data: LoginFormData) => {

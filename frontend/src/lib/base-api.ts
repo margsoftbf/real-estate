@@ -10,11 +10,13 @@ export class BaseApiClient {
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     const session = await getSession();
-    
+
     const config: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
-        ...(session?.accessToken && { Authorization: `Bearer ${session.accessToken}` }),
+        ...(session?.accessToken && {
+          Authorization: `Bearer ${session.accessToken}`,
+        }),
         ...options.headers,
       },
       ...options,
