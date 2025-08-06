@@ -86,11 +86,13 @@ jobs:
         working-directory: ./backend
         run: yarn install --frozen-lockfile
 
-      - name: Run migrations
+      - name: Run database migrations
         working-directory: ./backend
-        run: yarn migration:run
+        run: |
+          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          yarn migration:run
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NODE_ENV: production
 
       - name: Deploy to Vercel
         run: echo "Auto-deploy via Vercel GitHub integration"
