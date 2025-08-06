@@ -88,10 +88,9 @@ jobs:
 
       - name: Run database migrations
         working-directory: ./backend
-        run: |
-          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
-          yarn migration:run
+        run: yarn migration:run
         env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NODE_ENV: production
 
       - name: Deploy to Vercel

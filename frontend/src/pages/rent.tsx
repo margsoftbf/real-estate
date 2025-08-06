@@ -52,7 +52,7 @@ const RentPage = () => {
         <meta name="description" content="Find your perfect rental property" />
       </Head>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative overflow-hidden">
         <div className="mb-6">
           <Breadcrumbs
             items={[{ label: 'Home', href: '/' }, { label: 'Rent' }]}

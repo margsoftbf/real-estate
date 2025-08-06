@@ -24,8 +24,6 @@ const Newsletter = () => {
 
     setError('');
     setIsSubmitted(true);
-    // Here you would typically send the email to your backend
-    console.log('Newsletter signup:', email);
   };
   return (
     <section className="py-16 bg-gradient-to-t from-purple-50 via-purple-50 via-80% lg:via-90% to-white to-95% lg:to-100%">

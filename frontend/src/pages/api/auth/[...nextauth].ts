@@ -14,7 +14,6 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          console.log('NextAuth: Missing credentials');
           return null;
         }
 
@@ -24,12 +23,6 @@ export const authOptions: NextAuthOptions = {
             password: credentials.password,
           };
 
-          console.log(
-            'NextAuth: Attempting login to:',
-            `${API_BASE_URL}/auth/login`
-          );
-          console.log('NextAuth: Login data:', { email: loginData.email });
-
           const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
@@ -38,11 +31,8 @@ export const authOptions: NextAuthOptions = {
             body: JSON.stringify(loginData),
           });
 
-          console.log('NextAuth: Backend response status:', response.status);
-
           if (!response.ok) {
-            const errorText = await response.text();
-            console.log('NextAuth: Backend error:', errorText);
+            await response.text();
             return null;
           }
 
