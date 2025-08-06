@@ -77,7 +77,7 @@ const RegisterPage = () => {
   return (
     <div className="min-h-screen bg-white ">
       <Header variant="auth" />
-      <div className="flex max-w-7xl mx-auto lg:py-12">
+      <div className="flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-12">
         <div className="w-full lg:w-1/2 flex items-center lg:items-start lg:justify-start justify-center p-8">
           <div className="max-w-md w-full">
             <h1 className="text-h3 font-bold text-primary-black text-center">

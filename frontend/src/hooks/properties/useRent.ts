@@ -242,17 +242,9 @@ async function loadProperties(
   if (filters.cable !== null)
     query['filter.features.cable'] = filters.cable.toString();
 
-  console.log('🔍 Query being sent to API:', JSON.stringify(query, null, 2));
-
   const response: BasePaginatedResponse<PropertyPublicDto> =
     await propertiesApi.findRentProperties(query);
 
-  console.log('📊 Response from API:', {
-    totalItems: response.meta.totalItems,
-    totalPages: response.meta.totalPages,
-    currentPage: response.meta.currentPage,
-    itemsCount: response.data.length,
-  });
 
   return {
     properties: response.data,
