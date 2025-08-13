@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PropertyCard from '../shared/PropertyCard';
+import PropertyCard from '../shared/Property/PropertyCard';
 import { PropertyPublicDto } from '@/types/properties';
 import { propertiesApi } from '@/lib/properties/api';
 

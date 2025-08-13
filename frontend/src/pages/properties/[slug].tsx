@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import Header from '@/components/features/landing/Header';
 import Footer from '@/components/features/landing/Footer';
 import PhotoModal from '@/components/shared/PhotoModal';
-import LoadingSpinner from '@/components/ui/LoadingSpinner/LoadingSpinner';
+import LoadingState from '@/components/shared/LoadingState';
 import { PropertyPublicDto } from '@/types/properties';
 import { propertiesApi } from '@/lib/properties/api';
-import { ChevronLeftOutline } from '@/assets/icons';
 import PropertyHeader from '@/components/features/properties/PropertyHeader';
 import PropertyActions from '@/components/features/properties/PropertyActions';
 import PropertyPhotos from '@/components/features/properties/PropertyPhotos';
@@ -17,6 +16,9 @@ import PropertyOwner from '@/components/features/properties/PropertyOwner';
 import PropertyLocation from '@/components/features/properties/PropertyLocation';
 import SimilarProperties from '@/components/features/properties/SimilarProperties';
 import PropertyRequest from '@/components/features/properties/PropertyRequest';
+import BackToResultsButton from '@/components/features/properties/BackToResultsButton';
+import PropertyDescription from '@/components/features/properties/PropertyDescription';
+import PropertyPriceHistory from '@/components/features/properties/PropertyPriceHistory';
 
 interface PropertyPageProps {
   property: PropertyPublicDto | null;
@@ -88,198 +90,108 @@ export default function PropertyPage({
     setIsPhotoModalOpen(false);
   };
 
-  const renderContent = () => {
-    if (error) {
-      return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-            <p className="text-gray-600">{error}</p>
+  return (
+    <div className="min-h-screen bg-white">
+      <Header />
+      <main className="pb-8">
+        {error ? (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+              <p className="text-gray-600">{error}</p>
+            </div>
           </div>
-        </div>
-      );
-    }
-
-    if (isLoading || !property) {
-      return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="flex justify-center items-center py-20">
-            <LoadingSpinner />
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <>
-        <div className="lg:hidden bg-white border-b border-gray-100 sticky top-0 z-10">
-          <div className="px-4 py-3">
-            <button
-              onClick={handleBackToResults}
-              className="flex items-center gap-1 text-primary-violet font-medium font-jakarta"
-            >
-              <ChevronLeftOutline className="w-5 h-5" />
-              <span>Back to results</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="hidden lg:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          <button
-            onClick={handleBackToResults}
-            className="flex items-center gap-2 text-primary-violet font-medium mb-6"
-          >
-            <ChevronLeftOutline className="w-5 h-5" />
-            <span>Back to results</span>
-          </button>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="block lg:hidden">
-            <PropertyHeader property={property} />
-            <PropertyActions />
-          </div>
-
-          <div className="hidden lg:flex justify-between items-center mb-4">
-            <PropertyHeader property={property} />
-            <PropertyActions />
-          </div>
-
-          <div className="block lg:hidden">
-            <PropertyPhotos
-              property={property}
-              onOpenPhotoModal={openPhotoModal}
-            />
-            <PropertyPriceBox property={property} />
-
-            {property.description && (
-              <div className="my-6">
-                <h2 className="text-xl font-semibold text-primary-black mb-2">
-                  About this home
-                </h2>
-                <p className="text-gray-700 leading-relaxed">
-                  {property.description}
-                </p>
-              </div>
-            )}
-
-            <PropertyOwner property={property} />
-            <PropertyRequest />
-            <PropertyFeatures property={property} />
-
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Price history
-              </h2>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-lg font-semibold text-gray-900">
-                      ${property.price.toLocaleString()}
-                      {property.type === 'rent' && (
-                        <span className="text-sm font-normal text-gray-600">
-                          /month
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Listed {new Date(property.createdAt).toLocaleDateString()}
-                    </div>
-                  </div>
-                  <div className="text-sm text-green-600 font-medium">
-                    Current price
-                  </div>
-                </div>
-              </div>
+        ) : isLoading || !property ? (
+          <LoadingState className="flex justify-center items-center py-20" />
+        ) : (
+          <>
+            <div className="lg:hidden bg-white border-b border-gray-100 sticky top-0 left-0 z-10">
+              <BackToResultsButton onClick={handleBackToResults} isMobile />
             </div>
 
-            <PropertyLocation property={property} />
-          </div>
+            <BackToResultsButton onClick={handleBackToResults} />
 
-          <div className="hidden lg:block">
-            <div className="grid grid-cols-12 gap-8">
-              <div className="col-span-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="block lg:hidden">
+                <PropertyHeader property={property} />
+                <PropertyActions />
+              </div>
+
+              <div className="hidden lg:flex justify-between items-center mb-4">
+                <PropertyHeader property={property} />
+                <PropertyActions />
+              </div>
+
+              <div className="block lg:hidden">
                 <PropertyPhotos
                   property={property}
                   onOpenPhotoModal={openPhotoModal}
                 />
+                <PropertyPriceBox property={property} />
 
-                {property.description && (
-                  <div className="my-6">
-                    <h2 className="text-xl font-semibold text-primary-black mb-2">
-                      About this home
-                    </h2>
-                    <p className="text-gray-700 leading-relaxed">
-                      {property.description}
-                    </p>
-                  </div>
-                )}
+                <PropertyDescription description={property.description} />
+
+                <PropertyOwner property={property} />
+
+                <PropertyRequest />
 
                 <PropertyFeatures property={property} />
 
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                    Price history
-                  </h2>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-lg font-semibold text-gray-900">
-                          ${property.price.toLocaleString()}
-                          {property.type === 'rent' && (
-                            <span className="text-sm font-normal text-gray-600">
-                              /month
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          Listed{' '}
-                          {new Date(property.createdAt).toLocaleDateString()}
-                        </div>
-                      </div>
-                      <div className="text-sm text-green-600 font-medium">
-                        Current price
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
+                <PropertyPriceHistory
+                  price={property.price}
+                  type={property.type}
+                  createdAt={property.createdAt}
+                />
                 <PropertyLocation property={property} />
               </div>
 
-              <div className="col-span-4 space-y-6">
-                <PropertyPriceBox property={property} />
-                <PropertyOwner property={property} />
-                <PropertyRequest />
+              <div className="hidden lg:block">
+                <div className="grid grid-cols-12 gap-8">
+                  <div className="col-span-8">
+                    <PropertyPhotos
+                      property={property}
+                      onOpenPhotoModal={openPhotoModal}
+                    />
+
+                    <PropertyDescription description={property.description} />
+
+                    <PropertyFeatures property={property} />
+
+                    <PropertyPriceHistory
+                      price={property.price}
+                      type={property.type}
+                      createdAt={property.createdAt}
+                    />
+
+                    <PropertyLocation property={property} />
+                  </div>
+
+                  <div className="col-span-4 space-y-6">
+                    <PropertyPriceBox property={property} />
+                    <PropertyOwner property={property} />
+                    <PropertyRequest />
+                  </div>
+                </div>
               </div>
+
+              <SimilarProperties
+                similarProperties={similarProperties}
+                currentPropertyType={property.type}
+              />
             </div>
-          </div>
 
-          <SimilarProperties
-            similarProperties={similarProperties}
-            currentPropertyType={property.type}
-          />
-        </div>
-
-        {property && property.photos && (
-          <PhotoModal
-            isOpen={isPhotoModalOpen}
-            onClose={closePhotoModal}
-            photos={property.photos}
-            initialIndex={photoModalIndex}
-            propertyTitle={property.title || 'Property'}
-          />
+            {property && property.photos && (
+              <PhotoModal
+                isOpen={isPhotoModalOpen}
+                onClose={closePhotoModal}
+                photos={property.photos}
+                initialIndex={photoModalIndex}
+                propertyTitle={property.title || 'Property'}
+              />
+            )}
+          </>
         )}
-      </>
-    );
-  };
-
-  return (
-    <div className="min-h-screen bg-white">
-      <Header />
-
-      <main className="pb-8">{renderContent()}</main>
-
+      </main>
       <Footer />
     </div>
   );

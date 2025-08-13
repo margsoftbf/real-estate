@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
-import PropertyCard from '@/components/shared/PropertyCard';
+import PropertyCard from '@/components/shared/Property/PropertyCard';
 import Button from '@/components/ui/Button/Button';
 import {
   Carousel,
@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/Carousel/carousel';
 import { PropertyPublicDto } from '@/types/properties';
 import { propertiesApi } from '@/lib/properties/api';
-
 
 const PopularProperties = () => {
   const [properties, setProperties] = useState<PropertyPublicDto[]>([]);

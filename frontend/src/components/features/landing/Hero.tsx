@@ -14,7 +14,7 @@ import {
 import HeroText from './Hero/HeroText';
 import HeroSearchBar from './Hero/HeroSearchBar';
 import HeroIcon from './Hero/HeroIcon';
-import PropertyCard from '@/components/shared/PropertyCard';
+import PropertyCard from '@/components/shared/Property/PropertyCard';
 import { PropertyPublicDto } from '@/types/properties';
 import { propertiesApi } from '@/lib/properties/api';
 

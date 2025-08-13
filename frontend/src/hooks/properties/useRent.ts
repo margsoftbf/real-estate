@@ -6,6 +6,7 @@ import { BasePaginatedResponse } from '@/types/api';
 const ITEMS_PER_REQUEST = 12;
 
 interface Filters {
+  [key: string]: string | boolean | null;
   minPrice: string;
   maxPrice: string;
   city: string;
