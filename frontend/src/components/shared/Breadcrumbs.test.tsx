@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Breadcrumbs from './Breadcrumbs';
 
-// Mock Next.js Link
+
 vi.mock('next/link', () => ({
   default: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
@@ -27,19 +27,18 @@ describe('Breadcrumbs', () => {
     
     render(<Breadcrumbs items={items} />);
     
-    // Check all labels are present
+
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Products')).toBeInTheDocument();
     expect(screen.getByText('Details')).toBeInTheDocument();
-    
-    // Check links
+
     const homeLink = screen.getByRole('link', { name: 'Home' });
     const productsLink = screen.getByRole('link', { name: 'Products' });
     
     expect(homeLink).toHaveAttribute('href', '/');
     expect(productsLink).toHaveAttribute('href', '/products');
     
-    // Last item should not be a link
+
     expect(screen.getByText('Details').closest('a')).toBeNull();
   });
 
@@ -51,7 +50,7 @@ describe('Breadcrumbs', () => {
     
     render(<Breadcrumbs items={items} />);
     
-    // Should have separator (ChevronRightOutline SVG)
+
     const separators = screen.getByRole('navigation').querySelectorAll('svg');
     expect(separators).toHaveLength(1);
   });

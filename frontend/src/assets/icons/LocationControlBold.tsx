@@ -55,12 +55,13 @@ const LocationControlBold: React.FC<LocationControlBoldProps> = ({
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <path
-          d="M12 11V11.01"
-          stroke="white"
+        <circle
+          cx="12"
+          cy="11"
+          r="3"
+          fill="black"
+          stroke={color}
           strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
         />
       </g>
       <defs>

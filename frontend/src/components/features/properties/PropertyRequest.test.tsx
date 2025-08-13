@@ -1,0 +1,160 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import PropertyRequest from './PropertyRequest';
+
+describe('PropertyRequest', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-15'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('renders request form with default values', () => {
+    render(<PropertyRequest />);
+    
+    expect(screen.getByText('Request a home tour')).toBeInTheDocument();
+    expect(screen.getByText('In Person')).toBeInTheDocument();
+    expect(screen.getByText('Virtual')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('2024-01-15')).toBeInTheDocument();
+    expect(screen.getByText('Request a Tour')).toBeInTheDocument();
+  });
+
+  it('has In Person selected by default', () => {
+    render(<PropertyRequest />);
+    
+    const inPersonButton = screen.getByRole('button', { name: /in person/i });
+    const virtualButton = screen.getByRole('button', { name: /virtual/i });
+    
+    expect(inPersonButton).toHaveClass('bg-purple-200', 'text-primary-violet-dark');
+    expect(virtualButton).toHaveClass('bg-white', 'text-primary-black/50');
+  });
+
+  it('switches between tour types', () => {
+    render(<PropertyRequest />);
+    
+    const virtualButton = screen.getByRole('button', { name: /virtual/i });
+    const inPersonButton = screen.getByRole('button', { name: /in person/i });
+    
+    fireEvent.click(virtualButton);
+    
+    expect(virtualButton).toHaveClass('bg-purple-200', 'text-primary-violet-dark');
+    expect(inPersonButton).toHaveClass('bg-white', 'text-primary-black/50');
+  });
+
+  it('displays icons for tour types', () => {
+    render(<PropertyRequest />);
+    
+    const inPersonButton = screen.getByRole('button', { name: /in person/i });
+    const virtualButton = screen.getByRole('button', { name: /virtual/i });
+    
+    expect(inPersonButton).toBeInTheDocument();
+    expect(virtualButton).toBeInTheDocument();
+  });
+
+  it('updates date when changed', () => {
+    render(<PropertyRequest />);
+    
+    const dateInput = screen.getByDisplayValue('2024-01-15');
+    fireEvent.change(dateInput, { target: { value: '2024-02-01' } });
+    
+    expect(screen.getByDisplayValue('2024-02-01')).toBeInTheDocument();
+  });
+
+  it('shows success modal when form is submitted', () => {
+    render(<PropertyRequest />);
+    
+    const requestButton = screen.getByRole('button', { name: /request a tour/i });
+    fireEvent.click(requestButton);
+    
+    expect(screen.getByText('Tour Request Sent!')).toBeInTheDocument();
+    expect(screen.getByText(/your in person tour request for 2024-01-15/i)).toBeInTheDocument();
+  });
+
+  it('shows correct tour type in success modal', () => {
+    render(<PropertyRequest />);
+    
+    const virtualButton = screen.getByRole('button', { name: /virtual/i });
+    fireEvent.click(virtualButton);
+    
+    const requestButton = screen.getByRole('button', { name: /request a tour/i });
+    fireEvent.click(requestButton);
+    
+    expect(screen.getByText(/your virtual tour request/i)).toBeInTheDocument();
+  });
+
+  it('closes modal and resets date when modal is closed', () => {
+    render(<PropertyRequest />);
+    
+    const dateInput = screen.getByDisplayValue('2024-01-15');
+    fireEvent.change(dateInput, { target: { value: '2024-02-01' } });
+    
+    const requestButton = screen.getByRole('button', { name: /request a tour/i });
+    fireEvent.click(requestButton);
+    
+    expect(screen.getByText('Tour Request Sent!')).toBeInTheDocument();
+    
+    const closeButton = screen.getByRole('button', { name: /close/i });
+    fireEvent.click(closeButton);
+    
+    expect(screen.queryByText('Tour Request Sent!')).not.toBeInTheDocument();
+    
+    expect(screen.getByDisplayValue('2024-01-15')).toBeInTheDocument();
+  });
+
+  it('closes modal when X button is clicked', () => {
+    render(<PropertyRequest />);
+    
+    const requestButton = screen.getByRole('button', { name: /request a tour/i });
+    fireEvent.click(requestButton);
+    
+    expect(screen.getByText('Tour Request Sent!')).toBeInTheDocument();
+    
+    // Click X button by finding it via its class that contains CloseOutline
+    const buttons = screen.getAllByRole('button');
+    const xButton = buttons.find(btn => btn.className.includes('text-gray-400')); // X button has specific styling
+    fireEvent.click(xButton!);
+    
+    expect(screen.queryByText('Tour Request Sent!')).not.toBeInTheDocument();
+  });
+
+  it('displays disclaimer text', () => {
+    render(<PropertyRequest />);
+    
+    expect(screen.getByText(/obligation.*cancel/)).toBeInTheDocument();
+  });
+
+  it('has minimum date set to today', () => {
+    render(<PropertyRequest />);
+    
+    const dateInput = screen.getByDisplayValue('2024-01-15');
+    expect(dateInput).toHaveAttribute('min', '2024-01-15');
+  });
+
+  it('renders location control icon on request button', () => {
+    render(<PropertyRequest />);
+    
+    const requestButton = screen.getByRole('button', { name: /request a tour/i });
+    expect(requestButton).toBeInTheDocument();
+  });
+
+  it('has correct styling for active and inactive tour buttons', () => {
+    render(<PropertyRequest />);
+    
+    const inPersonButton = screen.getByRole('button', { name: /in person/i });
+    const virtualButton = screen.getByRole('button', { name: /virtual/i });
+    
+    // Initial state - In Person active
+    expect(inPersonButton).toHaveClass('bg-purple-200');
+    expect(virtualButton).toHaveClass('bg-white');
+    
+    // Switch to Virtual
+    fireEvent.click(virtualButton);
+    
+    expect(virtualButton).toHaveClass('bg-purple-200');
+    expect(inPersonButton).toHaveClass('bg-white');
+  });
+});

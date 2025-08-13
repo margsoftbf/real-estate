@@ -8,12 +8,17 @@ import { User } from '../../users/entities/user.entity';
 import { PropertyLandlordController } from './property.landlord.controller';
 import { PropertyLandlordService } from './property.landlord.service';
 import { JwtAuthGuard } from '../../auth/jwt';
-import { createMockProperty, createLandlordUser } from '../../../../test/test-helpers';
+import {
+  createMockProperty,
+  createLandlordUser,
+} from '../../../../test/test-helpers';
 
 jest.mock('nestjs-paginate', () => ({
   ...jest.requireActual('nestjs-paginate'),
   paginate: jest.fn(),
-  Paginate: () => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => descriptor,
+  Paginate:
+    () => (target: any, propertyKey: string, descriptor: PropertyDescriptor) =>
+      descriptor,
 }));
 
 import { paginate } from 'nestjs-paginate';
@@ -120,7 +125,7 @@ describe('PropertyLandlordController (e2e)', () => {
       userRepository.findOne.mockResolvedValue(mockLandlord);
       propertyRepository.create.mockReturnValue(mockProperty);
       propertyRepository.save.mockResolvedValue(mockProperty);
-      
+
       const invalidDto = {
         price: -100,
       };
@@ -211,7 +216,7 @@ describe('PropertyLandlordController (e2e)', () => {
     it('should return 403 when property belongs to another landlord', async () => {
       const otherLandlord = createLandlordUser({ id: 'other-landlord-id' });
       const otherProperty = createMockProperty({ owner: otherLandlord });
-      
+
       propertyRepository.findOne.mockResolvedValue(otherProperty);
 
       await request(app.getHttpServer())
@@ -228,12 +233,12 @@ describe('PropertyLandlordController (e2e)', () => {
 
     it('should update property successfully', async () => {
       const updatedProperty = { ...mockProperty, ...updateDto };
-      
+
       propertyRepository.findOne
         .mockResolvedValueOnce(mockProperty)
         .mockResolvedValueOnce(mockProperty)
         .mockResolvedValueOnce(updatedProperty);
-      
+
       propertyRepository.save.mockResolvedValue(updatedProperty);
 
       const response = await request(app.getHttpServer())
@@ -256,23 +261,22 @@ describe('PropertyLandlordController (e2e)', () => {
 
     it('should handle update with invalid data', async () => {
       const updatedProperty = { ...mockProperty, price: -1000 };
-      
+
       propertyRepository.findOne
-        .mockResolvedValueOnce(mockProperty) // First call in findOne 
-        .mockResolvedValueOnce(mockProperty) // Second call in update method
-        .mockResolvedValueOnce(updatedProperty); // Third call in return
+        .mockResolvedValueOnce(mockProperty)
+        .mockResolvedValueOnce(mockProperty)
+        .mockResolvedValueOnce(updatedProperty);
       propertyRepository.save.mockResolvedValue(updatedProperty);
-      
+
       const invalidDto = {
-        price: -1000, // Invalid negative price
-        type: 'INVALID_TYPE', // Invalid enum value
+        price: -1000,
+        type: 'INVALID_TYPE',
       };
 
       const response = await request(app.getHttpServer())
         .patch(`/landlord/properties/${mockProperty.id}`)
         .send(invalidDto);
 
-      // In test environment, validation might be bypassed
       expect([200, 400, 404]).toContain(response.status);
     });
   });
@@ -300,7 +304,7 @@ describe('PropertyLandlordController (e2e)', () => {
     it('should return 403 when property belongs to another landlord', async () => {
       const otherLandlord = createLandlordUser({ id: 'other-landlord-id' });
       const otherProperty = createMockProperty({ owner: otherLandlord });
-      
+
       propertyRepository.findOne.mockResolvedValue(otherProperty);
 
       await request(app.getHttpServer())

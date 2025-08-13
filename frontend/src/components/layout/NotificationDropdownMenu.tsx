@@ -64,7 +64,7 @@ const NotificationDropdownMenu: React.FC<NotificationDropdownMenuProps> = ({
           <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
           <div className="flex gap-1.5 items-center group transition-colors duration-200 hover:text-primary-violet-dark/50">
             <DoubleChecksOutline className="w-4 h-4 text-primary-violet group-hover:text-primary-violet-dark/50" />
-            <button className="cursor-pointer text-xs text-primary-violet group-hover:text-primary-violet-dark/50">
+            <button className="cursor-pointer text-xs text-primary-violet group-hover:text-primary-violet-dark/50 font-semibold">
               Mark as read
             </button>
           </div>
@@ -102,7 +102,7 @@ const NotificationDropdownMenu: React.FC<NotificationDropdownMenuProps> = ({
       </div>
 
       <div className="px-4 py-2 border-t border-gray-100">
-        <button className="w-full text-center text-sm text-primary-violet hover:text-primary-violet-dark/50 cursor-pointer transition-colors duration-200">
+        <button className="w-full text-center text-sm text-primary-violet hover:text-primary-violet-dark/50 cursor-pointer transition-colors duration-200 font-semibold">
           View all notifications
         </button>
       </div>

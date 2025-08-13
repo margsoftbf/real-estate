@@ -1,4 +1,5 @@
 import { useReducer, useEffect, useState, useOptimistic } from 'react';
+import { NextRouter } from 'next/router';
 import { propertiesApi } from '@/lib/properties/api';
 import { PropertyPublicDto } from '@/types/properties';
 import { BasePaginatedResponse } from '@/types/api';
@@ -6,6 +7,7 @@ import { BasePaginatedResponse } from '@/types/api';
 const ITEMS_PER_REQUEST = 12;
 
 interface Filters {
+  [key: string]: string | boolean | null;
   minPrice: string;
   maxPrice: string;
   city: string;
@@ -185,12 +187,9 @@ async function loadProperties(
     search: appliedSearchTerm.trim() || undefined,
   };
 
-  // Basic filters
   if (filters.minPrice) query['filter.price$gte'] = Number(filters.minPrice);
   if (filters.maxPrice) query['filter.price$lte'] = Number(filters.maxPrice);
-  if (filters.city) query['filter.city$ilike'] = filters.city;
 
-  // Features range filters  
   if (filters.minBedrooms)
     query['filter.features.minBedrooms'] = filters.minBedrooms;
   if (filters.maxBedrooms)
@@ -210,12 +209,10 @@ async function loadProperties(
   if (filters.maxYearBuilt)
     query['filter.features.maxYearBuilt'] = filters.maxYearBuilt;
 
-  // Features string filters
   if (filters.homeType) query['filter.features.homeType'] = filters.homeType;
   if (filters.laundry) query['filter.features.laundry'] = filters.laundry;
   if (filters.heating) query['filter.features.heating'] = filters.heating;
 
-  // Features boolean filters
   if (filters.furnished !== null)
     query['filter.features.furnished'] = filters.furnished.toString();
   if (filters.petsAllowed !== null)
@@ -260,6 +257,13 @@ interface UseBuyReturn {
 
   dispatch: React.Dispatch<BuyAction>;
   loadPropertiesWithParams: (page?: number) => Promise<void>;
+
+  // New router-related functions
+  handleRouterSearch: (routerQuery: Record<string, string | string[] | undefined>, router: NextRouter) => void;
+  handleSearch: (searchTerm: string, router: NextRouter) => void;
+  handleFilterChange: (key: string, value: string | boolean | null) => void;
+  handleApplyFilters: () => void;
+  handleClearFilters: () => void;
 }
 
 export const useBuy = (): UseBuyReturn => {
@@ -274,15 +278,15 @@ export const useBuy = (): UseBuyReturn => {
     ]
   );
 
-  // Load properties when filters or applied search term change
   useEffect(() => {
+    if (
+      state.appliedSearchTerm === '' &&
+      Object.values(state.filters).every((v) => v === '' || v === null)
+    ) {
+      return;
+    }
     loadPropertiesWithParams(1);
   }, [state.filters, state.appliedSearchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Load initial properties
-  useEffect(() => {
-    loadPropertiesWithParams(1);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadPropertiesWithParams = async (page?: number) => {
     try {
@@ -312,6 +316,52 @@ export const useBuy = (): UseBuyReturn => {
     }
   };
 
+  const handleRouterSearch = (routerQuery: Record<string, string | string[] | undefined>, router: NextRouter) => {
+    if (router.isReady) {
+      if (routerQuery.city && typeof routerQuery.city === 'string') {
+        dispatch({
+          type: 'SET_SEARCH_TERM',
+          payload: routerQuery.city,
+        });
+        dispatch({
+          type: 'APPLY_SEARCH',
+          payload: routerQuery.city,
+        });
+      } else {
+        loadPropertiesWithParams(1);
+      }
+    }
+  };
+
+
+  const handleSearch = (searchTerm: string, router: NextRouter) => {
+    dispatch({ type: 'APPLY_SEARCH', payload: searchTerm });
+    dispatch({ type: 'SET_PAGE', payload: 1 });
+
+    if (searchTerm.trim()) {
+      router.push(
+        `/buy?city=${encodeURIComponent(searchTerm.trim())}`,
+        undefined,
+        { shallow: true }
+      );
+    } else {
+      router.push('/buy', undefined, { shallow: true });
+    }
+  };
+
+
+  const handleFilterChange = (key: string, value: string | boolean | null) => {
+    dispatch({ type: 'SET_FILTER', payload: { key, value } });
+  };
+
+  const handleApplyFilters = () => {
+    dispatch({ type: 'SET_PAGE', payload: 1 });
+  };
+
+  const handleClearFilters = () => {
+    dispatch({ type: 'CLEAR_FILTERS' });
+  };
+
   return {
     state,
     isLoading,
@@ -319,5 +369,11 @@ export const useBuy = (): UseBuyReturn => {
     optimisticProperties,
     dispatch,
     loadPropertiesWithParams,
+
+    handleRouterSearch,
+    handleSearch,
+    handleFilterChange,
+    handleApplyFilters,
+    handleClearFilters,
   };
 };

@@ -17,7 +17,9 @@
     "test:coverage": "vitest --coverage --config ./vitest.config.ts",
     "test:ui": "vitest --ui --config ./vitest.config.ts",
     "generate:types": "node scripts/generate-types.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "ci:check": "yarn lint && yarn type-check && yarn test && yarn build",
+    "ci:skip-tests": "yarn lint && yarn type-check && yarn build"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

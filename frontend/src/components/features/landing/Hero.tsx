@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import SearchOutline from '@/assets/icons/SearchOutline';
 import heroMapImage from '@/assets/hero-map.png';
@@ -13,65 +14,35 @@ import {
 import HeroText from './Hero/HeroText';
 import HeroSearchBar from './Hero/HeroSearchBar';
 import HeroIcon from './Hero/HeroIcon';
-import PropertyCard from '@/components/shared/PropertyCard';
-import { PropertyPublicDto, PropertyType } from '@/types/properties';
+import PropertyCard from '@/components/shared/Property/PropertyCard';
+import { PropertyPublicDto } from '@/types/properties';
+import { propertiesApi } from '@/lib/properties/api';
 
 const Hero = () => {
-  const mockProperty1: PropertyPublicDto = {
-    slug: 'beverly-springfield-hero',
-    type: PropertyType.RENT,
-    price: 2700,
-    city: 'Palm Harbor',
-    country: 'TX',
-    title: 'Beverly Springfield',
-    photos: [
-      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=400',
-    ],
-    description: 'Beautiful property in Palm Harbor',
-    features: {
-      bedrooms: 4,
-      bathrooms: 2,
-      area: 45,
-    },
-    isPopular: true,
-    createdAt: '2025-01-01T00:00:00Z',
-    updatedAt: '2025-01-01T00:00:00Z',
-    owner: {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@example.com',
-      phoneNumber: '+1234567890',
-      avatarUrl: null,
-    },
-  };
+  const [heroProperties, setHeroProperties] = useState<PropertyPublicDto[]>([]);
+  const [isLoadingProperties, setIsLoadingProperties] = useState(true);
 
-  const mockProperty2: PropertyPublicDto = {
-    slug: 'sunset-gardens-hero',
-    type: PropertyType.RENT,
-    price: 1900,
-    city: 'Miami',
-    country: 'FL',
-    title: 'Sunset Gardens',
-    photos: [
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400',
-    ],
-    description: 'Cozy property in Miami',
-    features: {
-      bedrooms: 2,
-      bathrooms: 1,
-      area: 20,
-    },
-    isPopular: false,
-    createdAt: '2025-01-01T00:00:00Z',
-    updatedAt: '2025-01-01T00:00:00Z',
-    owner: {
-      firstName: 'Jane',
-      lastName: 'Smith',
-      email: 'jane@example.com',
-      phoneNumber: '+1234567891',
-      avatarUrl: null,
-    },
-  };
+  useEffect(() => {
+    const fetchHeroProperties = async () => {
+      try {
+        setIsLoadingProperties(true);
+        const response = await propertiesApi.findAll({
+          limit: 2,
+          page: 1,
+        });
+        setHeroProperties(response.data);
+      } catch (error) {
+        console.error('Error fetching hero properties:', error);
+      } finally {
+        setIsLoadingProperties(false);
+      }
+    };
+
+    fetchHeroProperties();
+  }, []);
+
+  const mockProperty1 = heroProperties[0];
+  const mockProperty2 = heroProperties[1];
 
   return (
     <section className="relative bg-gradient-to-b from-purple-50 via-purple-50 via-80% lg:via-90% to-white to-95% lg:to-100% overflow-hidden">
@@ -121,13 +92,17 @@ const Hero = () => {
             <HouseDot className="absolute z-30 right-56 top-88 w-16 h-24" />
             <LineAToB className="absolute z-20 right-26 top-28 w-48 h-72" />
 
-            <div className="absolute top-40 left-2 z-40 transform scale-80">
-              <PropertyCard property={mockProperty1} />
-            </div>
+            {!isLoadingProperties && mockProperty1 && (
+              <div className="absolute top-40 left-2 z-40 transform scale-80">
+                <PropertyCard property={mockProperty1} />
+              </div>
+            )}
 
-            <div className="absolute -bottom-10 right-4 z-40 transform scale-60">
-              <PropertyCard property={mockProperty2} />
-            </div>
+            {!isLoadingProperties && mockProperty2 && (
+              <div className="absolute -bottom-10 right-4 z-40 transform scale-60">
+                <PropertyCard property={mockProperty2} />
+              </div>
+            )}
 
             <div className="absolute z-10 left-[20%] top-[30%] w-4 h-4 bg-primary-violet rounded-full opacity-80" />
             <div className="absolute z-10 left-[60%] top-[60%] w-3 h-3 bg-primary-violet rounded-full opacity-60" />

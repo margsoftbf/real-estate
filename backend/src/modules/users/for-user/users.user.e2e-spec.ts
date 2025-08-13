@@ -141,16 +141,14 @@ describe('UsersUserController (e2e)', () => {
       userRepository.findOne.mockResolvedValue(mockUser);
       
       const invalidData = {
-        firstName: '', // Invalid - empty string
-        email: 'invalid-email', // Invalid email format
+        firstName: '',
+        email: 'invalid-email',
       };
 
       const response = await request(app.getHttpServer())
         .patch('/users/userinfo')
         .send(invalidData);
 
-      // Note: ValidationPipe might not be set up in test, so this might pass
-      // In real E2E tests, you'd set up validation properly
       expect([200, 400]).toContain(response.status);
     });
   });

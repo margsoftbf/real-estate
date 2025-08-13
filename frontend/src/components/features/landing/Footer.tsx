@@ -92,7 +92,7 @@ const navigation = {
 const Footer = () => {
   return (
     <footer className="bg-white">
-      <div className="mx-auto max-w-7xl px-6 pt-16 pb-8 sm:pt-24 lg:px-8 lg:pt-20 relative">
+      <div className="mx-auto max-w-7xl px-6 pt-6 pb-8 lg:px-8 lg:pt-6 relative">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8 relative">
           <div className="space-y-8 relative">
             <p className="text-sm/6 text-balance text-gray-600">

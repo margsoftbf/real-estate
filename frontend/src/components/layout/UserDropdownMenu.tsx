@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { HelpOutline, LogoutOutline, UserOutline } from '@/assets/icons';
+import { useLogout } from '@/hooks/auth/useUser';
 
 const userMenuItems = [
   {
@@ -15,7 +16,7 @@ const userMenuItems = [
   },
   {
     title: 'Logout',
-    url: '/logout',
+    url: '/',
     icon: <LogoutOutline className="w-4 h-4 text-red-600" />,
     className: 'text-red-600 hover:bg-red-50',
   },
@@ -33,6 +34,12 @@ const UserDropdownMenu: React.FC<UserDropdownMenuProps> = ({
   buttonRef,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const logout = useLogout();
+
+  const handleLogout = () => {
+    onClose();
+    logout();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -65,16 +72,28 @@ const UserDropdownMenu: React.FC<UserDropdownMenuProps> = ({
     >
       {userMenuItems.map((item, index) => (
         <div key={item.title}>
-          <Link
-            href={item.url}
-            onClick={onClose}
-            className={`w-full px-2 py-2 text-left text-sm  flex items-center space-x-3 rounded-md transition-colors ${
-              item.className || 'text-primary-black hover:bg-gray-50'
-            }`}
-          >
-            {item.icon}
-            <span className="text-body-sm">{item.title}</span>
-          </Link>
+          {item.title === 'Logout' ? (
+            <button
+              onClick={handleLogout}
+              className={`w-full px-2 py-2 text-left text-sm  flex items-center space-x-3 rounded-md transition-colors ${
+                item.className || 'text-primary-black hover:bg-gray-50'
+              }`}
+            >
+              {item.icon}
+              <span className="text-body-sm">{item.title}</span>
+            </button>
+          ) : (
+            <Link
+              href={item.url}
+              onClick={onClose}
+              className={`w-full px-2 py-2 text-left text-sm  flex items-center space-x-3 rounded-md transition-colors ${
+                item.className || 'text-primary-black hover:bg-gray-50'
+              }`}
+            >
+              {item.icon}
+              <span className="text-body-sm">{item.title}</span>
+            </Link>
+          )}
           {index < userMenuItems.length - 1 && (
             <div className="my-1 mx-1 border-t border-gray-200" />
           )}

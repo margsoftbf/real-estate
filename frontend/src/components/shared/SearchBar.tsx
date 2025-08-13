@@ -27,7 +27,7 @@ const SearchBar = ({
             placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full pr-14 py-3 px-4 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-purple-300 focus:border-transparent text-gray-900 placeholder:text-gray-400"
+            className="w-full pr-14 py-3 px-4 bg-purple-50 border border-purple-300 rounded-lg focus:ring-1 focus:outline-none focus:ring-primary-violet focus:border-primary-violet focus:bg-white text-gray-900 placeholder:text-gray-400"
           />
           <button
             type="submit"
@@ -37,7 +37,7 @@ const SearchBar = ({
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center bg-white border border-gray-300 rounded-lg overflow-hidden px-2 gap-1">
+        <div className="hidden lg:flex items-center bg-purple-50 border border-purple-300 rounded-lg overflow-hidden px-2 gap-1 focus-within:ring-1 focus-within:ring-primary-violet focus-within:border-primary-violet focus-within:bg-white transition-colors">
           <div className="flex-1 px-4 py-3">
             <label className="block text-xs font-medium text-gray-700 mb-1">
               Location

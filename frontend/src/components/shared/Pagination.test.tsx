@@ -16,7 +16,6 @@ describe('Pagination', () => {
   it('renders pagination with correct page numbers', () => {
     render(<Pagination {...defaultProps} />);
     
-    // Should show page numbers 1-5
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('2')).toBeInTheDocument();
     expect(screen.getByText('3')).toBeInTheDocument();
@@ -99,7 +98,6 @@ describe('Pagination', () => {
   it('handles large page counts with ellipsis', () => {
     render(<Pagination {...defaultProps} totalPages={20} currentPage={10} />);
     
-    // Should show ellipsis for truncated pages (there are multiple ellipsis)
     expect(screen.getAllByText('...')).toHaveLength(2);
   });
 });

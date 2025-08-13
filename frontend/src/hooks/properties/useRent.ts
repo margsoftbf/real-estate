@@ -6,6 +6,7 @@ import { BasePaginatedResponse } from '@/types/api';
 const ITEMS_PER_REQUEST = 12;
 
 interface Filters {
+  [key: string]: string | boolean | null;
   minPrice: string;
   maxPrice: string;
   city: string;
@@ -185,12 +186,9 @@ async function loadProperties(
     search: appliedSearchTerm.trim() || undefined,
   };
 
-  // Basic filters
   if (filters.minPrice) query['filter.price$gte'] = Number(filters.minPrice);
   if (filters.maxPrice) query['filter.price$lte'] = Number(filters.maxPrice);
-  if (filters.city) query['filter.city$ilike'] = filters.city;
 
-  // Features range filters
   if (filters.minBedrooms)
     query['filter.features.minBedrooms'] = filters.minBedrooms;
   if (filters.maxBedrooms)
@@ -210,12 +208,10 @@ async function loadProperties(
   if (filters.maxYearBuilt)
     query['filter.features.maxYearBuilt'] = filters.maxYearBuilt;
 
-  // Features string filters
   if (filters.homeType) query['filter.features.homeType'] = filters.homeType;
   if (filters.laundry) query['filter.features.laundry'] = filters.laundry;
   if (filters.heating) query['filter.features.heating'] = filters.heating;
 
-  // Features boolean filters
   if (filters.furnished !== null)
     query['filter.features.furnished'] = filters.furnished.toString();
   if (filters.petsAllowed !== null)
@@ -244,7 +240,6 @@ async function loadProperties(
 
   const response: BasePaginatedResponse<PropertyPublicDto> =
     await propertiesApi.findRentProperties(query);
-
 
   return {
     properties: response.data,
@@ -275,15 +270,12 @@ export const useRent = (): UseRentReturn => {
     ]
   );
 
-  // Load properties when filters or applied search term change
   useEffect(() => {
+    if (state.appliedSearchTerm === '' && Object.values(state.filters).every(v => v === '' || v === null)) {
+      return;
+    }
     loadPropertiesWithParams(1);
   }, [state.filters, state.appliedSearchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Load initial properties
-  useEffect(() => {
-    loadPropertiesWithParams(1);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadPropertiesWithParams = async (page?: number) => {
     try {
