@@ -65,13 +65,11 @@ export class PropertyPublicService {
       if (query[filterKey] !== undefined) {
         const boolValue = query[filterKey].toString();
         if (boolValue === 'false') {
-          // For false, show properties that are explicitly false OR don't have this feature set
           queryBuilder.andWhere(
             `(property.features->>'${field}' = :${field} OR property.features->>'${field}' IS NULL)`,
             { [field]: 'false' }
           );
         } else {
-          // For true, show only properties that are explicitly true
           queryBuilder.andWhere(`property.features->>'${field}' = :${field}`, {
             [field]: boolValue,
           });
