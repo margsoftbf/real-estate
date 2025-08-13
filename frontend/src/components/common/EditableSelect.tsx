@@ -148,12 +148,11 @@ const EditableSelect: React.FC<EditableSelectProps> = ({
         </div>
       )}
 
-      {/* Hidden select for form compatibility */}
       <select
         id={fieldName}
         name={fieldName}
         value={selectedValue}
-        onChange={() => {}} // Controlled by our custom logic
+        onChange={() => {}} 
         className="sr-only"
         tabIndex={-1}
         aria-hidden="true"

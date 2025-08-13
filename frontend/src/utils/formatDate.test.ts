@@ -10,7 +10,6 @@ describe('formatDate', () => {
     const testDate = new Date('2024-01-15T10:30:00');
     const result = formatDate(testDate);
 
-    // Check if the result contains expected parts
     expect(result).toContain('January');
     expect(result).toContain('15');
     expect(result).toContain('2024');

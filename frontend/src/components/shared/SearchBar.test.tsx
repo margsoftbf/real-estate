@@ -15,12 +15,12 @@ describe('SearchBar', () => {
 
   it('renders search input with placeholder', () => {
     render(<SearchBar {...defaultProps} placeholder="Search here" />);
-    expect(screen.getAllByPlaceholderText('Search here')).toHaveLength(2); // mobile + desktop
+    expect(screen.getAllByPlaceholderText('Search here')).toHaveLength(2);
   });
 
   it('displays current value', () => {
     render(<SearchBar {...defaultProps} value="test query" />);
-    expect(screen.getAllByDisplayValue('test query')).toHaveLength(2); // mobile + desktop
+    expect(screen.getAllByDisplayValue('test query')).toHaveLength(2);
   });
 
   it('calls onChange when typing in mobile input', () => {
@@ -28,7 +28,7 @@ describe('SearchBar', () => {
     render(<SearchBar {...defaultProps} onChange={onChange} />);
     
     const inputs = screen.getAllByRole('textbox');
-    fireEvent.change(inputs[0], { target: { value: 'new value' } }); // mobile input
+    fireEvent.change(inputs[0], { target: { value: 'new value' } });
     
     expect(onChange).toHaveBeenCalledWith('new value');
   });
@@ -59,7 +59,6 @@ describe('SearchBar', () => {
     const onFiltersClick = vi.fn();
     render(<SearchBar {...defaultProps} onFiltersClick={onFiltersClick} />);
     
-    // Desktop version
     expect(screen.getByText('Filters')).toBeInTheDocument();
   });
 

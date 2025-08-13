@@ -4,11 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  HouseOutline,
-  ApartmentOutline,
-  IncomeToRentOutline,
-} from '@/assets/icons';
 import logoImage from '@/assets/logo.png';
 import Button from '@/components/ui/Button/Button';
 import { useUser } from '@/hooks/auth/useUser';
@@ -23,9 +18,9 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
   const router = useRouter();
 
   const navigationItems = [
-    { name: 'Rent', href: '/rent', icon: HouseOutline },
-    { name: 'Buy', href: '/buy', icon: ApartmentOutline },
-    { name: 'Sell', href: '/dashboard', icon: IncomeToRentOutline },
+    { name: 'Rent', href: '/rent' },
+    { name: 'Buy', href: '/buy' },
+    { name: 'Sell', href: '/dashboard' },
   ];
 
   const toggleMobileMenu = () => {
@@ -54,7 +49,6 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
           {variant === 'default' && (
             <nav className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
               {navigationItems.map((item) => {
-                const IconComponent = item.icon;
                 const isActive = router.pathname === item.href;
                 return (
                   <Link
@@ -66,7 +60,6 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
                         : 'text-primary-black hover:text-primary-violet hover:bg-purple-200'
                     }`}
                   >
-                    <IconComponent size={18} />
                     <span>{item.name}</span>
                   </Link>
                 );
@@ -85,7 +78,11 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
               ) : (
                 <>
                   <Link href="/login">
-                    <Button variant="outline" size="md" className="text-black">
+                    <Button
+                      variant="outline"
+                      size="md"
+                      className="text-black font-semibold"
+                    >
                       Login
                     </Button>
                   </Link>
@@ -139,7 +136,6 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
               <div className="px-4 py-6">
                 <div className="space-y-2">
                   {navigationItems.map((item) => {
-                    const IconComponent = item.icon;
                     const isActive = router.pathname === item.href;
                     return (
                       <Link
@@ -152,7 +148,6 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
                         }`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        <IconComponent size={20} />
                         <span>{item.name}</span>
                       </Link>
                     );

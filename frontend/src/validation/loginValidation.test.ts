@@ -58,7 +58,7 @@ describe('loginValidation', () => {
   it('accepts any non-empty password', () => {
     const validData = {
       email: 'test@example.com',
-      password: '123' // login schema only requires non-empty
+      password: '123'
     };
 
     const result = loginSchema.safeParse(validData);
@@ -72,7 +72,7 @@ describe('loginValidation', () => {
     expect(result.success).toBe(false);
     
     if (!result.success) {
-      expect(result.error.issues).toHaveLength(2); // email and password required
+      expect(result.error.issues).toHaveLength(2);
     }
   });
 

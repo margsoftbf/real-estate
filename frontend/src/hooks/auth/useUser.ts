@@ -50,5 +50,5 @@ export const useUpdateUser = () => {
 };
 
 export const useLogout = () => {
-  return () => signOut({ callbackUrl: '/login' });
+  return () => signOut({ callbackUrl: '/' });
 };

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import SearchOutline from '@/assets/icons/SearchOutline';
 import Button from '@/components/ui/Button/Button';
 
@@ -8,6 +9,23 @@ interface HeroSearchBarProps {
 
 const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
   const [activeTab, setActiveTab] = useState('Rent');
+  const [searchValue, setSearchValue] = useState('');
+  const router = useRouter();
+
+  const handleBrowse = () => {
+    const targetPage = activeTab.toLowerCase() === 'rent' ? '/rent' : '/buy';
+    if (searchValue.trim()) {
+      router.push(`${targetPage}?city=${encodeURIComponent(searchValue.trim())}`);
+    } else {
+      router.push(targetPage);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleBrowse();
+    }
+  };
 
   return (
     <div
@@ -52,6 +70,9 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
                 name="location"
                 type="text"
                 placeholder="Search location"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
                 className="block w-full text-gray-900 placeholder:text-gray-400 focus:outline-none text-sm border-0 p-0 h-8 bg-transparent"
               />
             </div>
@@ -61,6 +82,9 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
             <input
               type="text"
               placeholder="Search location"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="
                 w-full py-3 pr-14 bg-transparent text-gray-700 text-body-md
                 focus:outline-none transition-all text-body-md-medium
@@ -68,6 +92,7 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
               "
             />
             <button
+              onClick={handleBrowse}
               className="
                 absolute right-2 top-1/2 transform -translate-y-1/2
                 bg-primary-violet w-10 h-10 flex items-center justify-center
@@ -80,7 +105,12 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
           </div>
         </div>
 
-        <Button variant="primary" size="md" className="hidden lg:flex">
+        <Button 
+          variant="primary" 
+          size="md" 
+          className="hidden lg:flex"
+          onClick={handleBrowse}
+        >
           Browse Properties
         </Button>
       </div>

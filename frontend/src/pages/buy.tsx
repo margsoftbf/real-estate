@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import PublicLayout from '@/components/layout/PublicLayout';
 import PropertyCard from '@/components/shared/PropertyCard';
-import SearchBar from '@/components/shared/SearchBar';
 import Breadcrumbs from '@/components/shared/Breadcrumbs';
 import FilterModal from '@/components/shared/FilterModal';
 import Pagination from '@/components/shared/Pagination';
-import { FilterOutline, CloseOutline } from '@/assets/icons';
-import Button from '@/components/ui/Button/Button';
+import { CloseOutline } from '@/assets/icons';
 import { useBuy } from '@/hooks/properties';
+import PropertySearchSection from '@/components/shared/PropertySearchSection';
 
 const BuyPage = () => {
+  const router = useRouter();
   const {
     state,
     isLoading,
@@ -18,25 +19,20 @@ const BuyPage = () => {
     optimisticProperties,
     dispatch,
     loadPropertiesWithParams,
+    handleRouterSearch,
+    handleSearch: handleSearchFromHook,
+    handleFilterChange,
+    handleApplyFilters,
+    handleClearFilters,
   } = useBuy();
+
+  useEffect(() => {
+    handleRouterSearch(router.query, router);
+  }, [router.isReady, router.asPath]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch({ type: 'APPLY_SEARCH', payload: state.searchTerm });
-    dispatch({ type: 'SET_PAGE', payload: 1 });
-  };
-
-  const handleFilterChange = (key: string, value: string | boolean | null) => {
-    dispatch({ type: 'SET_FILTER', payload: { key, value } });
-  };
-
-  const handleApplyFilters = () => {
-    dispatch({ type: 'SET_PAGE', payload: 1 });
-  };
-
-  const handleClearFilters = () => {
-    dispatch({ type: 'CLEAR_FILTERS' });
-    dispatch({ type: 'SET_PAGE', payload: 1 });
+    handleSearchFromHook(state.searchTerm, router);
   };
 
   const handlePageChange = (page: number) => {
@@ -63,32 +59,16 @@ const BuyPage = () => {
             Search properties to buy
           </h1>
         </div>
-
-        <div className="mb-8 flex gap-4">
-          <SearchBar
-            value={state.searchTerm}
-            onChange={(value) =>
-              dispatch({ type: 'SET_SEARCH_TERM', payload: value })
-            }
-            onSubmit={handleSearch}
-            placeholder="Search location"
-            className="flex-1 lg:max-w-2xl"
-            onFiltersClick={() =>
-              dispatch({ type: 'SET_FILTER_MODAL_OPEN', payload: true })
-            }
-          />
-          <Button
-            variant="white"
-            size="sm"
-            onClick={() =>
-              dispatch({ type: 'SET_FILTER_MODAL_OPEN', payload: true })
-            }
-            className="flex items-center gap-2 shrink-0 px-3 lg:hidden"
-          >
-            <FilterOutline className="w-7 h-7 text-primary-violet-dark" />
-            <span>Filters</span>
-          </Button>
-        </div>
+        <PropertySearchSection
+          searchTerm={state.searchTerm}
+          onSearchTermChange={(value) =>
+            dispatch({ type: 'SET_SEARCH_TERM', payload: value })
+          }
+          onSubmit={handleSearch}
+          onFiltersClick={() =>
+            dispatch({ type: 'SET_FILTER_MODAL_OPEN', payload: true })
+          }
+        />
 
         {(state.appliedSearchTerm ||
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -161,6 +141,7 @@ const BuyPage = () => {
               onClick={() => {
                 dispatch({ type: 'CLEAR_FILTERS' });
                 dispatch({ type: 'SET_PAGE', payload: 1 });
+                router.push('/buy', undefined, { shallow: true });
               }}
               className="text-sm text-red-600 hover:text-red-700 font-medium underline cursor-pointer"
             >
