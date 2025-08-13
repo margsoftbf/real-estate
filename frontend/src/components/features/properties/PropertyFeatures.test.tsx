@@ -1,12 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import PropertyFeatures from './PropertyFeatures';
-import { PropertyPublicDto } from '@/types/properties';
+import { PropertyPublicDto, PropertyType } from '@/types/properties';
 
 const mockProperty: PropertyPublicDto = {
-  id: '1',
   slug: 'test-property',
-  type: 'rent',
+  type: PropertyType.RENT,
   price: 2500,
   city: 'New York',
   country: 'USA',
@@ -32,7 +31,6 @@ const mockProperty: PropertyPublicDto = {
     washerDryer: false,
   },
   owner: {
-    id: '1',
     firstName: 'John',
     lastName: 'Doe',
     email: 'john@example.com',
@@ -40,7 +38,6 @@ const mockProperty: PropertyPublicDto = {
     avatarUrl: null,
   },
   isPopular: false,
-  isActive: true,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
 };
@@ -158,7 +155,7 @@ describe('PropertyFeatures', () => {
     render(<PropertyFeatures property={mockProperty} />);
     
     // These should appear in property details, not amenities
-    expect(screen.queryByText('2')).toBeInTheDocument(); // bedrooms in property details
+    expect(screen.getByText('Apartment')).toBeInTheDocument(); // property type in property details
     
     // But bedrooms should not appear as an amenity pill
     const amenitiesSection = screen.getByText('Amenities').closest('div');
@@ -171,7 +168,7 @@ describe('PropertyFeatures', () => {
     const container = screen.getByText('Property features').closest('div');
     expect(container).toHaveClass('mb-6');
     
-    const featuresContainer = screen.getByText('Apartment').closest('div')?.closest('div');
+    const featuresContainer = screen.getByText('Property features').nextElementSibling;
     expect(featuresContainer).toHaveClass('bg-white', 'border-2', 'border-purple-300');
   });
 

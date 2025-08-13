@@ -1,12 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import PropertyHeader from './PropertyHeader';
-import { PropertyPublicDto } from '@/types/properties';
+import { PropertyPublicDto, PropertyType } from '@/types/properties';
 
 const mockProperty: PropertyPublicDto = {
-  id: '1',
   slug: 'test-property',
-  type: 'rent',
+  type: PropertyType.RENT,
   price: 2500,
   city: 'New York',
   country: 'USA',
@@ -15,7 +14,6 @@ const mockProperty: PropertyPublicDto = {
   description: 'A lovely place to live',
   features: null,
   owner: {
-    id: '1',
     firstName: 'John',
     lastName: 'Doe',
     email: 'john@example.com',
@@ -23,7 +21,6 @@ const mockProperty: PropertyPublicDto = {
     avatarUrl: null,
   },
   isPopular: false,
-  isActive: true,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
 };

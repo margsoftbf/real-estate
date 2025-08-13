@@ -23,7 +23,7 @@ const PropertyRequest = () => {
 
   const closeModal = () => {
     setShowSuccessModal(false);
-    setSelectedDate('');
+    setSelectedDate(new Date().toISOString().split('T')[0]);
   };
 
   const tourOptions = [

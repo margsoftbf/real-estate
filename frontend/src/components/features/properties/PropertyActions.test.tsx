@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import PropertyActions from './PropertyActions';
 
@@ -17,8 +17,8 @@ describe('PropertyActions', () => {
   it('renders buttons with correct icons', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
-    const favoriteButton = screen.getByText('Favorite');
+    const shareButton = screen.getByRole('button', { name: /share/i });
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     
     expect(shareButton).toBeInTheDocument();
     expect(favoriteButton).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('PropertyActions', () => {
   it('applies correct responsive classes to share button', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
+    const shareButton = screen.getByRole('button', { name: /share/i });
     expect(shareButton).toHaveClass(
       'gap-1.5',
       'w-full',
@@ -59,7 +59,7 @@ describe('PropertyActions', () => {
   it('applies correct responsive classes to favorite button', () => {
     render(<PropertyActions />);
     
-    const favoriteButton = screen.getByText('Favorite');
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     expect(favoriteButton).toHaveClass(
       'gap-1.5',
       'w-full',
@@ -73,10 +73,9 @@ describe('PropertyActions', () => {
   it('uses large size variant by default', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
-    const favoriteButton = screen.getByText('Favorite');
+    const shareButton = screen.getByRole('button', { name: /share/i });
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     
-    // These are rendered as lg size buttons
     expect(shareButton).toBeInTheDocument();
     expect(favoriteButton).toBeInTheDocument();
   });
@@ -84,10 +83,9 @@ describe('PropertyActions', () => {
   it('uses gray variant for both buttons', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
-    const favoriteButton = screen.getByText('Favorite');
+    const shareButton = screen.getByRole('button', { name: /share/i });
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     
-    // Check that buttons have gray variant styling
     expect(shareButton).toBeInTheDocument();
     expect(favoriteButton).toBeInTheDocument();
   });
@@ -95,35 +93,31 @@ describe('PropertyActions', () => {
   it('handles share button click', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
+    const shareButton = screen.getByRole('button', { name: /share/i });
     
-    // Should not throw error when clicked
     expect(() => fireEvent.click(shareButton)).not.toThrow();
   });
 
   it('handles favorite button click', () => {
     render(<PropertyActions />);
     
-    const favoriteButton = screen.getByText('Favorite');
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     
-    // Should not throw error when clicked
     expect(() => fireEvent.click(favoriteButton)).not.toThrow();
   });
 
   it('renders share icon with correct styling', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
+    const shareButton = screen.getByRole('button', { name: /share/i });
     expect(shareButton).toBeInTheDocument();
-    // ShareOutline icon should be present with correct classes
   });
 
   it('renders heart icon with correct styling', () => {
     render(<PropertyActions />);
     
-    const favoriteButton = screen.getByText('Favorite');
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     expect(favoriteButton).toBeInTheDocument();
-    // HeartOutline icon should be present with correct classes
   });
 
   it('maintains button order - share then favorite', () => {
@@ -194,8 +188,8 @@ describe('PropertyActions', () => {
   it('buttons have full width on mobile and auto width on desktop', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
-    const favoriteButton = screen.getByText('Favorite');
+    const shareButton = screen.getByRole('button', { name: /share/i });
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     
     expect(shareButton).toHaveClass('w-full', 'lg:w-auto');
     expect(favoriteButton).toHaveClass('w-full', 'lg:w-auto');
@@ -204,8 +198,8 @@ describe('PropertyActions', () => {
   it('applies custom desktop padding with important flag', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
-    const favoriteButton = screen.getByText('Favorite');
+    const shareButton = screen.getByRole('button', { name: /share/i });
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     
     expect(shareButton).toHaveClass('lg:!px-3', 'lg:!py-2');
     expect(favoriteButton).toHaveClass('lg:!px-3', 'lg:!py-2');
@@ -214,8 +208,8 @@ describe('PropertyActions', () => {
   it('applies custom desktop text size', () => {
     render(<PropertyActions />);
     
-    const shareButton = screen.getByText('Share');
-    const favoriteButton = screen.getByText('Favorite');
+    const shareButton = screen.getByRole('button', { name: /share/i });
+    const favoriteButton = screen.getByRole('button', { name: /favorite/i });
     
     expect(shareButton).toHaveClass('lg:text-sm');
     expect(favoriteButton).toHaveClass('lg:text-sm');

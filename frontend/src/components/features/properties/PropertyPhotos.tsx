@@ -30,6 +30,7 @@ const PropertyPhotos = ({
   return (
     <div className="mb-6">
       <div
+        data-testid="photo-container"
         className="h-64 md:h-80 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-gray-200 relative group"
         onClick={() => onOpenPhotoModal(0)}
       >
