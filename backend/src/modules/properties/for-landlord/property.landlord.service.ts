@@ -106,8 +106,8 @@ export class PropertyLandlordService {
   ): Promise<PropertyLandlordReadManyResponseDto> {
     const queryBuilder = this.propertyRepository
       .createQueryBuilder('property')
-      .where('property.owner = :ownerId', { ownerId })
-      .andWhere('property.deletedAt IS NULL');
+      .leftJoin('property.owner', 'owner')
+      .where('owner.id = :ownerId', { ownerId });
 
     const paginatedResult = await paginate(
       query,
@@ -219,7 +219,7 @@ export class PropertyLandlordService {
       );
     }
 
-    await this.propertyRepository.softDelete({ slug });
+    await this.propertyRepository.softRemove(property);
     return { message: 'Property deleted successfully' };
   }
 }

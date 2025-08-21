@@ -40,7 +40,13 @@ describe('PropertyLandlordController (e2e)', () => {
       softRemove: jest.fn(),
       createQueryBuilder: jest.fn().mockReturnValue({
         where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        leftJoin: jest.fn().mockReturnThis(),
         leftJoinAndSelect: jest.fn().mockReturnThis(),
+        orderBy: jest.fn().mockReturnThis(),
+        addOrderBy: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValue([mockProperty]),
+        getCount: jest.fn().mockResolvedValue(1),
       }),
     };
 
