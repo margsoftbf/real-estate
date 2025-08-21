@@ -286,7 +286,7 @@ export const useBuy = (): UseBuyReturn => {
       return;
     }
     loadPropertiesWithParams(1);
-  }, [state.filters, state.appliedSearchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.appliedSearchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadPropertiesWithParams = async (page?: number) => {
     try {
@@ -356,10 +356,12 @@ export const useBuy = (): UseBuyReturn => {
 
   const handleApplyFilters = () => {
     dispatch({ type: 'SET_PAGE', payload: 1 });
+    loadPropertiesWithParams(1);
   };
 
   const handleClearFilters = () => {
     dispatch({ type: 'CLEAR_FILTERS' });
+    loadPropertiesWithParams(1);
   };
 
   return {

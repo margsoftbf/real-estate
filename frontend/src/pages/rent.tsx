@@ -63,11 +63,13 @@ const RentPage = () => {
 
   const handleApplyFilters = () => {
     dispatch({ type: 'SET_PAGE', payload: 1 });
+    loadPropertiesWithParams(1);
   };
 
   const handleClearFilters = () => {
     dispatch({ type: 'CLEAR_FILTERS' });
     dispatch({ type: 'SET_PAGE', payload: 1 });
+    loadPropertiesWithParams(1);
   };
 
   const handlePageChange = (page: number) => {

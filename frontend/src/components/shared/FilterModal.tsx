@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CloseOutline } from '@/assets/icons';
 import Button from '@/components/ui/Button/Button';
 import EditableInput from '@/components/common/EditableInput';
@@ -104,17 +104,61 @@ const FilterModal = ({
   filters,
   onFilterChange,
   onApplyFilters,
-  onClearFilters,
 }: FilterModalProps) => {
+  const [localFilters, setLocalFilters] = useState<Filters>(filters);
+
+  useEffect(() => {
+    if (isOpen) {
+      setLocalFilters(filters);
+    }
+  }, [isOpen, filters]);
+
   if (!isOpen) return null;
 
+  const handleLocalFilterChange = (key: string, value: string | boolean | null) => {
+    setLocalFilters(prev => ({ ...prev, [key]: value }));
+  };
+
   const handleApply = () => {
+    Object.keys(localFilters).forEach(key => {
+      onFilterChange(key, localFilters[key as keyof Filters]);
+    });
     onApplyFilters();
     onClose();
   };
 
   const handleClear = () => {
-    onClearFilters();
+    const clearedFilters: Filters = {
+      minPrice: '',
+      maxPrice: '',
+      city: '',
+      minBedrooms: '',
+      maxBedrooms: '',
+      minBathrooms: '',
+      maxBathrooms: '',
+      minArea: '',
+      maxArea: '',
+      minParkingSpaces: '',
+      maxParkingSpaces: '',
+      minYearBuilt: '',
+      maxYearBuilt: '',
+      homeType: '',
+      laundry: '',
+      heating: '',
+      furnished: null,
+      petsAllowed: null,
+      smokingAllowed: null,
+      balcony: null,
+      garden: null,
+      garage: null,
+      elevator: null,
+      airConditioning: null,
+      dishwasher: null,
+      washerDryer: null,
+      internet: null,
+      cable: null,
+    };
+    setLocalFilters(clearedFilters);
   };
 
   const homeTypeOptions = [
@@ -171,10 +215,10 @@ const FilterModal = ({
                   label="Price Range ($)"
                   minFieldName="minPrice"
                   maxFieldName="maxPrice"
-                  minValue={filters.minPrice}
-                  maxValue={filters.maxPrice}
-                  onMinChange={(value) => onFilterChange('minPrice', value)}
-                  onMaxChange={(value) => onFilterChange('maxPrice', value)}
+                  minValue={localFilters.minPrice}
+                  maxValue={localFilters.maxPrice}
+                  onMinChange={(value) => handleLocalFilterChange('minPrice', value)}
+                  onMaxChange={(value) => handleLocalFilterChange('maxPrice', value)}
                   placeholder={{ min: 'Min Price', max: 'Max Price' }}
                 />
 
@@ -183,8 +227,8 @@ const FilterModal = ({
                   label="City"
                   placeholder="Enter city name"
                   type="text"
-                  value={filters.city}
-                  onChange={(e) => onFilterChange('city', e.target.value)}
+                  value={localFilters.city}
+                  onChange={(e) => handleLocalFilterChange('city', e.target.value)}
                 />
 
                 <EditableSelect
@@ -192,8 +236,8 @@ const FilterModal = ({
                   label="Home Type"
                   placeholder="Any"
                   options={homeTypeOptions}
-                  value={filters.homeType}
-                  onChange={(e) => onFilterChange('homeType', e.target.value)}
+                  value={localFilters.homeType}
+                  onChange={(e) => handleLocalFilterChange('homeType', e.target.value)}
                 />
               </div>
 
@@ -206,10 +250,10 @@ const FilterModal = ({
                   label="Bedrooms"
                   minFieldName="minBedrooms"
                   maxFieldName="maxBedrooms"
-                  minValue={filters.minBedrooms}
-                  maxValue={filters.maxBedrooms}
-                  onMinChange={(value) => onFilterChange('minBedrooms', value)}
-                  onMaxChange={(value) => onFilterChange('maxBedrooms', value)}
+                  minValue={localFilters.minBedrooms}
+                  maxValue={localFilters.maxBedrooms}
+                  onMinChange={(value) => handleLocalFilterChange('minBedrooms', value)}
+                  onMaxChange={(value) => handleLocalFilterChange('maxBedrooms', value)}
                   placeholder={{ min: 'Min', max: 'Max' }}
                 />
 
@@ -217,10 +261,10 @@ const FilterModal = ({
                   label="Bathrooms"
                   minFieldName="minBathrooms"
                   maxFieldName="maxBathrooms"
-                  minValue={filters.minBathrooms}
-                  maxValue={filters.maxBathrooms}
-                  onMinChange={(value) => onFilterChange('minBathrooms', value)}
-                  onMaxChange={(value) => onFilterChange('maxBathrooms', value)}
+                  minValue={localFilters.minBathrooms}
+                  maxValue={localFilters.maxBathrooms}
+                  onMinChange={(value) => handleLocalFilterChange('minBathrooms', value)}
+                  onMaxChange={(value) => handleLocalFilterChange('maxBathrooms', value)}
                   placeholder={{ min: 'Min', max: 'Max' }}
                 />
 
@@ -228,10 +272,10 @@ const FilterModal = ({
                   label="Area (m²)"
                   minFieldName="minArea"
                   maxFieldName="maxArea"
-                  minValue={filters.minArea}
-                  maxValue={filters.maxArea}
-                  onMinChange={(value) => onFilterChange('minArea', value)}
-                  onMaxChange={(value) => onFilterChange('maxArea', value)}
+                  minValue={localFilters.minArea}
+                  maxValue={localFilters.maxArea}
+                  onMinChange={(value) => handleLocalFilterChange('minArea', value)}
+                  onMaxChange={(value) => handleLocalFilterChange('maxArea', value)}
                   placeholder={{ min: 'Min Area', max: 'Max Area' }}
                 />
 
@@ -239,13 +283,13 @@ const FilterModal = ({
                   label="Parking Spaces"
                   minFieldName="minParkingSpaces"
                   maxFieldName="maxParkingSpaces"
-                  minValue={filters.minParkingSpaces}
-                  maxValue={filters.maxParkingSpaces}
+                  minValue={localFilters.minParkingSpaces}
+                  maxValue={localFilters.maxParkingSpaces}
                   onMinChange={(value) =>
-                    onFilterChange('minParkingSpaces', value)
+                    handleLocalFilterChange('minParkingSpaces', value)
                   }
                   onMaxChange={(value) =>
-                    onFilterChange('maxParkingSpaces', value)
+                    handleLocalFilterChange('maxParkingSpaces', value)
                   }
                   placeholder={{ min: 'Min', max: 'Max' }}
                 />
@@ -254,10 +298,10 @@ const FilterModal = ({
                   label="Year Built"
                   minFieldName="minYearBuilt"
                   maxFieldName="maxYearBuilt"
-                  minValue={filters.minYearBuilt}
-                  maxValue={filters.maxYearBuilt}
-                  onMinChange={(value) => onFilterChange('minYearBuilt', value)}
-                  onMaxChange={(value) => onFilterChange('maxYearBuilt', value)}
+                  minValue={localFilters.minYearBuilt}
+                  maxValue={localFilters.maxYearBuilt}
+                  onMinChange={(value) => handleLocalFilterChange('minYearBuilt', value)}
+                  onMaxChange={(value) => handleLocalFilterChange('maxYearBuilt', value)}
                   placeholder={{ min: 'From Year', max: 'To Year' }}
                 />
               </div>
@@ -272,8 +316,8 @@ const FilterModal = ({
                   label="Laundry"
                   placeholder="Any"
                   options={laundryOptions}
-                  value={filters.laundry}
-                  onChange={(e) => onFilterChange('laundry', e.target.value)}
+                  value={localFilters.laundry}
+                  onChange={(e) => handleLocalFilterChange('laundry', e.target.value)}
                 />
 
                 <EditableSelect
@@ -281,39 +325,39 @@ const FilterModal = ({
                   label="Heating"
                   placeholder="Any"
                   options={heatingOptions}
-                  value={filters.heating}
-                  onChange={(e) => onFilterChange('heating', e.target.value)}
+                  value={localFilters.heating}
+                  onChange={(e) => handleLocalFilterChange('heating', e.target.value)}
                 />
 
                 <div className="space-y-3">
                   <ToggleSwitch
                     label="Furnished"
-                    value={filters.furnished}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.furnished}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="furnished"
                   />
                   <ToggleSwitch
                     label="Pets Allowed"
-                    value={filters.petsAllowed}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.petsAllowed}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="petsAllowed"
                   />
                   <ToggleSwitch
                     label="Smoking Allowed"
-                    value={filters.smokingAllowed}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.smokingAllowed}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="smokingAllowed"
                   />
                   <ToggleSwitch
                     label="Balcony"
-                    value={filters.balcony}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.balcony}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="balcony"
                   />
                   <ToggleSwitch
                     label="Garden"
-                    value={filters.garden}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.garden}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="garden"
                   />
                 </div>
@@ -326,20 +370,20 @@ const FilterModal = ({
                 <div className="space-y-3">
                   <ToggleSwitch
                     label="Garage"
-                    value={filters.garage}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.garage}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="garage"
                   />
                   <ToggleSwitch
                     label="Elevator"
-                    value={filters.elevator}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.elevator}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="elevator"
                   />
                   <ToggleSwitch
                     label="Air Conditioning"
-                    value={filters.airConditioning}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.airConditioning}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="airConditioning"
                   />
                 </div>
@@ -352,14 +396,14 @@ const FilterModal = ({
                 <div className="space-y-3">
                   <ToggleSwitch
                     label="Dishwasher"
-                    value={filters.dishwasher}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.dishwasher}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="dishwasher"
                   />
                   <ToggleSwitch
                     label="Washer/Dryer"
-                    value={filters.washerDryer}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.washerDryer}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="washerDryer"
                   />
                 </div>
@@ -372,14 +416,14 @@ const FilterModal = ({
                 <div className="space-y-3">
                   <ToggleSwitch
                     label="Internet"
-                    value={filters.internet}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.internet}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="internet"
                   />
                   <ToggleSwitch
                     label="Cable TV"
-                    value={filters.cable}
-                    onFilterChange={onFilterChange}
+                    value={localFilters.cable}
+                    onFilterChange={handleLocalFilterChange}
                     filterKey="cable"
                   />
                 </div>

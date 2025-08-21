@@ -15,7 +15,9 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
   const handleBrowse = () => {
     const targetPage = activeTab.toLowerCase() === 'rent' ? '/rent' : '/buy';
     if (searchValue.trim()) {
-      router.push(`${targetPage}?city=${encodeURIComponent(searchValue.trim())}`);
+      router.push(
+        `${targetPage}?city=${encodeURIComponent(searchValue.trim())}`
+      );
     } else {
       router.push(targetPage);
     }
@@ -105,10 +107,10 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
           </div>
         </div>
 
-        <Button 
-          variant="primary" 
-          size="md" 
-          className="hidden lg:flex"
+        <Button
+          variant="primary"
+          size="md"
+          className="hidden lg:flex h-12"
           onClick={handleBrowse}
         >
           Browse Properties

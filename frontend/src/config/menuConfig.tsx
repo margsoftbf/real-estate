@@ -25,7 +25,7 @@ export const menu = {
     // },
     {
       title: 'My Listings',
-      url: '/listings',
+      url: '/landlord/my-listings',
       icon: <PropertiesOutline className="w-5 h-5" />,
     },
     {
