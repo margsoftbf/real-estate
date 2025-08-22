@@ -32,22 +32,22 @@ export class PropertyLandlordController {
     return this.propertyLandlordService.findAll(query, user.id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string, @AuthUser() user: User) {
-    return this.propertyLandlordService.findOne(id, user.id);
+  @Get(':slug')
+  findOne(@Param('slug') slug: string, @AuthUser() user: User) {
+    return this.propertyLandlordService.findOne(slug, user.id);
   }
 
-  @Patch(':id')
+  @Patch(':slug')
   update(
-    @Param('id') id: string,
+    @Param('slug') slug: string,
     @Body() updatePropertyDto: PropertiesLandlordUpdateDto,
     @AuthUser() user: User,
   ) {
-    return this.propertyLandlordService.update(id, updatePropertyDto, user.id);
+    return this.propertyLandlordService.update(slug, updatePropertyDto, user.id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string, @AuthUser() user: User) {
-    return this.propertyLandlordService.remove(id, user.id);
+  @Delete(':slug')
+  remove(@Param('slug') slug: string, @AuthUser() user: User) {
+    return this.propertyLandlordService.remove(slug, user.id);
   }
 }

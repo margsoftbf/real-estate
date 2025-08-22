@@ -275,7 +275,7 @@ export const useRent = (): UseRentReturn => {
       return;
     }
     loadPropertiesWithParams(1);
-  }, [state.filters, state.appliedSearchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.appliedSearchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadPropertiesWithParams = async (page?: number) => {
     try {

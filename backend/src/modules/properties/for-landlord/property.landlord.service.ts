@@ -21,6 +21,7 @@ import {
 } from './dto/properties-landlord-read-many.response.dto';
 import { PropertyLandlordReadOneDto } from './dto/properties-landlord-read-one.response.dto';
 import { ExceptionConstants } from '../../../exceptions/exceptions.constants';
+import { generateRandomString } from '../../../utils/utils';
 
 export const propertiesLandlordFindAllConfig: PaginateConfig<Property> = {
   sortableColumns: ['createdAt', 'price', 'city'],
@@ -54,8 +55,20 @@ export class PropertyLandlordService {
       throw new NotFoundException(ExceptionConstants.UsersErrors.userNotFound);
     }
 
+    const titleSlug = createPropertyDto.title
+      ? createPropertyDto.title
+          .slice(0, 50)
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/^-|-$/g, '')
+      : 'property';
+    const slug =
+      createPropertyDto.slug || `${titleSlug}-${generateRandomString(8)}`;
+
     const property = this.propertyRepository.create({
       ...createPropertyDto,
+      slug,
       owner,
       priceHistory: [
         {
@@ -66,7 +79,25 @@ export class PropertyLandlordService {
       ],
     });
 
-    return this.propertyRepository.save(property);
+    const savedProperty = await this.propertyRepository.save(property);
+
+    return {
+      id: savedProperty.id,
+      slug: savedProperty.slug,
+      type: savedProperty.type,
+      price: savedProperty.price,
+      city: savedProperty.city,
+      country: savedProperty.country,
+      title: savedProperty.title,
+      photos: savedProperty.photos,
+      description: savedProperty.description,
+      features: savedProperty.features,
+      priceHistory: savedProperty.priceHistory,
+      isPopular: savedProperty.isPopular,
+      isActive: savedProperty.isActive,
+      createdAt: savedProperty.createdAt,
+      updatedAt: savedProperty.updatedAt,
+    };
   }
 
   async findAll(
@@ -75,7 +106,8 @@ export class PropertyLandlordService {
   ): Promise<PropertyLandlordReadManyResponseDto> {
     const queryBuilder = this.propertyRepository
       .createQueryBuilder('property')
-      .where('property.owner = :ownerId', { ownerId });
+      .leftJoin('property.owner', 'owner')
+      .where('owner.id = :ownerId', { ownerId });
 
     const paginatedResult = await paginate(
       query,
@@ -107,11 +139,11 @@ export class PropertyLandlordService {
   }
 
   async findOne(
-    id: string,
+    slug: string,
     ownerId: string,
   ): Promise<PropertyLandlordReadOneDto> {
     const property = await this.propertyRepository.findOne({
-      where: { id },
+      where: { slug },
       relations: ['owner'],
     });
 
@@ -146,14 +178,14 @@ export class PropertyLandlordService {
   }
 
   async update(
-    id: string,
+    slug: string,
     updatePropertyDto: PropertiesLandlordUpdateDto,
     ownerId: string,
   ): Promise<PropertyLandlordReadOneDto> {
-    const propertyData = await this.findOne(id, ownerId);
+    const propertyData = await this.findOne(slug, ownerId);
 
     const property = await this.propertyRepository.findOne({
-      where: { id },
+      where: { slug },
       relations: ['owner'],
     });
 
@@ -166,11 +198,28 @@ export class PropertyLandlordService {
     Object.assign(property, updatePropertyDto);
     await this.propertyRepository.save(property);
 
-    return this.findOne(id, ownerId);
+    return this.findOne(slug, ownerId);
   }
 
-  async remove(id: string, ownerId: string) {
-    const property = await this.findOne(id, ownerId);
-    return this.propertyRepository.softRemove(property);
+  async remove(slug: string, ownerId: string) {
+    const property = await this.propertyRepository.findOne({
+      where: { slug },
+      relations: ['owner'],
+    });
+
+    if (!property) {
+      throw new NotFoundException(
+        ExceptionConstants.PropertyErrors.propertyNotFound,
+      );
+    }
+
+    if (property.owner.id !== ownerId) {
+      throw new ForbiddenException(
+        ExceptionConstants.PropertyErrors.propertyIsNotYours,
+      );
+    }
+
+    await this.propertyRepository.softRemove(property);
+    return { message: 'Property deleted successfully' };
   }
 }

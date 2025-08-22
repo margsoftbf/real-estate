@@ -3,11 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PropertyType, PropertyFeatures } from '../../entities/property.entity';
 
 export class PropertiesLandlordCreateDto {
-  @ApiProperty({ description: 'Property slug', maxLength: 500 })
+  @ApiProperty({ description: 'Property slug', maxLength: 500, required: false })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MaxLength(500)
-  slug: string;
+  slug?: string;
 
   @ApiProperty({ description: 'Property type', enum: PropertyType })
   @IsEnum(PropertyType)

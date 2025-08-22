@@ -8,6 +8,7 @@ interface SearchBarProps {
   placeholder?: string;
   className?: string;
   onFiltersClick?: () => void;
+  size?: 'default' | 'compact';
 }
 
 const SearchBar = ({
@@ -17,7 +18,10 @@ const SearchBar = ({
   placeholder = 'Search location',
   className = '',
   onFiltersClick,
+  size = 'default',
 }: SearchBarProps) => {
+  const isCompact = size === 'compact';
+
   return (
     <form onSubmit={onSubmit} className={`relative ${className}`}>
       <div className="relative">
@@ -27,13 +31,20 @@ const SearchBar = ({
             placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full pr-14 py-3 px-4 bg-purple-50 border border-purple-300 rounded-lg focus:ring-1 focus:outline-none focus:ring-primary-violet focus:border-primary-violet focus:bg-white text-gray-900 placeholder:text-gray-400"
+            className={`w-full pr-12 bg-purple-50 border border-purple-300 rounded-lg focus:ring-1 focus:outline-none focus:ring-primary-violet focus:border-primary-violet focus:bg-white text-gray-900 placeholder:text-gray-400 ${
+              isCompact ? 'py-2 px-3 text-sm' : 'py-3 px-4'
+            }`}
           />
           <button
             type="submit"
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary-violet w-10 h-10 flex items-center justify-center rounded-md hover:brightness-120 transition-all"
+            className={`absolute right-1 top-1/2 transform -translate-y-1/2 bg-primary-violet flex items-center justify-center rounded-md hover:brightness-120 transition-all ${
+              isCompact ? 'w-8 h-8' : 'w-10 h-10'
+            }`}
           >
-            <SearchOutline className="w-4 h-4" color="white" />
+            <SearchOutline
+              className={isCompact ? 'w-3 h-3' : 'w-4 h-4'}
+              color="white"
+            />
           </button>
         </div>
 
