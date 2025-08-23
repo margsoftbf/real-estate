@@ -50,7 +50,7 @@ export default function PropertyPage({
       propertiesApi
         .findBySlug(router.query.slug)
         .then(setProperty)
-        .catch(console.error)
+        .catch(() => {})
         .finally(() => setIsLoading(false));
     }
   }, [router.query.slug, initialProperty]);
@@ -63,8 +63,8 @@ export default function PropertyPage({
           page: 1,
         });
         setSimilarProperties(response.data.slice(0, 3));
-      } catch (error) {
-        console.error('Error fetching similar properties:', error);
+      } catch {
+        // Error handled by empty state
       }
     };
 
@@ -214,8 +214,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         property,
       },
     };
-  } catch (error) {
-    console.error('Error fetching property:', error);
+  } catch {
+    // Error handled by error state
 
     return {
       props: {

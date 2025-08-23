@@ -2,11 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { PropertyLandlordDto } from '@/lib/properties/for-landlord/api';
-import {
-  EditOutline,
-  TrashOutline,
-  EyeOutline,
-} from '@/assets/icons';
+import { EditOutline, TrashOutline, EyeOutline } from '@/assets/icons';
+import { PropertyType } from '@/types/properties/public-types';
 
 interface PropertyListItemProps {
   property: PropertyLandlordDto;
@@ -26,6 +23,19 @@ const PropertyListItem = ({
 }: PropertyListItemProps) => {
   const router = useRouter();
   const statusBadge = getStatusBadge(property);
+
+  const getTypeBadge = (type: PropertyType) => {
+    switch (type) {
+      case PropertyType.RENT:
+        return { label: 'RENT', color: 'bg-blue-100 text-blue-700' };
+      case PropertyType.SELL:
+        return { label: 'SALE', color: 'bg-green-100 text-green-700' };
+      default:
+        return { label: 'UNKNOWN', color: 'bg-gray-100 text-gray-700' };
+    }
+  };
+
+  const typeBadge = getTypeBadge(property.type);
 
   return (
     <div className="p-4 hover:bg-gray-50 transition-colors">
@@ -58,24 +68,29 @@ const PropertyListItem = ({
               <div className="md:hidden mt-1">
                 <span className="text-xs text-gray-500">
                   {property.features?.area
-                    ? `${property.features.area} sq m`
+                    ? `${property.features.area} m²`
                     : 'Size N/A'}
                 </span>
               </div>
             </div>
 
-            <div className="flex-shrink-0 ml-2">
+            <div className="flex-shrink-0 flex-col md:flex-row flex-wrap ml-2 flex gap-1">
               <span
                 className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${statusBadge.color}`}
               >
                 {statusBadge.label}
+              </span>
+              <span
+                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${typeBadge.color}`}
+              >
+                {typeBadge.label}
               </span>
             </div>
 
             <div className="hidden md:flex flex-shrink-0 ml-4 text-right">
               <span className="text-sm text-gray-900 font-medium">
                 {property.features?.area
-                  ? `${property.features.area} sq m`
+                  ? `${property.features.area} m²`
                   : 'Size N/A'}
               </span>
             </div>
@@ -83,7 +98,7 @@ const PropertyListItem = ({
 
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-4">
-              <span className="text-sm md:text-base font-bold text-blue-600">
+              <span className="text-sm md:text-base font-bold text-primary-violet">
                 {formatPrice(property.price)}
               </span>
 
@@ -92,18 +107,14 @@ const PropertyListItem = ({
                   <span>{property.features.bedrooms} bed</span>
                 )}
                 {property.features?.bathrooms && (
-                  <span>
-                    {property.features.bathrooms} bath
-                  </span>
+                  <span>{property.features.bathrooms} bath</span>
                 )}
               </div>
             </div>
 
             <div className="flex items-center gap-1">
               <button
-                onClick={() =>
-                  router.push(`/properties/${property.slug}`)
-                }
+                onClick={() => router.push(`/properties/${property.slug}`)}
                 className="p-2 text-blue-500 hover:text-blue-700 transition-colors cursor-pointer"
                 title="View Property"
               >
@@ -111,9 +122,7 @@ const PropertyListItem = ({
               </button>
               <button
                 onClick={() =>
-                  router.push(
-                    `/landlord/my-listings/${property.slug}/edit`
-                  )
+                  router.push(`/landlord/edit-listing/${property.slug}`)
                 }
                 className="p-2 text-green-500 hover:text-green-700 transition-colors cursor-pointer"
                 title="Edit Property"

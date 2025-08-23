@@ -74,7 +74,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
           ))}
         </ul>
 
-        <div className="mt-8 pt-6 border-t border-gray-200">
+        <div className="mt-4 pt-4 border-t border-gray-200">
           <ul className="space-y-2">
             {commonMenuItems.map((item) => (
               <li key={item.title}>

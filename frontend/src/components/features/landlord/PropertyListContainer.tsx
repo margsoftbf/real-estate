@@ -17,7 +17,7 @@ interface PropertyListContainerProps {
   totalPages: number;
   searchQuery: string;
   onDeleteProperty: (slug: string, title: string) => void;
-  onPageChange: (page: number, searchQuery: string) => void;
+  onPageChange: (page: number) => void;
   formatPrice: (price: number) => string;
   getStatusBadge: (property: PropertyLandlordDto) => {
     label: string;
@@ -33,7 +33,6 @@ const PropertyListContainer = ({
   error,
   currentPage,
   totalPages,
-  searchQuery,
   onDeleteProperty,
   onPageChange,
   formatPrice,
@@ -96,7 +95,7 @@ const PropertyListContainer = ({
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={(page) => onPageChange(page, searchQuery)}
+          onPageChange={onPageChange}
         />
       </div>
     </>

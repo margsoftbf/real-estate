@@ -17,8 +17,8 @@ const PropertyLoginSidebar = () => {
         if (response.data.length > 0) {
           setRandomProperty(response.data[0]);
         }
-      } catch (error) {
-        console.error('Error fetching random property:', error);
+      } catch {
+        // Error handled by empty state
       }
     };
 

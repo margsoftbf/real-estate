@@ -85,10 +85,7 @@ const BuyPage = () => {
             handleFilterChange(key, value);
             dispatch({ type: 'SET_PAGE', payload: 1 });
           }}
-          onClearAll={() => {
-            dispatch({ type: 'CLEAR_FILTERS' });
-            dispatch({ type: 'SET_PAGE', payload: 1 });
-          }}
+          onClearAll={handleClearFilters}
           basePath="buy"
         />
 

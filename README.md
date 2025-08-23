@@ -17,6 +17,7 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 **Live Application**: [https://real-estate-six-tawny-67.vercel.app/](https://real-estate-six-tawny-67.vercel.app/)
 
 ### Test Credentials
+
 - **Email**: landlord@realestate.com
 - **Password**: I will add when finished
 
@@ -240,6 +241,7 @@ The code in this repository is provided for portfolio and demonstration purposes
 ## 👨‍💻 For Recruiters
 
 Quick demo setup:
+
 ```bash
 git clone <repository-url>
 cd real-estate-fullstack

@@ -21,7 +21,7 @@ const PropertyListHeader = ({ propertiesCount }: PropertyListHeaderProps) => {
         </p>
       </div>
       <Button
-        onClick={() => router.push('/landlord/my-listings/create')}
+        onClick={() => router.push('/landlord/add-listing')}
         className="flex items-center justify-center gap-2 w-full sm:w-auto"
       >
         <AddOutline className="w-4 h-4" />

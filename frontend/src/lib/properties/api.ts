@@ -105,24 +105,27 @@ class PropertiesApi extends BaseApiClient {
   }
 
   async findBuyProperties(
-    query: Omit<PropertyQuery, 'filter'> & {
-      filter?: Omit<PropertyQuery['filter'], 'type'>;
-    } = {}
+    query: Record<string, string | number | boolean | undefined> = {}
   ): Promise<BasePaginatedResponse<PropertyPublicDto>> {
     const searchParams = new URLSearchParams();
 
-    if (query.page) searchParams.append('page', query.page.toString());
-    if (query.limit) searchParams.append('limit', query.limit.toString());
-    if (query.sortBy) searchParams.append('sortBy', query.sortBy);
-    if (query.search) searchParams.append('search', query.search);
+    if (query.page) searchParams.append('page', String(query.page));
+    if (query.limit) searchParams.append('limit', String(query.limit));
+    if (query.sortBy) searchParams.append('sortBy', String(query.sortBy));
+    if (query.search) searchParams.append('search', String(query.search));
 
-    if (query.filter) {
-      Object.entries(query.filter).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          searchParams.append(`filter.${key}`, value.toString());
-        }
-      });
-    }
+    Object.entries(query).forEach(([key, value]) => {
+      if (
+        key !== 'page' &&
+        key !== 'limit' &&
+        key !== 'sortBy' &&
+        key !== 'search' &&
+        value !== undefined &&
+        value !== null
+      ) {
+        searchParams.append(key, String(value));
+      }
+    });
 
     const queryString = searchParams.toString();
     const endpoint = `/properties/buy${queryString ? `?${queryString}` : ''}`;
