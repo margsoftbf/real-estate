@@ -9,6 +9,7 @@ interface EditableInputProps
   type: string;
   required?: boolean;
   showPasswordToggle?: boolean;
+  error?: string;
 }
 
 const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
@@ -20,6 +21,7 @@ const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
       type,
       required = false,
       showPasswordToggle = false,
+      error,
       ...inputProps
     },
     ref
@@ -49,7 +51,12 @@ const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
             type={inputType}
             placeholder={placeholder}
             required={required}
-            className="mt-1 block w-full px-4 py-3 border bg-purple-50 font-medium border-purple-300 rounded-md placeholder-primary-black/50 focus:ring-1 focus:outline-none focus:ring-primary-violet focus:border-primary-violet text-body-md focus:bg-white valid:bg-white pr-1"
+            data-error={!!error}
+            className={`mt-1 block w-full px-4 py-3 border bg-white font-medium rounded-md placeholder-primary-black/50 focus:ring-1 focus:outline-none text-body-md focus:bg-purple-50 valid:bg-white pr-1 ${
+              error
+                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                : 'border-purple-300 focus:ring-primary-violet focus:border-primary-violet'
+            }`}
           />
           {showPasswordToggle && (
             <button
@@ -65,6 +72,11 @@ const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
             </button>
           )}
         </div>
+        {error && (
+          <span className="text-xs text-body-sm-medium text-red-600 mt-1">
+            {error}
+          </span>
+        )}
       </div>
     );
   }

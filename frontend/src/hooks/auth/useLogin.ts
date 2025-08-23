@@ -43,8 +43,8 @@ export const useLogin = () => {
       const returnTo = router.query.returnTo as string;
       router.push(returnTo || '/dashboard');
     },
-    onError: (error: LoginError) => {
-      console.error('Login failed:', error.message);
+    onError: () => {
+      // Error handled by setError state
     },
   });
 };

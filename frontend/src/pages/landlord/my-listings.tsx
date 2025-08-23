@@ -8,6 +8,7 @@ import FilterModal from '@/components/shared/FilterModal';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import PropertyListHeader from '@/components/features/landlord/PropertyListHeader';
 import PropertySearchSection from '@/components/features/landlord/PropertySearchSection';
+import PropertyTypeTabs from '@/components/features/landlord/PropertyTypeTabs';
 import PropertyListContainer from '@/components/features/landlord/PropertyListContainer';
 
 const MyListingsPage = () => {
@@ -18,10 +19,18 @@ const MyListingsPage = () => {
     error,
     totalPages,
     currentPage,
+    totalCount,
+    rentCount,
+    saleCount,
     searchQuery,
     setSearchQuery,
+    activeTab,
+    setActiveTab,
     showFilters,
     setShowFilters,
+    filters,
+    handleFilterChange,
+    handleClearFilters,
     deleteDialog,
     openDeleteDialog,
     closeDeleteDialog,
@@ -48,7 +57,7 @@ const MyListingsPage = () => {
       </Head>
 
       <div className="p-4 md:p-0 space-y-4 md:space-y-6">
-        <PropertyListHeader propertiesCount={properties.length} />
+        <PropertyListHeader propertiesCount={totalCount} />
 
         <PropertySearchSection
           searchQuery={searchQuery}
@@ -56,6 +65,14 @@ const MyListingsPage = () => {
           handleSearch={handleSearch}
           setShowFilters={setShowFilters}
           propertiesCount={properties.length}
+        />
+
+        <PropertyTypeTabs
+          totalCount={totalCount}
+          rentCount={rentCount}
+          saleCount={saleCount}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         />
 
         <PropertyListContainer
@@ -66,49 +83,55 @@ const MyListingsPage = () => {
           totalPages={totalPages}
           searchQuery={searchQuery}
           onDeleteProperty={openDeleteDialog}
-          onPageChange={fetchProperties}
+          onPageChange={(page) => fetchProperties(page, searchQuery, activeTab, filters)}
           formatPrice={formatPrice}
           getStatusBadge={getStatusBadge}
           sortProperties={sortProperties}
-          onRetry={() => fetchProperties(currentPage, searchQuery)}
+          onRetry={() => fetchProperties(currentPage, searchQuery, activeTab, filters)}
         />
 
         <FilterModal
           isOpen={showFilters}
           onClose={() => setShowFilters(false)}
-          filters={{
-            minPrice: '',
-            maxPrice: '',
-            city: '',
-            minBedrooms: '',
-            maxBedrooms: '',
-            minBathrooms: '',
-            maxBathrooms: '',
-            minArea: '',
-            maxArea: '',
-            minParkingSpaces: '',
-            maxParkingSpaces: '',
-            minYearBuilt: '',
-            maxYearBuilt: '',
-            homeType: '',
-            laundry: '',
-            heating: '',
-            furnished: null,
-            petsAllowed: null,
-            smokingAllowed: null,
-            balcony: null,
-            garden: null,
-            garage: null,
-            elevator: null,
-            airConditioning: null,
-            dishwasher: null,
-            washerDryer: null,
-            internet: null,
-            cable: null,
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onApplyFilters={() => {
+            fetchProperties(1, searchQuery, activeTab, filters);
+            setShowFilters(false);
           }}
-          onFilterChange={() => {}}
-          onApplyFilters={() => setShowFilters(false)}
-          onClearFilters={() => {}}
+          onClearFilters={() => {
+            handleClearFilters();
+            fetchProperties(1, searchQuery, activeTab, {
+              minPrice: '',
+              maxPrice: '',
+              city: '',
+              minBedrooms: '',
+              maxBedrooms: '',
+              minBathrooms: '',
+              maxBathrooms: '',
+              minArea: '',
+              maxArea: '',
+              minParkingSpaces: '',
+              maxParkingSpaces: '',
+              minYearBuilt: '',
+              maxYearBuilt: '',
+              homeType: '',
+              laundry: '',
+              heating: '',
+              furnished: null,
+              petsAllowed: null,
+              smokingAllowed: null,
+              balcony: null,
+              garden: null,
+              garage: null,
+              elevator: null,
+              airConditioning: null,
+              dishwasher: null,
+              washerDryer: null,
+              internet: null,
+              cable: null,
+            });
+          }}
         />
 
         <ConfirmDialog

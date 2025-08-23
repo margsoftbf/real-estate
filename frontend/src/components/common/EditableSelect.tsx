@@ -14,6 +14,7 @@ interface EditableSelectProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   className?: string;
+  error?: string;
 }
 
 const EditableSelect: React.FC<EditableSelectProps> = ({
@@ -24,6 +25,7 @@ const EditableSelect: React.FC<EditableSelectProps> = ({
   value = '',
   onChange,
   className = '',
+  error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
@@ -82,12 +84,16 @@ const EditableSelect: React.FC<EditableSelectProps> = ({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          mt-1 w-full px-4 py-3 border bg-white font-medium border-purple-300 
-          rounded-md focus:ring-1 focus:outline-none focus:ring-primary-violet 
-          focus:border-primary-violet text-body-md focus:bg-white text-left
+          mt-1 w-full px-4 py-3 border bg-white font-medium 
+          rounded-md focus:ring-1 focus:outline-none text-body-md focus:bg-white text-left
           flex items-center justify-between transition-colors duration-200
           ${selectedValue ? 'bg-white' : ''}
+          ${error 
+            ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+            : 'border-purple-300 focus:ring-primary-violet focus:border-primary-violet'
+          }
         `}
+        data-error={!!error}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
@@ -132,7 +138,7 @@ const EditableSelect: React.FC<EditableSelectProps> = ({
                   onClick={() => handleSelect(option.value)}
                   className={`
                     w-full px-4 py-3 text-left text-body-md hover:bg-purple-100 
-                    transition-colors duration-150 flex items-center justify-between
+                    transition-colors duration-150 flex items-center justify-between cursor-pointer
                     ${index === options.length - 1 ? 'rounded-b-lg' : ''}
                     ${selectedValue === option.value ? 'bg-purple-100 text-primary-violet font-medium' : 'text-primary-black'}
                   `}
@@ -152,7 +158,7 @@ const EditableSelect: React.FC<EditableSelectProps> = ({
         id={fieldName}
         name={fieldName}
         value={selectedValue}
-        onChange={() => {}} 
+        onChange={() => {}}
         className="sr-only"
         tabIndex={-1}
         aria-hidden="true"
@@ -164,6 +170,10 @@ const EditableSelect: React.FC<EditableSelectProps> = ({
           </option>
         ))}
       </select>
+      
+      {error && (
+        <span className="text-sm text-red-600 mt-1">{error}</span>
+      )}
     </div>
   );
 };

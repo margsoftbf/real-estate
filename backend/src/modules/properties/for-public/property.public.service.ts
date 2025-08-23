@@ -2,25 +2,48 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Property, PropertyType } from '../entities/property.entity';
-import { FilterOperator, paginate, PaginateConfig, PaginateQuery } from 'nestjs-paginate';
-import { PropertyPublicReadManyDto, PropertyPublicReadManyResponseDto } from './dto/properties-public-read-many.response.dto';
+import {
+  FilterOperator,
+  paginate,
+  PaginateConfig,
+  PaginateQuery,
+} from 'nestjs-paginate';
+import {
+  PropertyPublicReadManyDto,
+  PropertyPublicReadManyResponseDto,
+} from './dto/properties-public-read-many.response.dto';
 import { PropertiesPublicReadOneResponseDto } from './dto/properties-public-read-one.response.dto';
 
 export const findAllPropertiesPublicConfig: PaginateConfig<Property> = {
   sortableColumns: ['createdAt', 'price', 'city', 'isPopular'],
   nullSort: 'last',
   relations: ['owner'],
-  defaultSortBy: [['isPopular', 'DESC'], ['createdAt', 'DESC']],
+  defaultSortBy: [
+    ['isPopular', 'DESC'],
+    ['createdAt', 'DESC'],
+  ],
   searchableColumns: ['title', 'description', 'city', 'country'],
   filterableColumns: {
     city: [FilterOperator.ILIKE],
     country: [FilterOperator.ILIKE],
     type: [FilterOperator.EQ],
     price: [FilterOperator.GTE, FilterOperator.LTE],
-    'features.bedrooms': [FilterOperator.GTE, FilterOperator.LTE, FilterOperator.EQ],
-    'features.bathrooms': [FilterOperator.GTE, FilterOperator.LTE, FilterOperator.EQ],
+    'features.bedrooms': [
+      FilterOperator.GTE,
+      FilterOperator.LTE,
+      FilterOperator.EQ,
+    ],
+    'features.bathrooms': [
+      FilterOperator.GTE,
+      FilterOperator.LTE,
+      FilterOperator.EQ,
+    ],
     'features.area': [FilterOperator.GTE, FilterOperator.LTE],
-    'features.parkingSpaces': [FilterOperator.GTE, FilterOperator.LTE, FilterOperator.EQ],
+    'features.parkingSpaces': [
+      FilterOperator.GTE,
+      FilterOperator.LTE,
+      FilterOperator.EQ,
+    ],
     'features.homeType': [FilterOperator.EQ],
     'features.laundry': [FilterOperator.EQ],
     'features.heating': [FilterOperator.EQ],
@@ -50,35 +73,52 @@ export class PropertyPublicService {
   ) {}
 
   private applyFeaturesFilters(query: PaginateQuery, queryBuilder: any): void {
+    console.log(
+      '🔍 applyFeaturesFilters called with query:',
+      JSON.stringify(query, null, 2),
+    );
     const booleanFilters = [
-      'balcony', 'furnished', 'garden', 'garage', 'elevator', 'airConditioning',
-      'petsAllowed', 'smokingAllowed', 'dishwasher', 'washerDryer', 'internet', 'cable'
+      'balcony',
+      'furnished',
+      'garden',
+      'garage',
+      'elevator',
+      'airConditioning',
+      'petsAllowed',
+      'smokingAllowed',
+      'dishwasher',
+      'washerDryer',
+      'internet',
+      'cable',
     ];
-
 
     const stringFilters = ['homeType', 'laundry', 'heating'];
 
-    const rangeFilters = ['bedrooms', 'bathrooms', 'area', 'parkingSpaces', 'yearBuilt'];
+    const rangeFilters = [
+      'bedrooms',
+      'bathrooms',
+      'area',
+      'parkingSpaces',
+      'yearBuilt',
+    ];
 
-    booleanFilters.forEach(field => {
+    booleanFilters.forEach((field) => {
       const filterKey = `filter.features.${field}`;
       if (query[filterKey] !== undefined) {
         const boolValue = query[filterKey].toString();
         if (boolValue === 'false') {
           queryBuilder.andWhere(
             `(property.features->>'${field}' = :${field} OR property.features->>'${field}' IS NULL)`,
-            { [field]: 'false' }
+            { [field]: 'false' },
           );
         } else {
-          queryBuilder.andWhere(`property.features->>'${field}' = :${field}`, {
-            [field]: boolValue,
-          });
+          queryBuilder.andWhere(`property.features->>'${field}' = 'true'`);
         }
         delete query[filterKey];
       }
     });
 
-    stringFilters.forEach(field => {
+    stringFilters.forEach((field) => {
       const filterKey = `filter.features.${field}`;
       if (query[filterKey]) {
         queryBuilder.andWhere(`property.features->>'${field}' = :${field}`, {
@@ -88,34 +128,49 @@ export class PropertyPublicService {
       }
     });
 
-    rangeFilters.forEach(field => {
-      const minKey = `filter.features.min${field.charAt(0).toUpperCase() + field.slice(1)}`;
-      const maxKey = `filter.features.max${field.charAt(0).toUpperCase() + field.slice(1)}`;
-      
-      if (query[minKey]) {
-        queryBuilder.andWhere(`(property.features->>'${field}')::int >= :min${field}`, {
-          [`min${field}`]: parseInt(query[minKey].toString()),
-        });
-        delete query[minKey];
+    rangeFilters.forEach((field) => {
+      const gteKey = `filter.features.${field}$gte`;
+      const lteKey = `filter.features.${field}$lte`;
+
+      if (query[gteKey]) {
+        queryBuilder.andWhere(
+          `(property.features->>'${field}')::int >= :min${field}`,
+          {
+            [`min${field}`]: parseInt(query[gteKey].toString()),
+          },
+        );
+        delete query[gteKey];
       }
-      
-      if (query[maxKey]) {
-        queryBuilder.andWhere(`(property.features->>'${field}')::int <= :max${field}`, {
-          [`max${field}`]: parseInt(query[maxKey].toString()),
-        });
-        delete query[maxKey];
+
+      if (query[lteKey]) {
+        queryBuilder.andWhere(
+          `(property.features->>'${field}')::int <= :max${field}`,
+          {
+            [`max${field}`]: parseInt(query[lteKey].toString()),
+          },
+        );
+        delete query[lteKey];
       }
     });
   }
 
-  async findAll(query: PaginateQuery): Promise<PropertyPublicReadManyResponseDto> {
+  async findAll(
+    query: PaginateQuery,
+  ): Promise<PropertyPublicReadManyResponseDto> {
     const queryBuilder = this.propertyRepository
       .createQueryBuilder('property')
       .leftJoinAndSelect('property.owner', 'owner')
       .where('property.isActive = :isActive', { isActive: true })
       .andWhere('property.deletedAt IS NULL');
 
-    const paginatedResult = await paginate(query, queryBuilder, findAllPropertiesPublicConfig);
+    // Apply custom features filters
+    this.applyFeaturesFilters(query, queryBuilder);
+
+    const paginatedResult = await paginate(
+      query,
+      queryBuilder,
+      findAllPropertiesPublicConfig,
+    );
 
     const mappedProperties: PropertyPublicReadManyDto[] =
       paginatedResult.data.map((property) => ({
@@ -147,7 +202,9 @@ export class PropertyPublicService {
     };
   }
 
-  async findBySlug(slug: string): Promise<PropertiesPublicReadOneResponseDto | null> {
+  async findBySlug(
+    slug: string,
+  ): Promise<PropertiesPublicReadOneResponseDto | null> {
     const property = await this.propertyRepository.findOne({
       where: { slug, isActive: true },
       relations: ['owner'],
@@ -182,7 +239,9 @@ export class PropertyPublicService {
     };
   }
 
-  async findRentProperties(query: PaginateQuery): Promise<PropertyPublicReadManyResponseDto> {
+  async findRentProperties(
+    query: PaginateQuery,
+  ): Promise<PropertyPublicReadManyResponseDto> {
     const queryBuilder = this.propertyRepository
       .createQueryBuilder('property')
       .leftJoinAndSelect('property.owner', 'owner')
@@ -190,9 +249,14 @@ export class PropertyPublicService {
       .andWhere('property.deletedAt IS NULL')
       .andWhere('property.type = :type', { type: PropertyType.RENT });
 
+    // Apply custom features filters
     this.applyFeaturesFilters(query, queryBuilder);
 
-    const paginatedResult = await paginate(query, queryBuilder, findAllPropertiesPublicConfig);
+    const paginatedResult = await paginate(
+      query,
+      queryBuilder,
+      findAllPropertiesPublicConfig,
+    );
 
     const mappedProperties: PropertyPublicReadManyDto[] =
       paginatedResult.data.map((property) => ({
@@ -224,7 +288,9 @@ export class PropertyPublicService {
     };
   }
 
-  async findSellProperties(query: PaginateQuery): Promise<PropertyPublicReadManyResponseDto> {
+  async findSellProperties(
+    query: PaginateQuery,
+  ): Promise<PropertyPublicReadManyResponseDto> {
     const queryBuilder = this.propertyRepository
       .createQueryBuilder('property')
       .leftJoinAndSelect('property.owner', 'owner')
@@ -232,7 +298,14 @@ export class PropertyPublicService {
       .andWhere('property.deletedAt IS NULL')
       .andWhere('property.type = :type', { type: PropertyType.SELL });
 
-    const paginatedResult = await paginate(query, queryBuilder, findAllPropertiesPublicConfig);
+    // Apply custom features filters
+    this.applyFeaturesFilters(query, queryBuilder);
+
+    const paginatedResult = await paginate(
+      query,
+      queryBuilder,
+      findAllPropertiesPublicConfig,
+    );
 
     const mappedProperties: PropertyPublicReadManyDto[] =
       paginatedResult.data.map((property) => ({

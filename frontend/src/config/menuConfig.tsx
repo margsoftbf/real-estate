@@ -3,10 +3,10 @@ import {
   DocumentOutline,
   HeartOutline,
   // InsightOutline,
-  MessageOutline,
+  // MessageOutline,
   PropertiesOutline,
-  QuestionMarkOutline,
-  RentPaymentOutline,
+  // QuestionMarkOutline,
+  // RentPaymentOutline,
   SettingOutline,
   TenantsOutline,
 } from '@/assets/icons';
@@ -28,21 +28,21 @@ export const menu = {
       url: '/landlord/my-listings',
       icon: <PropertiesOutline className="w-5 h-5" />,
     },
-    {
-      title: 'Tenants',
-      url: '/tenants',
-      icon: <TenantsOutline className="w-5 h-5" />,
-    },
-    {
-      title: 'Rent Payment',
-      url: '/payments',
-      icon: <RentPaymentOutline className="w-5 h-5" />,
-    },
-    {
-      title: 'Messages',
-      url: '/messages',
-      icon: <MessageOutline className="w-5 h-5" />,
-    },
+    // {
+    //   title: 'Tenants',
+    //   url: '/tenants',
+    //   icon: <TenantsOutline className="w-5 h-5" />,
+    // },
+    // {
+    //   title: 'Rent Payment',
+    //   url: '/payments',
+    //   icon: <RentPaymentOutline className="w-5 h-5" />,
+    // },
+    // {
+    //   title: 'Messages',
+    //   url: '/messages',
+    //   icon: <MessageOutline className="w-5 h-5" />,
+    // },
   ],
   tenant: [
     {
@@ -76,11 +76,11 @@ export const menu = {
 };
 
 export const commonMenuItems = [
-  {
-    title: 'Help',
-    url: '/help',
-    icon: <QuestionMarkOutline className="w-5 h-5" />,
-  },
+  // {
+  //   title: 'Help',
+  //   url: '/help',
+  //   icon: <QuestionMarkOutline className="w-5 h-5" />,
+  // },
   {
     title: 'Settings',
     url: '/settings',

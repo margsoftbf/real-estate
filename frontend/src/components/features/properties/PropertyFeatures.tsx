@@ -57,7 +57,6 @@ const PropertyFeatures = ({ property }: PropertyFeaturesProps) => {
       </h2>
       
       <div className="bg-white border-2 border-purple-300 rounded-lg p-5">
-        {/* Property Details */}
         {propertyDetails.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
             {propertyDetails.map(item => (
@@ -69,7 +68,6 @@ const PropertyFeatures = ({ property }: PropertyFeaturesProps) => {
           </div>
         )}
 
-        {/* Amenities */}
         {amenities.length > 0 && (
           <div className={propertyDetails.length > 0 ? "pt-5 border-t border-purple-200" : ""}>
             <h4 className="font-semibold text-primary-black mb-3">Amenities</h4>

@@ -31,8 +31,8 @@ const Hero = () => {
           page: 1,
         });
         setHeroProperties(response.data);
-      } catch (error) {
-        console.error('Error fetching hero properties:', error);
+      } catch {
+        // Error handled by empty state
       } finally {
         setIsLoadingProperties(false);
       }

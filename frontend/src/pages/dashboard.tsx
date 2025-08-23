@@ -30,10 +30,7 @@ const DashboardPage = () => {
       <Head>
         <title>Dashboard | Property Manager</title>
       </Head>
-      <DashboardContent
-        userFirstName={userInfo.firstName}
-        userRole={userInfo.role}
-      />
+      <DashboardContent />
     </AppLayout>
   );
 };

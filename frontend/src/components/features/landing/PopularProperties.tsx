@@ -27,8 +27,8 @@ const PopularProperties = () => {
           page: 1,
         });
         setProperties(response.data);
-      } catch (error) {
-        console.error('Error fetching popular properties:', error);
+      } catch {
+        // Error handled by empty state
       } finally {
         setIsLoading(false);
       }

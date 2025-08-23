@@ -22,54 +22,20 @@ const RentPage = () => {
     optimisticProperties,
     dispatch,
     loadPropertiesWithParams,
+    handleRouterSearch,
+    handleSearch: handleSearchFromHook,
+    handleFilterChange,
+    handleApplyFilters,
+    handleClearFilters,
   } = useRent();
 
   useEffect(() => {
-    if (router.isReady) {
-      if (router.query.city && typeof router.query.city === 'string') {
-        dispatch({
-          type: 'SET_SEARCH_TERM',
-          payload: router.query.city,
-        });
-        dispatch({
-          type: 'APPLY_SEARCH',
-          payload: router.query.city,
-        });
-      } else {
-        loadPropertiesWithParams(1);
-      }
-    }
+    handleRouterSearch(router.query, router);
   }, [router.isReady, router.asPath]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch({ type: 'APPLY_SEARCH', payload: state.searchTerm });
-    dispatch({ type: 'SET_PAGE', payload: 1 });
-
-    if (state.searchTerm.trim()) {
-      router.push(
-        `/rent?city=${encodeURIComponent(state.searchTerm.trim())}`,
-        undefined,
-        { shallow: true }
-      );
-    } else {
-      router.push('/rent', undefined, { shallow: true });
-    }
-  };
-
-  const handleFilterChange = (key: string, value: string | boolean | null) => {
-    dispatch({ type: 'SET_FILTER', payload: { key, value } });
-  };
-
-  const handleApplyFilters = () => {
-    dispatch({ type: 'SET_PAGE', payload: 1 });
-    loadPropertiesWithParams(1);
-  };
-
-  const handleClearFilters = () => {
-    dispatch({ type: 'CLEAR_FILTERS' });
-    dispatch({ type: 'SET_PAGE', payload: 1 });
-    loadPropertiesWithParams(1);
+    handleSearchFromHook(state.searchTerm, router);
   };
 
   const handlePageChange = (page: number) => {
@@ -120,10 +86,7 @@ const RentPage = () => {
             handleFilterChange(key, value);
             dispatch({ type: 'SET_PAGE', payload: 1 });
           }}
-          onClearAll={() => {
-            dispatch({ type: 'CLEAR_FILTERS' });
-            dispatch({ type: 'SET_PAGE', payload: 1 });
-          }}
+          onClearAll={handleClearFilters}
           basePath="rent"
         />
 
