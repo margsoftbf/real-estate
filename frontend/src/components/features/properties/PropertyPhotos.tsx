@@ -26,7 +26,6 @@ const PropertyPhotos = ({
     );
   }
 
-  // Always show single photo layout - no grid even for multiple photos
   return (
     <div className="mb-6">
       <div

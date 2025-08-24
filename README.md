@@ -4,13 +4,14 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 
 ## ✨ Features
 
+- 🤖 **AI-Powered Descriptions** - Automatic property description generation using Google Gemini (FREE!)
 - 🏘️ **Property Listings** - Browse, search, and filter real estate properties
 - 🔍 **Advanced Search** - Filter by location, price, property type, and amenities
-- 👤 **User Management** - User authentication and profile management
-- 📱 **Responsive Design** - Works seamlessly on desktop and mobile
-- 🎨 **Modern UI** - Beautiful, intuitive interface with smooth animations
-- 📊 **Analytics Dashboard** - Insights and property statistics
-- 🔐 **Secure Authentication** - Powered by Supabase
+- 👤 **Role-Based Access** - Landlord, Tenant, and Admin dashboards with different permissions
+- 📊 **Analytics Dashboard** - Comprehensive property insights and statistics
+- 🔐 **Enterprise Security** - JWT + Supabase authentication with secure role management
+- 📱 **Fully Responsive** - Seamless experience on desktop, tablet, and mobile devices
+- 🎨 **Modern UI/UX** - Beautiful interface with smooth animations and intuitive design
 
 ## 🌐 Live Demo
 
@@ -19,7 +20,51 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 ### Test Credentials
 
 - **Email**: landlord@realestate.com
-- **Password**: I will add when finished
+- **Password**: Contact for demo credentials
+
+## 📱 Application Screenshots
+
+### 🏠 Public Interface
+
+#### Homepage & Search
+
+![Main Page](./Screenshots/Main-Page.png)
+_Modern homepage with hero section and property search functionality_
+
+#### Property Listings
+
+![Rent Properties](./Screenshots/Public-Rent-List.png)
+_Browse available rental properties with advanced filtering_
+
+![Property Filters](./Screenshots/Public-Filter-List.png)
+_Advanced search and filtering system for finding perfect properties_
+
+#### User Registration
+
+![Registration](./Screenshots/Public-Register_page.png)
+_Clean and intuitive user registration interface_
+
+### 👤 Landlord Dashboard
+
+#### Property Management
+
+![Landlord Dashboard](./Screenshots/Landlord-Dashboard.png)
+_Comprehensive dashboard for property management and analytics_
+
+![My Listings](./Screenshots/Landlord-Listing.png)
+_Manage all your property listings in one place_
+
+#### AI-Powered Property Creation
+
+![Create Property](./Screenshots/Landlord-Create-Property.png)
+_Streamlined property creation with intelligent form validation_
+
+![AI Description Generator](./Screenshots/Landlord-Generate-AI-Modal.png)
+_🤖 **AI-Powered Feature**: Generate professional property descriptions using Google Gemini AI_
+
+### 📱 Mobile Responsive
+
+_The application is fully responsive and works seamlessly on all devices (mobile screenshots available upon request)_
 
 ## 🚀 Tech Stack
 
@@ -38,6 +83,7 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 - **Framework**: NestJS with TypeScript
 - **Database**: PostgreSQL with TypeORM
 - **Authentication**: Supabase integration
+- **AI Integration**: Google Gemini API for content generation
 - **Testing**: Jest with comprehensive test suite
 - **Deployment**: Vercel-ready configuration
 
@@ -82,6 +128,7 @@ docker-compose down
 ```
 
 **Services will be available at:**
+
 - Frontend: [http://localhost:3000](http://localhost:3000)
 - Backend API: [http://localhost:3001](http://localhost:3001)
 - PostgreSQL: `localhost:5432`
@@ -170,6 +217,9 @@ NEXTAUTH_SECRET=your-nextauth-secret-key-here
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
+# Google Gemini (for AI descriptions - FREE!)
+GEMINI_API_KEY=your-gemini-api-key
+
 # Redis (optional)
 REDIS_URL=redis://localhost:6379
 ```
@@ -231,6 +281,55 @@ cd backend && yarn build
 - Write tests for new features
 - Update documentation as needed
 - Use TypeScript strictly (no `any` types)
+
+## 🤖 AI Features
+
+### Property Description Generator
+
+Generate professional property descriptions automatically using Google Gemini:
+
+```bash
+POST /llm/properties/generate-description
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+```
+
+**Note:** Only landlords and admins can access this endpoint. Requires authentication.
+
+**Request:**
+
+```json
+{
+	"propertyType": "apartment",
+	"listingType": "rent",
+	"rooms": 3,
+	"area": 65,
+	"location": "Krakow, Old Town",
+	"price": 3500,
+	"features": "balcony, garage",
+	"additionalInfo": "recently renovated"
+}
+```
+
+**Response:**
+
+```json
+{
+	"success": true,
+	"data": {
+		"title": "Cozy 3-bedroom apartment in Krakow center",
+		"description": "Beautiful 3-bedroom apartment located in the heart of Old Town...",
+		"tags": ["center", "renovated", "balcony", "garage"],
+		"highlights": [
+			"Prime Old Town location",
+			"Recently renovated",
+			"Balcony and garage included"
+		]
+	}
+}
+```
+
+**Setup:** Get your free API key at [ai.google.dev](https://ai.google.dev) (Google account required). **Completely FREE** with generous limits: 15 requests/minute, 1,500 requests/day, 1M tokens/month. Uses **Gemini 1.5 Flash** model.
 
 ## 📚 Documentation
 

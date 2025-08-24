@@ -9,6 +9,7 @@ import ErrorState from '@/components/shared/ErrorState';
 import Button from '@/components/ui/Button/Button';
 import EditableInput from '@/components/common/EditableInput';
 import EditableSelect from '@/components/common/EditableSelect';
+
 import {
   propertiesLandlordApi,
   PropertyLandlordUpdateDto,
@@ -83,7 +84,6 @@ const EditListingPage = () => {
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-
     if (validationErrors[field]) {
       setValidationErrors((prev) => {
         const newErrors = { ...prev };
@@ -146,7 +146,6 @@ const EditListingPage = () => {
       photos: filteredPhotos,
     };
 
-
     const validation = validateUpdateListing(dataToValidate);
 
     if (!validation.isValid) {
@@ -164,7 +163,7 @@ const EditListingPage = () => {
     }
 
     setIsSubmitting(true);
-    setValidationErrors({}); 
+    setValidationErrors({});
 
     try {
       await propertiesLandlordApi.update(slug, dataToValidate);

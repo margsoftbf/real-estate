@@ -10,7 +10,6 @@ const nextConfig: NextConfig = {
     ],
   },
   reactStrictMode: true,
-  turbo: {},
   output: 'standalone',
 };
 

@@ -22,3 +22,4 @@ Logger.overrideLogger(false);
 jest.setTimeout(30_000);
 
 process.env.NODE_NO_WARNINGS = '1';
+process.env.GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'test-api-key';
