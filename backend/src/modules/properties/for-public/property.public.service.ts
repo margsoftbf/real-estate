@@ -14,141 +14,12 @@ import {
 } from './dto/properties-public-read-many.response.dto';
 import { PropertiesPublicReadOneResponseDto } from './dto/properties-public-read-one.response.dto';
 
-export const findAllPropertiesPublicConfig: PaginateConfig<Property> = {
-  sortableColumns: ['createdAt', 'price', 'city', 'isPopular'],
-  nullSort: 'last',
-  relations: ['owner'],
-  defaultSortBy: [
-    ['isPopular', 'DESC'],
-    ['createdAt', 'DESC'],
-  ],
-  searchableColumns: ['title', 'description', 'city', 'country'],
-  filterableColumns: {
-    city: [FilterOperator.ILIKE],
-    country: [FilterOperator.ILIKE],
-    type: [FilterOperator.EQ],
-    price: [FilterOperator.GTE, FilterOperator.LTE],
-    'features.bedrooms': [
-      FilterOperator.GTE,
-      FilterOperator.LTE,
-      FilterOperator.EQ,
-    ],
-    'features.bathrooms': [
-      FilterOperator.GTE,
-      FilterOperator.LTE,
-      FilterOperator.EQ,
-    ],
-    'features.area': [FilterOperator.GTE, FilterOperator.LTE],
-    'features.parkingSpaces': [
-      FilterOperator.GTE,
-      FilterOperator.LTE,
-      FilterOperator.EQ,
-    ],
-    'features.homeType': [FilterOperator.EQ],
-    'features.laundry': [FilterOperator.EQ],
-    'features.heating': [FilterOperator.EQ],
-    'features.yearBuilt': [FilterOperator.GTE, FilterOperator.LTE],
-    'features.furnished': [FilterOperator.EQ],
-    'features.petsAllowed': [FilterOperator.EQ],
-    'features.smokingAllowed': [FilterOperator.EQ],
-    'features.balcony': [FilterOperator.EQ],
-    'features.garden': [FilterOperator.EQ],
-    'features.garage': [FilterOperator.EQ],
-    'features.elevator': [FilterOperator.EQ],
-    'features.airConditioning': [FilterOperator.EQ],
-    'features.dishwasher': [FilterOperator.EQ],
-    'features.washerDryer': [FilterOperator.EQ],
-    'features.internet': [FilterOperator.EQ],
-    'features.cable': [FilterOperator.EQ],
-  },
-  defaultLimit: 10,
-  maxLimit: 50,
-};
-
 @Injectable()
 export class PropertyPublicService {
   constructor(
     @InjectRepository(Property)
     private propertyRepository: Repository<Property>,
   ) {}
-
-  private applyFeaturesFilters(query: PaginateQuery, queryBuilder: any): void {
-    const booleanFilters = [
-      'balcony',
-      'furnished',
-      'garden',
-      'garage',
-      'elevator',
-      'airConditioning',
-      'petsAllowed',
-      'smokingAllowed',
-      'dishwasher',
-      'washerDryer',
-      'internet',
-      'cable',
-    ];
-
-    const stringFilters = ['homeType', 'laundry', 'heating'];
-
-    const rangeFilters = [
-      'bedrooms',
-      'bathrooms',
-      'area',
-      'parkingSpaces',
-      'yearBuilt',
-    ];
-
-    booleanFilters.forEach((field) => {
-      const filterKey = `filter.features.${field}`;
-      if (query[filterKey] !== undefined) {
-        const boolValue = query[filterKey].toString();
-        if (boolValue === 'false') {
-          queryBuilder.andWhere(
-            `(property.features->>'${field}' = :${field} OR property.features->>'${field}' IS NULL)`,
-            { [field]: 'false' },
-          );
-        } else {
-          queryBuilder.andWhere(`property.features->>'${field}' = 'true'`);
-        }
-        delete query[filterKey];
-      }
-    });
-
-    stringFilters.forEach((field) => {
-      const filterKey = `filter.features.${field}`;
-      if (query[filterKey]) {
-        queryBuilder.andWhere(`property.features->>'${field}' = :${field}`, {
-          [field]: query[filterKey].toString(),
-        });
-        delete query[filterKey];
-      }
-    });
-
-    rangeFilters.forEach((field) => {
-      const gteKey = `filter.features.${field}$gte`;
-      const lteKey = `filter.features.${field}$lte`;
-
-      if (query[gteKey]) {
-        queryBuilder.andWhere(
-          `(property.features->>'${field}')::int >= :min${field}`,
-          {
-            [`min${field}`]: parseInt(query[gteKey].toString()),
-          },
-        );
-        delete query[gteKey];
-      }
-
-      if (query[lteKey]) {
-        queryBuilder.andWhere(
-          `(property.features->>'${field}')::int <= :max${field}`,
-          {
-            [`max${field}`]: parseInt(query[lteKey].toString()),
-          },
-        );
-        delete query[lteKey];
-      }
-    });
-  }
 
   async findAll(
     query: PaginateQuery,
@@ -244,7 +115,6 @@ export class PropertyPublicService {
       .andWhere('property.deletedAt IS NULL')
       .andWhere('property.type = :type', { type: PropertyType.RENT });
 
-    // Apply custom features filters
     this.applyFeaturesFilters(query, queryBuilder);
 
     const paginatedResult = await paginate(
@@ -293,7 +163,6 @@ export class PropertyPublicService {
       .andWhere('property.deletedAt IS NULL')
       .andWhere('property.type = :type', { type: PropertyType.SELL });
 
-    // Apply custom features filters
     this.applyFeaturesFilters(query, queryBuilder);
 
     const paginatedResult = await paginate(
@@ -331,4 +200,133 @@ export class PropertyPublicService {
       links: paginatedResult.links,
     };
   }
+
+  private applyFeaturesFilters(query: PaginateQuery, queryBuilder: any): void {
+    const booleanFilters = [
+      'balcony',
+      'furnished',
+      'garden',
+      'garage',
+      'elevator',
+      'airConditioning',
+      'petsAllowed',
+      'smokingAllowed',
+      'dishwasher',
+      'washerDryer',
+      'internet',
+      'cable',
+    ];
+
+    const stringFilters = ['homeType', 'laundry', 'heating'];
+
+    const rangeFilters = [
+      'bedrooms',
+      'bathrooms',
+      'area',
+      'parkingSpaces',
+      'yearBuilt',
+    ];
+
+    booleanFilters.forEach((field) => {
+      const filterKey = `filter.features.${field}`;
+      if (query[filterKey] !== undefined) {
+        const boolValue = query[filterKey].toString();
+        if (boolValue === 'false') {
+          queryBuilder.andWhere(
+            `(property.features->>'${field}' = :${field} OR property.features->>'${field}' IS NULL)`,
+            { [field]: 'false' },
+          );
+        } else {
+          queryBuilder.andWhere(`property.features->>'${field}' = 'true'`);
+        }
+        delete query[filterKey];
+      }
+    });
+
+    stringFilters.forEach((field) => {
+      const filterKey = `filter.features.${field}`;
+      if (query[filterKey]) {
+        queryBuilder.andWhere(`property.features->>'${field}' = :${field}`, {
+          [field]: query[filterKey].toString(),
+        });
+        delete query[filterKey];
+      }
+    });
+
+    rangeFilters.forEach((field) => {
+      const gteKey = `filter.features.${field}$gte`;
+      const lteKey = `filter.features.${field}$lte`;
+
+      if (query[gteKey]) {
+        queryBuilder.andWhere(
+          `(property.features->>'${field}')::int >= :min${field}`,
+          {
+            [`min${field}`]: parseInt(query[gteKey].toString()),
+          },
+        );
+        delete query[gteKey];
+      }
+
+      if (query[lteKey]) {
+        queryBuilder.andWhere(
+          `(property.features->>'${field}')::int <= :max${field}`,
+          {
+            [`max${field}`]: parseInt(query[lteKey].toString()),
+          },
+        );
+        delete query[lteKey];
+      }
+    });
+  }
 }
+
+export const findAllPropertiesPublicConfig: PaginateConfig<Property> = {
+  sortableColumns: ['createdAt', 'price', 'city', 'isPopular'],
+  nullSort: 'last',
+  relations: ['owner'],
+  defaultSortBy: [
+    ['isPopular', 'DESC'],
+    ['createdAt', 'DESC'],
+  ],
+  searchableColumns: ['title', 'description', 'city', 'country'],
+  filterableColumns: {
+    city: [FilterOperator.ILIKE],
+    country: [FilterOperator.ILIKE],
+    type: [FilterOperator.EQ],
+    price: [FilterOperator.GTE, FilterOperator.LTE],
+    'features.bedrooms': [
+      FilterOperator.GTE,
+      FilterOperator.LTE,
+      FilterOperator.EQ,
+    ],
+    'features.bathrooms': [
+      FilterOperator.GTE,
+      FilterOperator.LTE,
+      FilterOperator.EQ,
+    ],
+    'features.area': [FilterOperator.GTE, FilterOperator.LTE],
+    'features.parkingSpaces': [
+      FilterOperator.GTE,
+      FilterOperator.LTE,
+      FilterOperator.EQ,
+    ],
+    'features.homeType': [FilterOperator.EQ],
+    'features.laundry': [FilterOperator.EQ],
+    'features.heating': [FilterOperator.EQ],
+    'features.yearBuilt': [FilterOperator.GTE, FilterOperator.LTE],
+    'features.furnished': [FilterOperator.EQ],
+    'features.petsAllowed': [FilterOperator.EQ],
+    'features.smokingAllowed': [FilterOperator.EQ],
+    'features.balcony': [FilterOperator.EQ],
+    'features.garden': [FilterOperator.EQ],
+    'features.garage': [FilterOperator.EQ],
+    'features.elevator': [FilterOperator.EQ],
+    'features.airConditioning': [FilterOperator.EQ],
+    'features.dishwasher': [FilterOperator.EQ],
+    'features.washerDryer': [FilterOperator.EQ],
+    'features.internet': [FilterOperator.EQ],
+    'features.cable': [FilterOperator.EQ],
+  },
+  defaultLimit: 10,
+  maxLimit: 50,
+};

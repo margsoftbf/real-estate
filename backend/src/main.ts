@@ -47,24 +47,33 @@ async function bootstrap(): Promise<INestApplication> {
 
 export default async (req, res) => {
   try {
-    const app = await bootstrap();
-    const expressApp = app.getHttpAdapter().getInstance();
+    // Set CORS headers immediately for all requests
+    const origin = req.headers.origin;
+    const allowedOrigins = [
+      'https://real-estate-six-tawny-67.vercel.app',
+    ];
+    
+    const isAllowed = !origin || 
+      allowedOrigins.includes(origin) || 
+      origin.includes('vercel.app') || 
+      origin.includes('localhost');
+
+    if (isAllowed) {
+      res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    }
+    
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,X-Requested-With');
 
     if (req.method === 'OPTIONS') {
-      res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-      res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-      );
-      res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Content-Type,Authorization,Accept,X-Requested-With',
-      );
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.status(204).end();
       return;
     }
 
+    const app = await bootstrap();
+    const expressApp = app.getHttpAdapter().getInstance();
+    
     return expressApp(req, res);
   } catch (error) {
     console.error('Error in serverless function:', error);

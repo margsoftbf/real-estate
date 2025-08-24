@@ -8,6 +8,7 @@ import LoadingState from '@/components/shared/LoadingState';
 import Button from '@/components/ui/Button/Button';
 import EditableInput from '@/components/common/EditableInput';
 import EditableSelect from '@/components/common/EditableSelect';
+import AIGenerateButton from '@/components/landlord/AIGenerateButton';
 import {
   propertiesLandlordApi,
   PropertyLandlordCreateDto,
@@ -174,26 +175,50 @@ const AddListingPage = () => {
     }));
   };
 
+  const handleAIGenerated = (aiData: {
+    title?: string;
+    description?: string;
+    tags?: string[];
+    highlights?: string[];
+    city?: string;
+    price?: number;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...(aiData.title && { title: aiData.title }),
+      ...(aiData.description && { description: aiData.description }),
+      ...(aiData.city && { city: aiData.city }),
+      ...(aiData.price && { price: aiData.price }),
+    }));
+
+    setValidationErrors((prev) => {
+      const newErrors = { ...prev };
+      if (aiData.title) delete newErrors.title;
+      if (aiData.description) delete newErrors.description;
+      if (aiData.city) delete newErrors.city;
+      if (aiData.price) delete newErrors.price;
+      return newErrors;
+    });
+
+    showSuccess('AI description applied to your listing!');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-
     const filteredPhotos =
       formData.photos?.filter((photo) => photo.trim() !== '') || [];
-
 
     const dataToValidate = {
       ...formData,
       photos: filteredPhotos,
     };
 
-
     const validation = validateCreateListing(dataToValidate);
 
     if (!validation.isValid) {
       setValidationErrors(validation.errors);
       showError('Please fix the validation errors before submitting');
-
 
       const firstErrorElement = document.querySelector('[data-error="true"]');
       if (firstErrorElement) {
@@ -269,6 +294,32 @@ const AddListingPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  AI-Powered Description Generator
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Generate professional title and description instantly
+                </p>
+              </div>
+              <AIGenerateButton
+                onDescriptionGenerated={handleAIGenerated}
+                propertyType={
+                  formData.features?.homeType as
+                    | 'apartment'
+                    | 'house'
+                    | 'studio'
+                    | 'room'
+                }
+                location={`${formData.city}, ${formData.country}`}
+                variant="primary"
+                className="px-6 py-2"
+              />
+            </div>
+          </div>
+
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <h2 className="text-xl font-semibold mb-6">Basic Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
