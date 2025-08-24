@@ -47,8 +47,17 @@ const RentPage = () => {
   return (
     <PublicLayout>
       <Head>
-        <title>Properties for Rent | Property Manager</title>
-        <meta name="description" content="Find your perfect rental property" />
+        <title>
+          Properties for Rent | Rental Apartments & Houses | RentSmart
+        </title>
+        <meta
+          name="description"
+          content="Find rental properties including apartments, houses, and condos. Advanced search with filters for price, location, amenities. Virtual tours and detailed listings available."
+        />
+        <meta
+          name="keywords"
+          content="properties for rent, rental apartments, rent house, apartment rentals, rental search, property rentals"
+        />
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative overflow-hidden">

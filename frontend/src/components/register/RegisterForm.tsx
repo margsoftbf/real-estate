@@ -5,7 +5,12 @@ import googleImage from '@/assets/google.png';
 import Image from 'next/image';
 import { UserRole } from '@/types/types';
 import { RegisterFormData } from '@/validation/registerValidation';
-import { FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import {
+  FieldErrors,
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormSetValue,
+} from 'react-hook-form';
 
 interface RegisterFormProps {
   onSubmit: (data: RegisterFormData) => void;
@@ -23,8 +28,6 @@ const RegisterForm = ({
   handleSubmit,
   errors,
   isPending,
-  currentRole,
-  setValue,
 }: RegisterFormProps) => {
   return (
     <form
@@ -84,14 +87,10 @@ const RegisterForm = ({
           <input
             id="is_property_manager"
             type="checkbox"
-            className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded"
-            checked={currentRole === UserRole.LANDLORD}
-            onChange={(e) => {
-              setValue(
-                'role',
-                e.target.checked ? UserRole.LANDLORD : UserRole.TENANT
-              );
-            }}
+            className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded disabled:opacity-60 disabled:cursor-not-allowed"
+            checked={true}
+            disabled={true}
+            readOnly
           />
           <label
             htmlFor="is_property_manager"
@@ -110,18 +109,24 @@ const RegisterForm = ({
         </div>
       </div>
 
-      <div className="flex items-center">
+      <div className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50">
         <input
           {...register('privacyConsent')}
           id="privacyConsent"
           type="checkbox"
-          className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded"
+          className="mt-1 h-4 w-4 text-primary-violet focus:ring-primary-violet focus:ring-2 border-2 border-gray-300 rounded bg-white checked:bg-primary-violet checked:border-primary-violet"
         />
         <label
           htmlFor="privacyConsent"
-          className="ml-2 block text-sm text-gray-900"
+          className="block text-sm text-gray-900 cursor-pointer"
         >
-          I agree to the Terms of Service and Privacy Policy
+          <span className="font-medium">
+            I agree to the Terms of Service and Privacy Policy
+          </span>
+          <br />
+          <span className="text-xs text-gray-600">
+            Required to create an account
+          </span>
         </label>
       </div>
       {errors.privacyConsent && (
@@ -130,18 +135,24 @@ const RegisterForm = ({
         </p>
       )}
 
-      <div className="flex items-center">
+      <div className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg">
         <input
           {...register('marketingConsent')}
           id="marketingConsent"
           type="checkbox"
-          className="h-4 w-4 text-primary-violet focus:ring-primary-violet border-gray-300 rounded"
+          className="mt-1 h-4 w-4 text-primary-violet focus:ring-primary-violet focus:ring-2 border-2 border-gray-300 rounded bg-white checked:bg-primary-violet checked:border-primary-violet"
         />
         <label
           htmlFor="marketingConsent"
-          className="ml-2 block text-sm text-gray-900"
+          className="block text-sm text-gray-900 cursor-pointer"
         >
-          Send me marketing emails and updates
+          <span className="font-medium">
+            Send me marketing emails and updates
+          </span>
+          <br />
+          <span className="text-xs text-gray-600">
+            Optional - you can unsubscribe anytime
+          </span>
         </label>
       </div>
 

@@ -47,8 +47,15 @@ const BuyPage = () => {
   return (
     <PublicLayout>
       <Head>
-        <title>Properties for Sale | Property Manager</title>
-        <meta name="description" content="Find your perfect property to buy" />
+        <title>Properties for Sale | Buy Houses & Apartments | RentSmart</title>
+        <meta
+          name="description"
+          content="Browse properties for sale. Find houses, apartments, and condos. Advanced search filters, virtual tours, and detailed property information. Start your home buying journey today."
+        />
+        <meta
+          name="keywords"
+          content="properties for sale, buy house, buy apartment, homes for sale, real estate purchase, property search"
+        />
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative overflow-hidden">

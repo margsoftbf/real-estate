@@ -11,6 +11,7 @@ import { PropertyLandlordService } from './for-landlord/property.landlord.servic
 
 import { PropertyPublicController } from './for-public/property.public.controller';
 import { PropertyPublicService } from './for-public/property.public.service';
+import { PropertyCronService } from './property-cron.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Property, User])],
@@ -23,6 +24,7 @@ import { PropertyPublicService } from './for-public/property.public.service';
     PropertyAdminService,
     PropertyLandlordService,
     PropertyPublicService,
+    PropertyCronService,
   ],
   exports: [
     PropertyAdminService,

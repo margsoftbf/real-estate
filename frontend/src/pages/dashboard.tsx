@@ -28,7 +28,12 @@ const DashboardPage = () => {
   return (
     <AppLayout userRole={userInfo.role} userInfo={userInfo}>
       <Head>
-        <title>Dashboard | Property Manager</title>
+        <title>Dashboard | Property Management | RentSmart</title>
+        <meta
+          name="description"
+          content="Manage your properties, view analytics, and track performance. Complete property management dashboard for landlords and property managers."
+        />
+        <meta name="robots" content="noindex, nofollow" />
       </Head>
       <DashboardContent />
     </AppLayout>

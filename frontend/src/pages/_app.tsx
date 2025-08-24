@@ -43,9 +43,12 @@ export default function App({
         />
         <meta
           name="keywords"
-          content="real estate, property, rent, buy, sell, apartments, houses, homes"
+          content="real estate, property, rent, buy, sell, apartments, houses, homes, rental properties, property search, property management"
         />
         <meta name="author" content="RentSmart" />
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="en" />
+        <meta name="revisit-after" content="7 days" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

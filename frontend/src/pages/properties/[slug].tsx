@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import Head from 'next/head';
 import Header from '@/components/features/landing/Header';
 import Footer from '@/components/features/landing/Footer';
 import PhotoModal from '@/components/shared/PhotoModal';
@@ -91,109 +92,178 @@ export default function PropertyPage({
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      <main className="pb-8">
-        {error ? (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-              <p className="text-gray-600">{error}</p>
+    <>
+      {property && (
+        <Head>
+          <title>{`${property.title || 'Property'} | ${property.type === 'rent' ? 'For Rent' : 'For Sale'} in ${property.city} | RentSmart`}</title>
+          <meta
+            name="description"
+            content={`${property.description?.slice(0, 150) || `${property.type === 'rent' ? 'Rental property' : 'Property for sale'} in ${property.city}, ${property.country}`}. Price: $${property.price?.toLocaleString()}. ${property.features?.bedrooms ? `${property.features.bedrooms} bedrooms` : ''} ${property.features?.bathrooms ? `, ${property.features.bathrooms} bathrooms` : ''}.`}
+          />
+          <meta
+            name="keywords"
+            content={`${property.city}, ${property.country}, ${property.type === 'rent' ? 'rental' : 'for sale'}, property, real estate, ${property.features?.homeType || 'home'}`}
+          />
+        </Head>
+      )}
+
+      <div className="min-h-screen bg-white">
+        {property && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': property.type === 'rent' ? 'RentAction' : 'Product',
+                name: property.title || 'Property',
+                description: property.description,
+                url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://rentsmart.com'}/properties/${property.slug}`,
+                image: property.photos?.[0] || '',
+                ...(property.type === 'rent'
+                  ? {
+                      object: {
+                        '@type': 'Accommodation',
+                        name: property.title,
+                        description: property.description,
+                        address: {
+                          '@type': 'PostalAddress',
+                          addressLocality: property.city,
+                          addressCountry: property.country,
+                        },
+                        amenityFeature: Object.entries(property.features || {})
+                          .filter(([, value]) => value === true)
+                          .map(([key]) => ({
+                            '@type': 'LocationFeatureSpecification',
+                            name: key.replace(/([A-Z])/g, ' $1').trim(),
+                          })),
+                      },
+                      priceSpecification: {
+                        '@type': 'PriceSpecification',
+                        price: property.price,
+                        priceCurrency: 'USD',
+                        unitCode: 'MON',
+                      },
+                    }
+                  : {
+                      offers: {
+                        '@type': 'Offer',
+                        price: property.price,
+                        priceCurrency: 'USD',
+                        availability: 'https://schema.org/InStock',
+                      },
+                      address: {
+                        '@type': 'PostalAddress',
+                        addressLocality: property.city,
+                        addressCountry: property.country,
+                      },
+                    }),
+              }),
+            }}
+          />
+        )}
+        <Header />
+        <main className="pb-8">
+          {error ? (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+              <div className="text-center">
+                <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+                <p className="text-gray-600">{error}</p>
+              </div>
             </div>
-          </div>
-        ) : isLoading || !property ? (
-          <LoadingState className="flex justify-center items-center py-20" />
-        ) : (
-          <>
-            <div className="lg:hidden bg-white border-b border-gray-100 sticky top-0 left-0 z-10">
-              <BackToResultsButton onClick={handleBackToResults} isMobile />
-            </div>
-
-            <BackToResultsButton onClick={handleBackToResults} />
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="block lg:hidden">
-                <PropertyHeader property={property} />
-                <PropertyActions />
+          ) : isLoading || !property ? (
+            <LoadingState className="flex justify-center items-center py-20" />
+          ) : (
+            <>
+              <div className="lg:hidden bg-white border-b border-gray-100 sticky top-0 left-0 z-10">
+                <BackToResultsButton onClick={handleBackToResults} isMobile />
               </div>
 
-              <div className="hidden lg:flex justify-between items-center mb-4">
-                <PropertyHeader property={property} />
-                <PropertyActions />
-              </div>
+              <BackToResultsButton onClick={handleBackToResults} />
 
-              <div className="block lg:hidden">
-                <PropertyPhotos
-                  property={property}
-                  onOpenPhotoModal={openPhotoModal}
-                />
-                <PropertyPriceBox property={property} />
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="block lg:hidden">
+                  <PropertyHeader property={property} />
+                  <PropertyActions />
+                </div>
 
-                <PropertyDescription description={property.description} />
+                <div className="hidden lg:flex justify-between items-center mb-4">
+                  <PropertyHeader property={property} />
+                  <PropertyActions />
+                </div>
 
-                <PropertyOwner property={property} />
+                <div className="block lg:hidden">
+                  <PropertyPhotos
+                    property={property}
+                    onOpenPhotoModal={openPhotoModal}
+                  />
+                  <PropertyPriceBox property={property} />
 
-                <PropertyRequest />
+                  <PropertyDescription description={property.description} />
 
-                <PropertyFeatures property={property} />
+                  <PropertyOwner property={property} />
 
-                <PropertyPriceHistory
-                  price={property.price}
-                  type={property.type}
-                  createdAt={property.createdAt}
-                />
-                <PropertyLocation property={property} />
-              </div>
+                  <PropertyRequest />
 
-              <div className="hidden lg:block">
-                <div className="grid grid-cols-12 gap-8">
-                  <div className="col-span-8">
-                    <PropertyPhotos
-                      property={property}
-                      onOpenPhotoModal={openPhotoModal}
-                    />
+                  <PropertyFeatures property={property} />
 
-                    <PropertyDescription description={property.description} />
+                  <PropertyPriceHistory
+                    price={property.price}
+                    type={property.type}
+                    createdAt={property.createdAt}
+                  />
+                  <PropertyLocation property={property} />
+                </div>
 
-                    <PropertyFeatures property={property} />
+                <div className="hidden lg:block">
+                  <div className="grid grid-cols-12 gap-8">
+                    <div className="col-span-8">
+                      <PropertyPhotos
+                        property={property}
+                        onOpenPhotoModal={openPhotoModal}
+                      />
 
-                    <PropertyPriceHistory
-                      price={property.price}
-                      type={property.type}
-                      createdAt={property.createdAt}
-                    />
+                      <PropertyDescription description={property.description} />
 
-                    <PropertyLocation property={property} />
-                  </div>
+                      <PropertyFeatures property={property} />
 
-                  <div className="col-span-4 space-y-6">
-                    <PropertyPriceBox property={property} />
-                    <PropertyOwner property={property} />
-                    <PropertyRequest />
+                      <PropertyPriceHistory
+                        price={property.price}
+                        type={property.type}
+                        createdAt={property.createdAt}
+                      />
+
+                      <PropertyLocation property={property} />
+                    </div>
+
+                    <div className="col-span-4 space-y-6">
+                      <PropertyPriceBox property={property} />
+                      <PropertyOwner property={property} />
+                      <PropertyRequest />
+                    </div>
                   </div>
                 </div>
+
+                <SimilarProperties
+                  similarProperties={similarProperties}
+                  currentPropertyType={property.type}
+                />
               </div>
 
-              <SimilarProperties
-                similarProperties={similarProperties}
-                currentPropertyType={property.type}
-              />
-            </div>
-
-            {property && property.photos && (
-              <PhotoModal
-                isOpen={isPhotoModalOpen}
-                onClose={closePhotoModal}
-                photos={property.photos}
-                initialIndex={photoModalIndex}
-                propertyTitle={property.title || 'Property'}
-              />
-            )}
-          </>
-        )}
-      </main>
-      <Footer />
-    </div>
+              {property && property.photos && (
+                <PhotoModal
+                  isOpen={isPhotoModalOpen}
+                  onClose={closePhotoModal}
+                  photos={property.photos}
+                  initialIndex={photoModalIndex}
+                  propertyTitle={property.title || 'Property'}
+                />
+              )}
+            </>
+          )}
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 }
 

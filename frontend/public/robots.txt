@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Allow: /rent
+Allow: /buy
+Allow: /properties/
+
+# Block private pages
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /landlord/
+Disallow: /api/
+Disallow: /login
+Disallow: /register
+
+# Block admin/auth pages
+Disallow: /*?*
+Disallow: /admin
+
+# Sitemap location
+Sitemap: https://rentsmart.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
