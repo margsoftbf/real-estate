@@ -43,7 +43,10 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 
 ### Infrastructure
 
-- **Database**: Supabase (PostgreSQL)
+- **Database**: PostgreSQL with TypeORM
+- **Authentication**: Supabase integration
+- **Cache**: Redis
+- **Containerization**: Docker & Docker Compose
 - **Deployment**: Vercel
 - **CI/CD**: GitHub Actions
 - **Package Manager**: Yarn
@@ -53,8 +56,8 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 
 ### Prerequisites
 
-- Node.js 18+
-- Yarn package manager
+- Docker and Docker Compose (recommended)
+- OR manually: Node.js 18+, Yarn package manager, PostgreSQL
 - Git
 
 ### With Docker (Recommended)
@@ -64,9 +67,25 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 git clone <repository-url>
 cd real-estate-fullstack
 
-# Start both frontend and backend
-docker-compose up
+# Copy environment variables
+cp .env.example .env
+# Edit .env with your actual values
+
+# Start all services (PostgreSQL, Redis, Backend, Frontend)
+docker-compose up -d
+
+# View logs (optional)
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
 ```
+
+**Services will be available at:**
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend API: [http://localhost:3001](http://localhost:3001)
+- PostgreSQL: `localhost:5432`
+- Redis: `localhost:6379`
 
 ### Manual Setup
 
@@ -121,33 +140,38 @@ real-estate-fullstack/
 │   │   ├── db/             # Database configuration
 │   │   ├── config/         # App configuration
 │   │   └── exceptions/     # Custom exceptions
+│   ├── Dockerfile          # Backend Docker configuration
 │   ├── package.json
 │   └── README.md           # Backend-specific documentation
-├── docker-compose.yml      # Docker configuration
+├── docker-compose.yml      # Docker orchestration
+├── .env.example            # Environment variables template
 └── README.md              # This file
 ```
 
 ## 🔧 Environment Variables
 
-### Backend (.env)
+Copy `.env.example` to `.env` and configure the following:
 
 ```env
-DATABASE_HOST=your-database-host
-DATABASE_PORT=5432
-DATABASE_USERNAME=your-username
-DATABASE_PASSWORD=your-password
-DATABASE_NAME=your-database-name
-SUPABASE_URL=your-supabase-url
-SUPABASE_ANON_KEY=your-supabase-anon-key
+# Database
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/real_estate
+
+# Backend
+JWT_SECRET=your-super-secret-jwt-key-here
+NODE_ENV=development
 PORT=3001
-```
 
-### Frontend (.env.local)
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Frontend
 NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-nextauth-secret-key-here
+
+# Supabase (optional)
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Redis (optional)
+REDIS_URL=redis://localhost:6379
 ```
 
 ## 🧪 Testing
@@ -245,7 +269,8 @@ Quick demo setup:
 ```bash
 git clone <repository-url>
 cd real-estate-fullstack
-docker-compose up
+cp .env.example .env
+docker-compose up -d
 ```
 
-This project showcases full-stack development skills with modern technologies.
+This project showcases full-stack development skills with modern technologies including Docker containerization.

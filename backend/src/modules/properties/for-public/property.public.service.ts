@@ -73,10 +73,6 @@ export class PropertyPublicService {
   ) {}
 
   private applyFeaturesFilters(query: PaginateQuery, queryBuilder: any): void {
-    console.log(
-      '🔍 applyFeaturesFilters called with query:',
-      JSON.stringify(query, null, 2),
-    );
     const booleanFilters = [
       'balcony',
       'furnished',
@@ -163,7 +159,6 @@ export class PropertyPublicService {
       .where('property.isActive = :isActive', { isActive: true })
       .andWhere('property.deletedAt IS NULL');
 
-    // Apply custom features filters
     this.applyFeaturesFilters(query, queryBuilder);
 
     const paginatedResult = await paginate(
