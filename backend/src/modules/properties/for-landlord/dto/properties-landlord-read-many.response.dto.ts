@@ -1,5 +1,5 @@
 import { PropertyType, PropertyFeatures } from '../../entities/property.entity';
-import { BasePaginatedResponse } from '@/shared/types/base.dto';
+import { BasePaginatedResponse } from '../../../../shared/types/base.dto';
 
 export class PropertyLandlordReadManyDto {
   slug: string;

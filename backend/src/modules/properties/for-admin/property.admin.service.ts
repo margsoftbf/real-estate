@@ -6,7 +6,7 @@ import { User } from '../../users/entities/user.entity';
 import { PropertiesAdminCreateDto } from './dto/properties-admin-create.dto';
 import { PropertiesAdminUpdateDto } from './dto/properties-admin-update.dto';
 import { FilterOperator, paginate, PaginateConfig, PaginateQuery } from 'nestjs-paginate';
-import { ExceptionConstants } from '@/exceptions';
+import { ExceptionConstants } from '../../../exceptions';
 
 export const findAllPropertiesAdminConfig: PaginateConfig<Property> = {
   sortableColumns: ['createdAt', 'price', 'city', 'isPopular', 'isActive'],
