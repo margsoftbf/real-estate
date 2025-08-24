@@ -13,7 +13,10 @@ async function bootstrap(): Promise<INestApplication> {
       origin: (origin, callback) => {
         if (!origin) return callback(null, true);
 
-        const allowedOrigins = ['https://real-estate-six-tawny-67.vercel.app'];
+        const allowedOrigins = [
+          'https://real-estate-six-tawny-67.vercel.app',
+          'https://real-estate.marcingarski.com'
+        ];
 
         const isAllowed =
           allowedOrigins.includes(origin) ||
@@ -47,7 +50,10 @@ async function bootstrap(): Promise<INestApplication> {
 export default async (req, res) => {
   try {
     const origin = req.headers.origin;
-    const allowedOrigins = ['https://real-estate-six-tawny-67.vercel.app'];
+    const allowedOrigins = [
+      'https://real-estate-six-tawny-67.vercel.app',
+      'https://real-estate.marcingarski.com'
+    ];
 
     const isAllowed =
       !origin ||
