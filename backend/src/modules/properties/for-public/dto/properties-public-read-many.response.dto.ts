@@ -1,6 +1,6 @@
 import { PropertyType, PropertyFeatures } from '../../entities/property.entity';
 import { User } from '../../../users/entities/user.entity';
-import { BasePaginatedResponse } from '@/shared/types/base.dto';
+import { BasePaginatedResponse } from '../../../../shared/types/base.dto';
 
 class PropertyPublicOwnerReadManyDto
   implements
