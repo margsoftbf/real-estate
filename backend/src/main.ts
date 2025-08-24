@@ -13,9 +13,7 @@ async function bootstrap(): Promise<INestApplication> {
       origin: (origin, callback) => {
         if (!origin) return callback(null, true);
 
-        const allowedOrigins = [
-          'https://real-estate-six-tawny-67.vercel.app',
-        ];
+        const allowedOrigins = ['https://real-estate-six-tawny-67.vercel.app'];
 
         const isAllowed =
           allowedOrigins.includes(origin) ||
@@ -34,10 +32,11 @@ async function bootstrap(): Promise<INestApplication> {
         'Authorization',
         'Accept',
         'X-Requested-With',
+        'x-requested-with',
       ],
       credentials: true,
       preflightContinue: false,
-      optionsSuccessStatus: 204,
+      optionsSuccessStatus: 200,
     });
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
@@ -47,33 +46,40 @@ async function bootstrap(): Promise<INestApplication> {
 
 export default async (req, res) => {
   try {
-    // Set CORS headers immediately for all requests
     const origin = req.headers.origin;
-    const allowedOrigins = [
-      'https://real-estate-six-tawny-67.vercel.app',
-    ];
-    
-    const isAllowed = !origin || 
-      allowedOrigins.includes(origin) || 
-      origin.includes('vercel.app') || 
+    const allowedOrigins = ['https://real-estate-six-tawny-67.vercel.app'];
+
+    const isAllowed =
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.includes('vercel.app') ||
       origin.includes('localhost');
 
-    if (isAllowed) {
-      res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    if (isAllowed && origin) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    } else if (!origin) {
+      res.setHeader('Access-Control-Allow-Origin', '*');
     }
-    
+
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,X-Requested-With');
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+    );
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Content-Type,Authorization,Accept,X-Requested-With,x-requested-with',
+    );
+    res.setHeader('Access-Control-Max-Age', '86400');
 
     if (req.method === 'OPTIONS') {
-      res.status(204).end();
+      res.status(200).end();
       return;
     }
 
     const app = await bootstrap();
     const expressApp = app.getHttpAdapter().getInstance();
-    
+
     return expressApp(req, res);
   } catch (error) {
     console.error('Error in serverless function:', error);
