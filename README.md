@@ -1,6 +1,8 @@
-# Real Estate Platform 🏠 (In progress)
+# Real Estate Platform 🏠
 
 A modern full-stack real estate platform built with cutting-edge technologies. This monorepo contains both frontend and backend applications designed to provide a comprehensive property management and listing solution.
+
+App still in progress but enough to show skills.
 
 ## ✨ Features
 
@@ -15,12 +17,12 @@ A modern full-stack real estate platform built with cutting-edge technologies. T
 
 ## 🌐 Live Demo
 
-**Live Application**: [https://real-estate-six-tawny-67.vercel.app/](https://real-estate-six-tawny-67.vercel.app/)
+**Live Application**: [https://real-estate.marcingarski.com/](https://real-estate.marcingarski.com/)
 
 ### Test Credentials
 
 - **Email**: landlord@realestate.com
-- **Password**: Contact for demo credentials
+- **Password**: PasswordLandlord123!
 
 ## 📱 Application Screenshots
 
