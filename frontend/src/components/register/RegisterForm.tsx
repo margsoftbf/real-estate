@@ -11,6 +11,7 @@ import {
   UseFormRegister,
   UseFormSetValue,
 } from 'react-hook-form';
+import { ButtonLoading } from '@/components/ui/Loading';
 
 interface RegisterFormProps {
   onSubmit: (data: RegisterFormData) => void;
@@ -163,7 +164,14 @@ const RegisterForm = ({
           className="w-full"
           disabled={isPending}
         >
-          {isPending ? 'Creating account...' : 'Sign up'}
+{isPending ? (
+            <div className="flex items-center space-x-2">
+              <ButtonLoading />
+              <span>Creating account...</span>
+            </div>
+          ) : (
+            'Sign up'
+          )}
         </Button>
       </div>
 

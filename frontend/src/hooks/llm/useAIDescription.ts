@@ -4,7 +4,7 @@ import {
   GenerateDescriptionRequest,
   GeneratedDescription,
 } from '@/lib/llm/api';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/contexts/ToastContext';
 
 export const useAIDescription = () => {
   const [isGenerating, setIsGenerating] = useState(false);

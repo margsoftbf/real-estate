@@ -23,14 +23,14 @@ describe('SearchBar', () => {
     expect(screen.getAllByDisplayValue('test query')).toHaveLength(2);
   });
 
-  it('calls onChange when typing in mobile input', () => {
+  it('allows typing in mobile input without calling onChange immediately', () => {
     const onChange = vi.fn();
     render(<SearchBar {...defaultProps} onChange={onChange} />);
     
     const inputs = screen.getAllByRole('textbox');
     fireEvent.change(inputs[0], { target: { value: 'new value' } });
     
-    expect(onChange).toHaveBeenCalledWith('new value');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('calls onSubmit when form is submitted', () => {

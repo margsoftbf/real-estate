@@ -115,12 +115,27 @@ export class PropertyPublicService {
       .andWhere('property.deletedAt IS NULL')
       .andWhere('property.type = :type', { type: PropertyType.RENT });
 
+    if (query['filter.city$eq']) {
+      queryBuilder.andWhere('property.city = :city', { 
+        city: query['filter.city$eq'] 
+      });
+      delete query['filter.city$eq'];
+    }
+
     this.applyFeaturesFilters(query, queryBuilder);
+
+    const configForRent = {
+      ...findAllPropertiesPublicConfig,
+      filterableColumns: {
+        ...findAllPropertiesPublicConfig.filterableColumns,
+      }
+    };
+    delete (configForRent.filterableColumns as any).city;
 
     const paginatedResult = await paginate(
       query,
       queryBuilder,
-      findAllPropertiesPublicConfig,
+      configForRent,
     );
 
     const mappedProperties: PropertyPublicReadManyDto[] =
@@ -162,15 +177,31 @@ export class PropertyPublicService {
       .where('property.isActive = :isActive', { isActive: true })
       .andWhere('property.deletedAt IS NULL')
       .andWhere('property.type = :type', { type: PropertyType.SELL });
+    
+    
+      if (query['filter.city$eq']) {
+      queryBuilder.andWhere('property.city = :city', { 
+        city: query['filter.city$eq'] 
+      });
+      delete query['filter.city$eq'];
+    }
 
     this.applyFeaturesFilters(query, queryBuilder);
+
+    const configForSell = {
+      ...findAllPropertiesPublicConfig,
+      filterableColumns: {
+        ...findAllPropertiesPublicConfig.filterableColumns,
+      }
+    };
+    delete (configForSell.filterableColumns as any).city;
 
     const paginatedResult = await paginate(
       query,
       queryBuilder,
-      findAllPropertiesPublicConfig,
+      configForSell,
     );
-
+    
     const mappedProperties: PropertyPublicReadManyDto[] =
       paginatedResult.data.map((property) => ({
         slug: property.slug,
@@ -290,7 +321,7 @@ export const findAllPropertiesPublicConfig: PaginateConfig<Property> = {
   ],
   searchableColumns: ['title', 'description', 'city', 'country'],
   filterableColumns: {
-    city: [FilterOperator.ILIKE],
+    city: [FilterOperator.EQ],
     country: [FilterOperator.ILIKE],
     type: [FilterOperator.EQ],
     price: [FilterOperator.GTE, FilterOperator.LTE],

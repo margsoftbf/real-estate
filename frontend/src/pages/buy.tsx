@@ -69,6 +69,7 @@ const BuyPage = () => {
             Search properties to buy
           </h1>
         </div>
+
         <PropertySearchSection
           searchTerm={state.searchTerm}
           onSearchTermChange={(value) =>

@@ -69,7 +69,7 @@ const PropertyListItem = ({
                 <span className="text-xs text-gray-500">
                   {property.features?.area
                     ? `${property.features.area} m²`
-                    : 'Size N/A'}
+                    : 'None'}
                 </span>
               </div>
             </div>
@@ -91,7 +91,7 @@ const PropertyListItem = ({
               <span className="text-sm text-gray-900 font-medium">
                 {property.features?.area
                   ? `${property.features.area} m²`
-                  : 'Size N/A'}
+                  : 'None'}
               </span>
             </div>
           </div>
@@ -103,40 +103,44 @@ const PropertyListItem = ({
               </span>
 
               <div className="hidden sm:flex items-center gap-2 text-xs text-gray-500">
-                {property.features?.bedrooms && (
+                {property.features?.bedrooms ? (
                   <span>{property.features.bedrooms} bed</span>
+                ) : (
+                  <span>None</span>
                 )}
-                {property.features?.bathrooms && (
+                {property.features?.bathrooms ? (
                   <span>{property.features.bathrooms} bath</span>
+                ) : (
+                  <span>None</span>
                 )}
               </div>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               <button
                 onClick={() => router.push(`/properties/${property.slug}`)}
-                className="p-2 text-blue-500 hover:text-blue-700 transition-colors cursor-pointer"
+                className="p-2.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-xl transition-all duration-200 cursor-pointer group"
                 title="View Property"
               >
-                <EyeOutline className="w-4 h-4" />
+                <EyeOutline className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </button>
               <button
                 onClick={() =>
                   router.push(`/landlord/edit-listing/${property.slug}`)
                 }
-                className="p-2 text-green-500 hover:text-green-700 transition-colors cursor-pointer"
+                className="p-2.5 text-green-500 hover:text-green-700 hover:bg-green-50 rounded-xl transition-all duration-200 cursor-pointer group"
                 title="Edit Property"
               >
-                <EditOutline className="w-4 h-4" />
+                <EditOutline className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </button>
               <button
                 onClick={() =>
                   onDelete(property.slug, property.title || 'Untitled Property')
                 }
-                className="p-2 text-red-500 hover:text-red-700 transition-colors cursor-pointer"
+                className="p-2.5 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 cursor-pointer group"
                 title="Delete Property"
               >
-                <TrashOutline className="w-4 h-4" />
+                <TrashOutline className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </button>
             </div>
           </div>

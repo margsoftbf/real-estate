@@ -6,7 +6,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { LlmRequestData, LlmOptions } from '../llm.interface';
+import { LlmOptions, LlmRequestData } from '../../llm.interface';
+
 
 export class LlmRequestDataDto implements LlmRequestData {
   @IsString()

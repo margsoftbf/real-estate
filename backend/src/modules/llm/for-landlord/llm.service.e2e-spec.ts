@@ -3,18 +3,14 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { LlmController } from './llm.controller';
 import { LlmService } from './llm.service';
-import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import {
-  GenerateDescriptionDto,
-  PropertyType,
-  ListingType,
-} from './dto/generate-description.dto';
+import { JwtAuthGuard } from '../../auth/jwt/jwt-auth.guard';
 import {
   createLandlordUser,
   createMockUser,
   createAdminUser,
-} from '../../../test/test-helpers';
-import { UserRole } from '../users/entities/user.entity';
+} from '../../../../test/test-helpers';
+import { UserRole } from '../../users/entities/user.entity';
+import { GenerateDescriptionDto, ListingType, PropertyType } from './dto/generate-description.dto';
 
 describe('LlmController (e2e)', () => {
   let app: INestApplication;

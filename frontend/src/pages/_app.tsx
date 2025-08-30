@@ -2,14 +2,21 @@ import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import '@/styles/globals.css';
 import Head from 'next/head';
+import { ToastProvider } from '@/contexts/ToastContext';
+import ToastContainer from '@/components/ui/Toast/ToastContainer';
+import { PageLoading } from '@/components/ui/Loading';
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
+  const router = useRouter();
+  const [isPageLoading, setIsPageLoading] = useState(false);
+  
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -32,6 +39,22 @@ export default function App({
         },
       })
   );
+
+  useEffect(() => {
+    const handleRouteChangeStart = () => setIsPageLoading(true);
+    const handleRouteChangeComplete = () => setIsPageLoading(false);
+    const handleRouteChangeError = () => setIsPageLoading(false);
+
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    router.events.on('routeChangeError', handleRouteChangeError);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      router.events.off('routeChangeError', handleRouteChangeError);
+    };
+  }, [router.events]);
 
   return (
     <>
@@ -62,8 +85,15 @@ export default function App({
 
       <SessionProvider session={session}>
         <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ToastProvider>
+            {isPageLoading ? (
+              <PageLoading />
+            ) : (
+              <Component {...pageProps} />
+            )}
+            <ToastContainer />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </ToastProvider>
         </QueryClientProvider>
       </SessionProvider>
     </>

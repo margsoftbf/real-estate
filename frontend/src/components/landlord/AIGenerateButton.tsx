@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button/Button';
 import AIDescriptionModal from './AIDescriptionModal';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/contexts/ToastContext';
 
 interface AIGenerateButtonProps {
   onDescriptionGenerated: (data: {

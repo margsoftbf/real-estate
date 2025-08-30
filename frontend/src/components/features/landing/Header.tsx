@@ -20,7 +20,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
   const navigationItems = [
     { name: 'Rent', href: '/rent' },
     { name: 'Buy', href: '/buy' },
-    { name: 'Sell', href: '/dashboard' },
+    { name: 'Sell', href: '/landlord/add-listing' },
   ];
 
   const toggleMobileMenu = () => {

@@ -97,6 +97,8 @@ export class PropertyLandlordService {
       isActive: savedProperty.isActive,
       createdAt: savedProperty.createdAt,
       updatedAt: savedProperty.updatedAt,
+      latitude: savedProperty.latitude,
+      longitude: savedProperty.longitude,
     };
   }
 
@@ -182,7 +184,6 @@ export class PropertyLandlordService {
     updatePropertyDto: PropertiesLandlordUpdateDto,
     ownerId: string,
   ): Promise<PropertyLandlordReadOneDto> {
-    const propertyData = await this.findOne(slug, ownerId);
 
     const property = await this.propertyRepository.findOne({
       where: { slug },
@@ -220,6 +221,5 @@ export class PropertyLandlordService {
     }
 
     await this.propertyRepository.softRemove(property);
-    return { message: 'Property deleted successfully' };
   }
 }

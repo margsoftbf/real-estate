@@ -377,7 +377,7 @@ export const useMyListings = (): UseMyListingsReturn => {
 
     switch (randomStatus) {
       case 'OCCUPIED':
-        return { label: 'OCCUPIED', color: 'bg-green-100 text-green-700' };
+        return { label: 'OCCUPIED', color: 'bg-orange-100 text-orange-700' };
       case 'VACANT':
         return { label: 'VACANT', color: 'bg-purple-100 text-purple-700' };
       case 'REQUEST':

@@ -71,6 +71,8 @@ export const createMockProperty = (overrides?: Partial<Property>): Property => {
     price: 2500.00,
     city: 'Warsaw',
     country: 'Poland',
+    latitude: 52.237049,
+    longitude: 21.017532,
     title: 'Test Property',
     photos: ['https://example.com/photo1.jpg'],
     description: 'A beautiful test property',

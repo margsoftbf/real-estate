@@ -68,6 +68,12 @@ export class Property {
   @Column('varchar', { length: 100 })
   country: string;
 
+  @Column('decimal', { precision: 10, scale: 6, nullable: true })
+  latitude: number | null;
+
+  @Column('decimal', { precision: 10, scale: 6, nullable: true })
+  longitude: number | null;
+
   @Column('varchar', { length: 200, nullable: true })
   title: string | null;
 

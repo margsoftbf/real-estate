@@ -1,5 +1,5 @@
 import React from 'react';
-import LoadingSpinner from '@/components/ui/LoadingSpinner/LoadingSpinner';
+import { PageLoading } from '@/components/ui/Loading';
 
 interface LoadingStateProps {
   className?: string;
@@ -10,7 +10,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({
 }) => {
   return (
     <div className={className}>
-      <LoadingSpinner />
+      <PageLoading />
     </div>
   );
 };

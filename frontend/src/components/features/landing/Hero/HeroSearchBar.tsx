@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import SearchOutline from '@/assets/icons/SearchOutline';
 import Button from '@/components/ui/Button/Button';
+import CitySearch from '@/components/shared/CitySearch';
 
 interface HeroSearchBarProps {
   className?: string;
@@ -10,22 +11,25 @@ interface HeroSearchBarProps {
 const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
   const [activeTab, setActiveTab] = useState('Rent');
   const [searchValue, setSearchValue] = useState('');
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const router = useRouter();
+
+  const handleCitySelect = (city: string, coords?: { lat: number; lng: number }) => {
+    setSearchValue(city);
+    setCoordinates(coords || null);
+  };
 
   const handleBrowse = () => {
     const targetPage = activeTab.toLowerCase() === 'rent' ? '/rent' : '/buy';
     if (searchValue.trim()) {
-      router.push(
-        `${targetPage}?city=${encodeURIComponent(searchValue.trim())}`
-      );
+      const params = new URLSearchParams({ city: searchValue.trim() });
+      if (coordinates) {
+        params.append('lat', coordinates.lat.toString());
+        params.append('lng', coordinates.lng.toString());
+      }
+      router.push(`${targetPage}?${params.toString()}`);
     } else {
       router.push(targetPage);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleBrowse();
     }
   };
 
@@ -60,38 +64,29 @@ const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
       <div className="py-2 px-4 lg:p-0 lg:pr-2 lg:h-20 lg:bg-white lg:flex lg:items-center lg:justify-between lg:w-[600px]">
         <div className="relative flex-1 lg:mr-4">
           <div className="hidden lg:block">
-            <div className="rounded-md bg-white px-3 pt-3 pb-3 ">
-              <label
-                htmlFor="location"
-                className="block text-xs font-medium text-gray-700 mb-1"
-              >
+            <div className="rounded-md bg-white px-3 pt-3 pb-3">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
                 Location
               </label>
-              <input
-                id="location"
-                name="location"
-                type="text"
-                placeholder="Search location"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="block w-full text-gray-900 placeholder:text-gray-400 focus:outline-none text-sm border-0 p-0 h-8 bg-transparent"
-              />
+              <div className="relative">
+                <CitySearch
+                  value={searchValue}
+                  onChange={handleCitySelect}
+                  placeholder="Search for a city..."
+                  showSearchIcon={false}
+                  inputClassName="block w-full text-gray-900 placeholder:text-gray-400 focus:outline-none text-sm border-0 p-0 h-8 bg-transparent"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="lg:hidden">
-            <input
-              type="text"
-              placeholder="Search location"
+          <div className="lg:hidden relative">
+            <CitySearch
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="
-                w-full py-3 pr-14 bg-transparent text-gray-700 text-body-md
-                focus:outline-none transition-all text-body-md-medium
-                border-0
-              "
+              onChange={handleCitySelect}
+              placeholder="Search for a city..."
+              showSearchIcon={false}
+              inputClassName="w-full py-3 pr-14 bg-transparent text-gray-700 text-body-md focus:outline-none transition-all text-body-md-medium border-0"
             />
             <button
               onClick={handleBrowse}

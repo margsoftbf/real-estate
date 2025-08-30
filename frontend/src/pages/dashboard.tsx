@@ -3,16 +3,13 @@ import Head from 'next/head';
 import AppLayout from '@/components/layout/AppLayout';
 import DashboardContent from '@/components/features/dashboard/DashboardContent';
 import { useUser } from '@/hooks/auth/useUser';
+import { PageLoading } from '@/components/ui/Loading';
 
 const DashboardPage = () => {
   const { data: userInfo, isLoading } = useUser();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <PageLoading />;
   }
 
   if (!userInfo) {

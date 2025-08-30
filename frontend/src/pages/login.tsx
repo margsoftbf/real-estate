@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Toast from '@/components/ui/Toast/Toast';
 import Header from '@/components/features/landing/Header';
 import { useLogin } from '@/hooks/auth';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/contexts/ToastContext';
 import { LoginFormData, loginSchema } from '@/validation/loginValidation';
 import PropertyLoginSidebar from '@/components/login/PropertyLoginSidebar';
 import LoginForm from '@/components/login/LoginForm';

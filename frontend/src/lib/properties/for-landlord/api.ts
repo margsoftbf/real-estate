@@ -19,6 +19,8 @@ export interface PropertyLandlordCreateDto {
   features?: PropertyFeatures;
   isPopular?: boolean;
   isActive?: boolean;
+  latitude?: number;
+  longitude?: number;
 }
 
 export type PropertyLandlordUpdateDto = Partial<PropertyLandlordCreateDto>;
@@ -32,6 +34,8 @@ export interface PropertyLandlordDto {
   title: string | null;
   photos: string[];
   description: string | null;
+  latitude: number;
+  longitude: number;
   features: PropertyFeatures | null;
   priceHistory: PropertyPriceHistory[];
   isPopular: boolean;

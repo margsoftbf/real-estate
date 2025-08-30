@@ -21,7 +21,7 @@ const PropertyPriceBox = ({ property }: PropertyPriceBoxProps) => {
     <div className="bg-gray-50 border-2 border-purple-200 rounded-lg p-3 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="text-2xl font-bold text-primary-violet-dark">
-          ${property.price.toLocaleString()}
+          ${Math.floor(property.price).toLocaleString()}
           {property.type === 'rent' && (
             <span className="text-body-sm font-medium text-gray-600">
               /month
