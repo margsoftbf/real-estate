@@ -6,6 +6,7 @@ import {
   AreaIcon,
   HeartOutline,
   StarIconPopular,
+  ImageOutline,
 } from '@/assets/icons';
 import { PropertyPublicDto } from '@/types/properties';
 
@@ -14,7 +15,8 @@ type PropertyCardProps = {
 };
 
 const PropertyCard = ({ property }: PropertyCardProps) => {
-  const firstPhoto = property.photos?.[0] || '/placeholder-property.jpg';
+  const firstPhoto = property.photos?.[0];
+  const hasPhoto = !!firstPhoto;
   const priceText = property.type === 'rent' ? '/month' : '';
   const bedrooms = property.features?.bedrooms || 0;
   const bathrooms = property.features?.bathrooms || 0;
@@ -24,14 +26,23 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
     <Link href={`/properties/${property.slug}`}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden w-full max-w-96 mx-auto cursor-pointer hover:shadow-lg transition-all duration-300 hover:border-primary-violet-dark border border-transparent">
         <div className="relative h-48">
-          <Image
-            src={firstPhoto}
-            alt={property.title || 'Property'}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover"
-          />
-          <div className="absolute w-full h-full bg-gradient-to-b from-black/30 to-transparent"></div>
+          {hasPhoto ? (
+            <>
+              <Image
+                src={firstPhoto}
+                alt={property.title || 'Property'}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover"
+              />
+              <div className="absolute w-full h-full bg-gradient-to-b from-black/30 to-transparent"></div>
+            </>
+          ) : (
+            <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center border-b border-gray-200">
+              <ImageOutline className="w-12 h-12 text-gray-400 mb-2" />
+              <span className="text-gray-500 text-sm">No photo</span>
+            </div>
+          )}
           {property.isPopular && (
             <div className="absolute top-2 left-2 bg-primary-violet-dark text-white border border-primary-violet-dark text-xs font-bold px-3 py-2 rounded-md flex items-center gap-1.5 z-10">
               <StarIconPopular className="w-4 h-4 text-white" />

@@ -31,7 +31,7 @@ const SearchBar = ({
             value={value}
             onChange={(city) => onChange(city)}
             placeholder={placeholder}
-            inputClassName={`w-full pr-12 bg-purple-50 border border-purple-300 rounded-lg focus:ring-1 focus:outline-none focus:ring-primary-violet focus:border-primary-violet focus:bg-white text-gray-900 placeholder:text-gray-400 ${
+            inputClassName={`w-full pr-12 bg-white border border-purple-300 rounded-lg focus:ring-1 focus:outline-none focus:ring-primary-violet focus:border-primary-violet focus:bg-white text-gray-900 placeholder:text-gray-600 ${
               isCompact ? 'py-2 px-3 text-sm' : 'py-3 px-4'
             }`}
             showSearchIcon={false}
@@ -49,7 +49,7 @@ const SearchBar = ({
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center bg-purple-50 border border-purple-300 rounded-lg px-2 gap-1 focus-within:ring-1 focus-within:ring-primary-violet focus-within:border-primary-violet focus-within:bg-white transition-colors">
+        <div className="hidden lg:flex items-center bg-white border border-purple-300 rounded-lg px-2 gap-1 focus-within:ring-1 focus-within:ring-primary-violet focus-within:border-primary-violet focus-within:bg-white transition-colors">
           <div className="flex-1 px-4 py-3 relative">
             <label className="block text-xs font-medium text-gray-700 mb-1">
               Location

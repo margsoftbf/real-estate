@@ -85,6 +85,7 @@ export default function PropertyPageLayout({
             price={property.price}
             type={property.type}
             createdAt={property.createdAt}
+            priceHistory={property.priceHistory}
           />
           <PropertyLocation property={property} />
         </div>
@@ -102,6 +103,7 @@ export default function PropertyPageLayout({
                 price={property.price}
                 type={property.type}
                 createdAt={property.createdAt}
+                priceHistory={property.priceHistory}
               />
               <PropertyLocation property={property} />
             </div>

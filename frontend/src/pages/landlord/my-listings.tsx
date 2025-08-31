@@ -38,7 +38,6 @@ const MyListingsPage = () => {
     handleSearch,
     fetchProperties,
     formatPrice,
-    getStatusBadge,
     sortProperties,
   } = useMyListings();
 
@@ -87,7 +86,6 @@ const MyListingsPage = () => {
             fetchProperties(page, searchQuery, activeTab, filters)
           }
           formatPrice={formatPrice}
-          getStatusBadge={getStatusBadge}
           sortProperties={sortProperties}
           onRetry={() =>
             fetchProperties(currentPage, searchQuery, activeTab, filters)

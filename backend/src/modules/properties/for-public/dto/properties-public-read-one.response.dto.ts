@@ -56,6 +56,15 @@ export class PropertiesPublicReadOneResponseDto {
   isPopular: boolean;
 
   @ApiProperty()
+  latitude: number | null;
+
+  @ApiProperty()
+  longitude: number | null;
+
+  @ApiProperty()
+  priceHistory: PropertyPriceHistory[];
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

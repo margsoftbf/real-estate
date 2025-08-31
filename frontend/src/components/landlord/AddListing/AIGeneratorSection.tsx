@@ -23,8 +23,8 @@ const AIGeneratorSection: React.FC<AIGeneratorSectionProps> = ({
 }) => {
   return (
     <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-200">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col lg:flex-row gap-2 items-center justify-center lg:justify-between">
+        <div className='text-center lg:text-left'>
           <h3 className="text-lg font-semibold text-gray-800">
             AI-Powered Description Generator
           </h3>

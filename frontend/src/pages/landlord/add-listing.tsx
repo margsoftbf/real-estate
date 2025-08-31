@@ -60,8 +60,8 @@ const AddListingPage = () => {
         <form onSubmit={handleSubmit} className="space-y-8" noValidate>
           
           <AIGeneratorSection
-            propertyType={formData.features?.homeType as 'apartment' | 'house' | 'studio' | 'room'}
-            location={`${formData.city}, ${formData.country}`}
+            propertyType={formData.features?.homeType as 'apartment' | 'house' | 'studio' | 'room' || 'apartment'}
+            location={formData.city ? `${formData.city}${formData.country ? `, ${formData.country}` : ''}` : 'Your Location'}
             onDescriptionGenerated={handleAI}
           />
 

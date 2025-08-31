@@ -70,4 +70,10 @@ export class PropertiesLandlordCreateDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @ApiProperty({ description: 'Reason for price change', required: false, maxLength: 200 })
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  priceChangeReason?: string;
 }

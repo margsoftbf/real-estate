@@ -9,20 +9,14 @@ interface PropertyListItemProps {
   property: PropertyLandlordDto;
   onDelete: (slug: string, title: string) => void;
   formatPrice: (price: number) => string;
-  getStatusBadge: (property: PropertyLandlordDto) => {
-    label: string;
-    color: string;
-  };
 }
 
 const PropertyListItem = ({
   property,
   onDelete,
   formatPrice,
-  getStatusBadge,
 }: PropertyListItemProps) => {
-  const router = useRouter();
-  const statusBadge = getStatusBadge(property);
+  const router = useRouter();;
 
   const getTypeBadge = (type: PropertyType) => {
     switch (type) {
@@ -75,11 +69,6 @@ const PropertyListItem = ({
             </div>
 
             <div className="flex-shrink-0 flex-col md:flex-row flex-wrap ml-2 flex gap-1">
-              <span
-                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${statusBadge.color}`}
-              >
-                {statusBadge.label}
-              </span>
               <span
                 className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${typeBadge.color}`}
               >

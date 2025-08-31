@@ -4,3 +4,4 @@ export { default as PropertyFeaturesSection } from './PropertyFeaturesSection';
 export { default as ListingSettingsSection } from './ListingSettingsSection';
 export { default as AIGeneratorSection } from './AIGeneratorSection';
 export { default as EditListingInformationSection } from './EditListingInformationSection';
+export { default as PriceChangeSection } from './PriceChangeSection';

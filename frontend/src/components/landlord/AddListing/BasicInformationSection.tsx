@@ -7,7 +7,6 @@ import LocationMap from '@/components/shared/LocationMap';
 import { PropertyType } from '@/types/properties/public-types';
 interface FormData {
   type?: PropertyType;
-  price?: number;
   city?: string;
   country?: string;
   latitude?: number;
@@ -45,16 +44,6 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
           value={formData.type || PropertyType.RENT}
           onChange={(e) => onInputChange('type', e.target.value as PropertyType)}
           error={validationErrors.type}
-        />
-
-        <EditableInput
-          fieldName="price"
-          label={`Price * (${(formData.type || PropertyType.RENT) === PropertyType.RENT ? 'per month' : 'total'})`}
-          placeholder="Enter price"
-          type="number"
-          value={formData.price ? Math.round(formData.price).toString() : '0'}
-          onChange={(e) => onInputChange('price', Number(e.target.value))}
-          error={validationErrors.price}
         />
 
         <EditableInput

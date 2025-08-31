@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 
 interface EditableTextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -7,20 +7,18 @@ interface EditableTextareaProps
   placeholder: string;
   required?: boolean;
   error?: string;
+  ref?: React.Ref<HTMLTextAreaElement>;
 }
 
-const EditableTextarea = forwardRef<HTMLTextAreaElement, EditableTextareaProps>(
-  (
-    {
-      fieldName,
-      label,
-      placeholder,
-      required = false,
-      error,
-      ...textareaProps
-    },
-    ref
-  ) => {
+const EditableTextarea = ({
+  fieldName,
+  label,
+  placeholder,
+  required = false,
+  error,
+  ref,
+  ...textareaProps
+}: EditableTextareaProps) => {
     return (
       <div className="flex flex-col gap-1">
         <label
@@ -50,9 +48,7 @@ const EditableTextarea = forwardRef<HTMLTextAreaElement, EditableTextareaProps>(
         )}
       </div>
     );
-  }
-);
+};
 
-EditableTextarea.displayName = 'EditableTextarea';
 
 export default EditableTextarea;

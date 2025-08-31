@@ -50,6 +50,7 @@ const AIGenerateButton: React.FC<AIGenerateButtonProps> = ({
   return (
     <>
       <Button
+        type="button"
         onClick={() => setIsModalOpen(true)}
         className={`${buttonStyles[variant]} ${className}`}
       >

@@ -35,9 +35,14 @@ interface PhotoHandlers {
 
 interface FormActions {
   handleSubmit: (e: React.FormEvent) => Promise<void>;
+  handlePriceChange: (newPrice: number, reason: string) => Promise<void>;
 }
 
-interface UseEditListingForm extends FormState, InputHandlers, PhotoHandlers, FormActions {}
+interface UseEditListingForm
+  extends FormState,
+    InputHandlers,
+    PhotoHandlers,
+    FormActions {}
 
 const initialFormData: PropertyLandlordUpdateDto = {
   type: PropertyType.RENT,
@@ -54,15 +59,20 @@ const initialFormData: PropertyLandlordUpdateDto = {
   isActive: true,
 };
 
-export const useEditListing = (slug: string | string[] | undefined): UseEditListingForm => {
+export const useEditListing = (
+  slug: string | string[] | undefined
+): UseEditListingForm => {
   const router = useRouter();
   const { showSuccess, showError } = useToast();
 
   const [property, setProperty] = useState<PropertyLandlordDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState<PropertyLandlordUpdateDto>(initialFormData);
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] =
+    useState<PropertyLandlordUpdateDto>(initialFormData);
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -78,8 +88,14 @@ export const useEditListing = (slug: string | string[] | undefined): UseEditList
           price: propertyData.price,
           city: propertyData.city,
           country: propertyData.country,
-          latitude: propertyData.latitude,
-          longitude: propertyData.longitude,
+          latitude:
+            typeof propertyData.latitude === 'string'
+              ? parseFloat(propertyData.latitude)
+              : propertyData.latitude,
+          longitude:
+            typeof propertyData.longitude === 'string'
+              ? parseFloat(propertyData.longitude)
+              : propertyData.longitude,
           title: propertyData.title || '',
           description: propertyData.description || '',
           photos: propertyData.photos.length > 0 ? propertyData.photos : [''],
@@ -127,8 +143,8 @@ export const useEditListing = (slug: string | string[] | undefined): UseEditList
     setFormData((prev) => ({
       ...prev,
       city,
-      latitude: coords?.lat || undefined,
-      longitude: coords?.lng || undefined,
+      latitude: coords?.lat || prev.latitude,
+      longitude: coords?.lng || prev.longitude,
     }));
 
     if (validationErrors.city) {
@@ -155,7 +171,13 @@ export const useEditListing = (slug: string | string[] | undefined): UseEditList
       });
     }
 
-    const numericFields = ['bedrooms', 'bathrooms', 'area', 'parkingSpaces', 'yearBuilt'];
+    const numericFields = [
+      'bedrooms',
+      'bathrooms',
+      'area',
+      'parkingSpaces',
+      'yearBuilt',
+    ];
     if (numericFields.includes(field) && typeof value !== 'boolean') {
       const validation = validateField(
         field as keyof typeof import('@/validation/listingValidation').fieldValidationSchemas,
@@ -188,7 +210,7 @@ export const useEditListing = (slug: string | string[] | undefined): UseEditList
         return;
       }
     }
-    
+
     setValidationErrors((prev) => {
       const { [fieldKey]: removed, ...rest } = prev;
       void removed;
@@ -208,6 +230,36 @@ export const useEditListing = (slug: string | string[] | undefined): UseEditList
       ...prev,
       photos: prev.photos?.filter((_, i) => i !== index) || [''],
     }));
+  };
+
+  const handlePriceChange = async (newPrice: number, reason: string) => {
+    if (!slug || typeof slug !== 'string') return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      await propertiesLandlordApi.update(slug, {
+        price: newPrice,
+        priceChangeReason: reason,
+      });
+      
+      // Update the property state with new price
+      if (property) {
+        setProperty({ ...property, price: newPrice });
+      }
+      
+      // Update form data
+      setFormData(prev => ({ ...prev, price: newPrice }));
+      
+      showSuccess(`Price updated to $${newPrice.toLocaleString()} successfully!`);
+    } catch (error: any) {
+      console.error('Price update error:', error);
+      showError(
+        error.response?.data?.message || 'Failed to update price. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -261,15 +313,16 @@ export const useEditListing = (slug: string | string[] | undefined): UseEditList
     isLoading,
     property,
     error,
-    
+
     handleChange,
     handleCity,
     handleFeature,
-    
+
     handlePhoto,
     addPhoto,
     removePhoto,
     
+    handlePriceChange,
     handleSubmit,
   };
 };

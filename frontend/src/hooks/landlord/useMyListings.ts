@@ -83,10 +83,6 @@ interface UseMyListingsReturn {
   ) => Promise<void>;
 
   formatPrice: (price: number) => string;
-  getStatusBadge: (property: PropertyLandlordDto) => {
-    label: string;
-    color: string;
-  };
   sortProperties: (properties: PropertyLandlordDto[]) => PropertyLandlordDto[];
 }
 
@@ -367,26 +363,6 @@ export const useMyListings = (): UseMyListingsReturn => {
     }).format(price);
   };
 
-  const getStatusBadge = (property: PropertyLandlordDto) => {
-    if (!property.isActive) {
-      return { label: 'MAINTENANCE', color: 'bg-red-100 text-red-700' };
-    }
-
-    const statuses = ['OCCUPIED', 'VACANT', 'REQUEST'];
-    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-
-    switch (randomStatus) {
-      case 'OCCUPIED':
-        return { label: 'OCCUPIED', color: 'bg-orange-100 text-orange-700' };
-      case 'VACANT':
-        return { label: 'VACANT', color: 'bg-purple-100 text-purple-700' };
-      case 'REQUEST':
-        return { label: 'REQUEST', color: 'bg-orange-100 text-orange-700' };
-      default:
-        return { label: 'VACANT', color: 'bg-purple-100 text-purple-700' };
-    }
-  };
-
   const sortProperties = (properties: PropertyLandlordDto[]) => {
     return [...properties].sort((a, b) => {
       let aValue: string | number | Date;
@@ -465,7 +441,6 @@ export const useMyListings = (): UseMyListingsReturn => {
     fetchProperties,
 
     formatPrice,
-    getStatusBadge,
     sortProperties,
   };
 };

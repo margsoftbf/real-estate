@@ -14,13 +14,14 @@ import {
   PropertyFeaturesSection,
   ListingSettingsSection,
   EditListingInformationSection,
+  PriceChangeSection,
 } from '@/components/landlord/AddListing';
 
 const EditListingPage = () => {
   const router = useRouter();
   const { slug } = router.query;
   const { data: userInfo, isLoading: userLoading } = useUser();
-  
+
   const {
     formData,
     validationErrors,
@@ -28,14 +29,15 @@ const EditListingPage = () => {
     isLoading,
     property,
     error,
-    
+
     handleChange,
     handleCity,
     handleFeature,
     handlePhoto,
     addPhoto,
     removePhoto,
-    
+    handlePriceChange,
+
     handleSubmit,
   } = useEditListing(slug);
 
@@ -79,7 +81,11 @@ const EditListingPage = () => {
             onInputChange={handleChange}
             onCitySelect={handleCity}
           />
-
+          <PriceChangeSection
+            currentPrice={property.price}
+            onPriceChange={handlePriceChange}
+            validationErrors={validationErrors}
+          />
           <PropertyPhotosSection
             photos={formData.photos || ['']}
             validationErrors={validationErrors}

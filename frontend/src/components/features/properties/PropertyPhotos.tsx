@@ -19,8 +19,10 @@ const PropertyPhotos = ({
   if (!hasPhotos) {
     return (
       <div className="mb-6">
-        <div className="h-64 md:h-80 bg-gray-200 rounded-lg flex items-center justify-center">
-          <span className="text-gray-500">No image available</span>
+        <div className="h-64 md:h-80 bg-gray-100 rounded-lg flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
+          <ImageOutline className="w-16 h-16 text-gray-400 mb-3" />
+          <span className="text-gray-500 font-medium">No photos available</span>
+          <span className="text-gray-400 text-sm">Property images will be displayed here</span>
         </div>
       </div>
     );
