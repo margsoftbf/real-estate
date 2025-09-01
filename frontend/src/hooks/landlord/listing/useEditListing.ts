@@ -252,10 +252,13 @@ export const useEditListing = (
       setFormData(prev => ({ ...prev, price: newPrice }));
       
       showSuccess(`Price updated to $${newPrice.toLocaleString()} successfully!`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Price update error:', error);
+      const errorMessage = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
+        : undefined;
       showError(
-        error.response?.data?.message || 'Failed to update price. Please try again.'
+        errorMessage || 'Failed to update price. Please try again.'
       );
     } finally {
       setIsSubmitting(false);

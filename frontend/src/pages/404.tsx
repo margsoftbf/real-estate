@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { HomeIcon, ArrowLeftIcon } from 'lucide-react';
 
 const Custom404: React.FC = () => {
@@ -45,8 +44,8 @@ const Custom404: React.FC = () => {
             Property Not Found
           </h2>
           <p className="text-gray-600 mb-8">
-            Sorry, the property you're looking for seems to have been sold or moved. 
-            Let's help you find your perfect home instead!
+            Sorry, the property you&apos;re looking for seems to have been sold or moved. 
+            Let&apos;s help you find your perfect home instead!
           </p>
         </div>
 
