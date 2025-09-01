@@ -14,13 +14,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         migrations: [__dirname + '/migrations/*{.ts,.js}'],
         retryAttempts: 3,
         synchronize: false,
-        migrationsRun: true,
+        migrationsRun: false,
         ssl:
-          process.env.CI === 'true'
-            ? false
-            : {
+          process.env.NODE_ENV === 'production'
+            ? {
                 rejectUnauthorized: false,
-              },
+              }
+            : false,
         logging: false,
       }),
     }),
