@@ -15,12 +15,19 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
   const router = useRouter();
 
-  const isActive = (url: string) => router.pathname === url;
+  const isActive = (url: string) => {
+    if (url === '/landlord/my-listings') {
+      return router.pathname === url || 
+             router.pathname.startsWith('/landlord/edit-listing') ||
+             router.pathname === '/landlord/add-listing';
+    }
+    return router.pathname === url;
+  };
 
   return (
     <aside
       className={`
-      fixed md:static inset-y-0 left-0 z-50 w-full md:w-64 bg-gray-100 transform transition-transform duration-300 ease-in-out
+      fixed md:static inset-y-0 left-0 z-[999] md:z-40 w-full md:w-64 bg-gray-100 transform transition-transform duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
     `}
     >

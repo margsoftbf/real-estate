@@ -1,8 +1,8 @@
 import { Module, Logger } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { LlmController } from './llm.controller';
-import { LlmService } from './llm.service';
+import { LlmController } from './for-landlord/llm.controller';
+import { LlmService } from './for-landlord/llm.service';
 
 @Module({
   imports: [ConfigModule],

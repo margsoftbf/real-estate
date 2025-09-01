@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button/Button';
 import AIDescriptionModal from './AIDescriptionModal';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/contexts/ToastContext';
 
 interface AIGenerateButtonProps {
   onDescriptionGenerated: (data: {
@@ -50,6 +50,7 @@ const AIGenerateButton: React.FC<AIGenerateButtonProps> = ({
   return (
     <>
       <Button
+        type="button"
         onClick={() => setIsModalOpen(true)}
         className={`${buttonStyles[variant]} ${className}`}
       >

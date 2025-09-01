@@ -66,7 +66,7 @@ export const RecentProperties = ({ properties }: RecentPropertiesProps) => {
               </div>
               <div className="text-right">
                 <div className="font-medium text-gray-900">
-                  ${property.price?.toLocaleString()}
+                  ${property.price ? Math.floor(property.price).toLocaleString() : 'N/A'}
                 </div>
                 <div className="text-sm text-gray-500 capitalize">
                   {property.type}

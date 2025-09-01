@@ -40,7 +40,7 @@ const SimilarProperties = ({
               )}
               <div className="p-3">
                 <div className="text-lg font-semibold text-primary-violet mb-1">
-                  ${similarProperty.price.toLocaleString()}
+                  ${Math.floor(similarProperty.price).toLocaleString()}
                   {similarProperty.type === 'rent' && (
                     <span className="text-sm font-normal text-gray-600">
                       /month

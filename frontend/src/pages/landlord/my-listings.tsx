@@ -38,7 +38,6 @@ const MyListingsPage = () => {
     handleSearch,
     fetchProperties,
     formatPrice,
-    getStatusBadge,
     sortProperties,
   } = useMyListings();
 
@@ -83,11 +82,14 @@ const MyListingsPage = () => {
           totalPages={totalPages}
           searchQuery={searchQuery}
           onDeleteProperty={openDeleteDialog}
-          onPageChange={(page) => fetchProperties(page, searchQuery, activeTab, filters)}
+          onPageChange={(page) =>
+            fetchProperties(page, searchQuery, activeTab, filters)
+          }
           formatPrice={formatPrice}
-          getStatusBadge={getStatusBadge}
           sortProperties={sortProperties}
-          onRetry={() => fetchProperties(currentPage, searchQuery, activeTab, filters)}
+          onRetry={() =>
+            fetchProperties(currentPage, searchQuery, activeTab, filters)
+          }
         />
 
         <FilterModal

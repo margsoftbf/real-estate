@@ -30,6 +30,16 @@ export class PropertiesLandlordCreateDto {
   @MaxLength(100)
   country: string;
 
+  @ApiProperty({ description: 'Latitude coordinate', required: false })
+  @IsOptional()
+  @IsNumber()
+  latitude?: number;
+
+  @ApiProperty({ description: 'Longitude coordinate', required: false })
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
+
   @ApiProperty({ description: 'Property title', required: false, maxLength: 200 })
   @IsOptional()
   @IsString()
@@ -60,4 +70,10 @@ export class PropertiesLandlordCreateDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @ApiProperty({ description: 'Reason for price change', required: false, maxLength: 200 })
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  priceChangeReason?: string;
 }

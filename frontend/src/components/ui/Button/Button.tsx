@@ -7,13 +7,17 @@ export interface ButtonProps
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
   className?: string;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant = 'primary', size = 'md', children, ...props },
-    ref
-  ) => {
+const Button = ({
+  className,
+  variant = 'primary',
+  size = 'md',
+  children,
+  ref,
+  ...props
+}: ButtonProps) => {
     const baseClasses =
       'inline-flex items-center justify-center rounded-md transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-jakarta';
 
@@ -75,9 +79,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
-);
+};
 
-Button.displayName = 'Button';
 
 export default Button;

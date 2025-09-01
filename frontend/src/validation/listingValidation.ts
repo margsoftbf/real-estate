@@ -43,6 +43,14 @@ export const createListingSchema = z.object({
     .min(1, 'Country is required')
     .max(100, 'Country name is too long')
     .regex(/^[a-zA-Z\s\-'\.]+$/, 'Country name contains invalid characters'),
+  latitude: z.number()
+    .min(-90, 'Latitude must be between -90 and 90')
+    .max(90, 'Latitude must be between -90 and 90')
+    .optional(),
+  longitude: z.number()
+    .min(-180, 'Longitude must be between -180 and 180')
+    .max(180, 'Longitude must be between -180 and 180')
+    .optional(),
   title: z.string()
     .min(1, 'Title is required')
     .min(10, 'Title must be at least 10 characters')
@@ -95,6 +103,14 @@ const baseUpdateSchema = z.object({
     .min(1, 'Country is required')
     .max(100, 'Country name is too long')
     .regex(/^[a-zA-Z\s\-'\.]+$/, 'Country name contains invalid characters')
+    .optional(),
+  latitude: z.number()
+    .min(-90, 'Latitude must be between -90 and 90')
+    .max(90, 'Latitude must be between -90 and 90')
+    .optional(),
+  longitude: z.number()
+    .min(-180, 'Longitude must be between -180 and 180')
+    .max(180, 'Longitude must be between -180 and 180')
     .optional(),
   title: z.string()
     .min(1, 'Title is required')

@@ -9,6 +9,7 @@ import {
   UseFormHandleSubmit,
   UseFormRegister,
 } from 'react-hook-form';
+import { ButtonLoading } from '@/components/ui/Loading';
 
 interface LoginFormProps {
   onSubmit: (data: LoginFormData) => void;
@@ -72,7 +73,14 @@ const LoginForm = ({
           className="w-full"
           disabled={isPending}
         >
-          {isPending ? 'Signing in...' : 'Login'}
+{isPending ? (
+            <div className="flex items-center space-x-2">
+              <ButtonLoading />
+              <span>Signing in...</span>
+            </div>
+          ) : (
+            'Login'
+          )}
         </Button>
       </div>
 

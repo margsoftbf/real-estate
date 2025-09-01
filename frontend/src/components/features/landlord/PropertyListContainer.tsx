@@ -19,10 +19,6 @@ interface PropertyListContainerProps {
   onDeleteProperty: (slug: string, title: string) => void;
   onPageChange: (page: number) => void;
   formatPrice: (price: number) => string;
-  getStatusBadge: (property: PropertyLandlordDto) => {
-    label: string;
-    color: string;
-  };
   sortProperties: (properties: PropertyLandlordDto[]) => PropertyLandlordDto[];
   onRetry: () => void;
 }
@@ -36,7 +32,6 @@ const PropertyListContainer = ({
   onDeleteProperty,
   onPageChange,
   formatPrice,
-  getStatusBadge,
   sortProperties,
   onRetry,
 }: PropertyListContainerProps) => {
@@ -85,7 +80,6 @@ const PropertyListContainer = ({
               property={property}
               onDelete={onDeleteProperty}
               formatPrice={formatPrice}
-              getStatusBadge={getStatusBadge}
             />
           ))}
         </div>

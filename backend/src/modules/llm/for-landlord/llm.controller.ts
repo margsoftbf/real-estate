@@ -6,15 +6,15 @@ import {
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
-import { LlmService } from './llm.service';
 import {
   GenerateDescriptionDto,
   PropertyDescriptionResponse,
 } from './dto/generate-description.dto';
-import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { AuthUser } from '../auth/decorator/auth-user.decorator';
-import { User, UserRole } from '../users/entities/user.entity';
 import { ForbiddenException } from '@nestjs/common';
+import { JwtAuthGuard } from '@/modules/auth/jwt';
+import { LlmService } from './llm.service';
+import { User, UserRole } from '@/modules/users/entities/user.entity';
+import { AuthUser } from '@/modules/auth/decorator/auth-user.decorator';
 
 @Controller('llm/properties')
 @UseGuards(JwtAuthGuard)
@@ -32,7 +32,6 @@ export class LlmController {
     error?: string;
   }> {
     try {
-      // Only landlords and admins can generate descriptions
       if (user.role !== UserRole.LANDLORD && user.role !== UserRole.ADMIN) {
         throw new ForbiddenException(
           'Only landlords and admins can generate property descriptions',

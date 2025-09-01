@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
 interface EditableInputProps
@@ -10,22 +10,20 @@ interface EditableInputProps
   required?: boolean;
   showPasswordToggle?: boolean;
   error?: string;
+  ref?: React.Ref<HTMLInputElement>;
 }
 
-const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
-  (
-    {
-      fieldName,
-      label,
-      placeholder,
-      type,
-      required = false,
-      showPasswordToggle = false,
-      error,
-      ...inputProps
-    },
-    ref
-  ) => {
+const EditableInput = ({
+  fieldName,
+  label,
+  placeholder,
+  type,
+  required = false,
+  showPasswordToggle = false,
+  error,
+  ref,
+  ...inputProps
+}: EditableInputProps) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     const inputType = showPasswordToggle
@@ -79,9 +77,7 @@ const EditableInput = forwardRef<HTMLInputElement, EditableInputProps>(
         )}
       </div>
     );
-  }
-);
+};
 
-EditableInput.displayName = 'EditableInput';
 
 export default EditableInput;

@@ -48,11 +48,14 @@ export interface PropertyPublicDto {
   price: number;
   city: string;
   country: string;
+  latitude?: number | null;
+  longitude?: number | null;
   title: string | null;
   photos: string[];
   description: string | null;
   features: PropertyFeatures | null;
   isPopular: boolean;
+  priceHistory?: PropertyPriceHistory[];
   createdAt: string;
   updatedAt: string;
   owner: PropertyPublicOwnerDto;

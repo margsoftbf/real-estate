@@ -31,7 +31,7 @@ const RentPage = () => {
 
   useEffect(() => {
     handleRouterSearch(router.query, router);
-  }, [router.isReady, router.asPath]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query.city]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

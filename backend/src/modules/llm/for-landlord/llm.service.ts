@@ -7,17 +7,12 @@ import {
   LlmOptions,
   TypeOfResponse,
   TypeOfResponseObjectSchema,
-} from './llm.interface';
-import {
-  MODEL,
-} from './const/llm-parameters';
-import { PROPERTY_DESCRIPTION_INSTRUCTION } from './const/prompts';
+} from '../llm.interface';
+import { MODEL } from '../const/llm-parameters';
+import { PROPERTY_DESCRIPTION_INSTRUCTION } from '../const/prompts';
+import { ResponseObjectSchemas } from '../schemas/response-schema';
 import { LlmRequestDto } from './dto/llm-request.dto';
-import {
-  GenerateDescriptionDto,
-  PropertyDescriptionResponse,
-} from './dto/generate-description.dto';
-import { ResponseObjectSchemas } from './schemas/response-schema';
+import { GenerateDescriptionDto, PropertyDescriptionResponse } from './dto/generate-description.dto';
 
 @Injectable()
 export class LlmService {

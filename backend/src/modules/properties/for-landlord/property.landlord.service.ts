@@ -97,6 +97,8 @@ export class PropertyLandlordService {
       isActive: savedProperty.isActive,
       createdAt: savedProperty.createdAt,
       updatedAt: savedProperty.updatedAt,
+      latitude: savedProperty.latitude,
+      longitude: savedProperty.longitude,
     };
   }
 
@@ -170,6 +172,8 @@ export class PropertyLandlordService {
       description: property.description,
       features: property.features,
       priceHistory: property.priceHistory,
+      latitude: property.latitude,
+      longitude: property.longitude,
       isPopular: property.isPopular,
       isActive: property.isActive,
       createdAt: property.createdAt,
@@ -182,7 +186,6 @@ export class PropertyLandlordService {
     updatePropertyDto: PropertiesLandlordUpdateDto,
     ownerId: string,
   ): Promise<PropertyLandlordReadOneDto> {
-    const propertyData = await this.findOne(slug, ownerId);
 
     const property = await this.propertyRepository.findOne({
       where: { slug },
@@ -193,6 +196,16 @@ export class PropertyLandlordService {
       throw new NotFoundException(
         ExceptionConstants.PropertyErrors.propertyNotFound,
       );
+    }
+
+    if (updatePropertyDto.price !== undefined && updatePropertyDto.price !== property.price) {
+      const priceHistory = property.priceHistory || [];
+      priceHistory.push({
+        price: updatePropertyDto.price,
+        date: new Date(),
+        reason: updatePropertyDto.priceChangeReason || 'Price updated',
+      });
+      property.priceHistory = priceHistory;
     }
 
     Object.assign(property, updatePropertyDto);
@@ -220,6 +233,5 @@ export class PropertyLandlordService {
     }
 
     await this.propertyRepository.softRemove(property);
-    return { message: 'Property deleted successfully' };
   }
 }

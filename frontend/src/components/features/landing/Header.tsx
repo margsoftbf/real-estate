@@ -20,7 +20,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
   const navigationItems = [
     { name: 'Rent', href: '/rent' },
     { name: 'Buy', href: '/buy' },
-    { name: 'Sell', href: '/dashboard' },
+    { name: 'Sell', href: '/landlord/add-listing' },
   ];
 
   const toggleMobileMenu = () => {
@@ -28,7 +28,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-100 relative z-50">
+    <header className="bg-white shadow-sm border-b border-gray-100 relative z-[90]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 md:relative">
           <Link href="/" className="flex-shrink-0">
@@ -122,7 +122,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed top-20 left-0 right-0 bottom-0 bg-black/40 bg-opacity-20 z-40 md:hidden"
+              className="fixed top-20 left-0 right-0 bottom-0 bg-black/40 bg-opacity-20 z-[100] md:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -131,7 +131,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="fixed top-20 left-0 right-0 bg-white shadow-xl z-50 md:hidden"
+              className="fixed top-20 left-0 right-0 bg-white shadow-xl z-[110] md:hidden"
             >
               <div className="px-4 py-6">
                 <div className="space-y-2">

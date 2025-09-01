@@ -15,4 +15,6 @@ export class PropertyLandlordReadOneDto {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  latitude: number | null;
+  longitude: number | null;
 }

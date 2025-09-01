@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUser, useUpdateUser } from '@/hooks/auth/useUser';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/contexts/ToastContext';
 
 interface FormData {
   firstName: string;
