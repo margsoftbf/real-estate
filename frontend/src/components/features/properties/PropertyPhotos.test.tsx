@@ -41,7 +41,7 @@ describe('PropertyPhotos', () => {
       />
     );
 
-    expect(screen.getByText('No image available')).toBeInTheDocument();
+    expect(screen.getByText('No photos available')).toBeInTheDocument();
   });
 
   it('displays single photo with correct button text', () => {
@@ -204,7 +204,7 @@ describe('PropertyPhotos', () => {
       />
     );
 
-    expect(screen.getByText('No image available')).toBeInTheDocument();
+    expect(screen.getByText('No photos available')).toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
@@ -220,7 +220,7 @@ describe('PropertyPhotos', () => {
       />
     );
 
-    expect(screen.getByText('No image available')).toBeInTheDocument();
+    expect(screen.getByText('No photos available')).toBeInTheDocument();
   });
 
   it('renders first photo when multiple photos available', () => {
