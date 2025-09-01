@@ -21,6 +21,7 @@ export interface PropertyLandlordCreateDto {
   isActive?: boolean;
   latitude?: number;
   longitude?: number;
+  priceChangeReason?: string;
 }
 
 export type PropertyLandlordUpdateDto = Partial<PropertyLandlordCreateDto>;
