@@ -30,38 +30,38 @@ App still in progress but enough to show skills.
 
 #### Homepage & Search
 
-![Main Page](./Screenshots/Main-Page.png)
+![Main Page](./frontend/public/screenshots/Main-Page.png)
 _Modern homepage with hero section and property search functionality_
 
 #### Property Listings
 
-![Rent Properties](./Screenshots/Public-Rent-List.png)
+![Rent Properties](./frontend/public/screenshots/Public-Rent-List.png)
 _Browse available rental properties with advanced filtering_
 
-![Property Filters](./Screenshots/Public-Filter-List.png)
+![Property Filters](./frontend/public/screenshots/Public-Filter-List.png)
 _Advanced search and filtering system for finding perfect properties_
 
 #### User Registration
 
-![Registration](./Screenshots/Public-Register_page.png)
+![Registration](./frontend/public/screenshots/Public-Register_page.png)
 _Clean and intuitive user registration interface_
 
 ### 👤 Landlord Dashboard
 
 #### Property Management
 
-![Landlord Dashboard](./Screenshots/Landlord-Dashboard.png)
+![Landlord Dashboard](./frontend/public/screenshots/Landlord-Dashboard.png)
 _Comprehensive dashboard for property management and analytics_
 
-![My Listings](./Screenshots/Landlord-Listing.png)
+![My Listings](./frontend/public/screenshots/Landlord-Listing.png)
 _Manage all your property listings in one place_
 
 #### AI-Powered Property Creation
 
-![Create Property](./Screenshots/Landlord-Create-Property.png)
+![Create Property](./frontend/public/screenshots/Landlord-Create-Property.png)
 _Streamlined property creation with intelligent form validation_
 
-![AI Description Generator](./Screenshots/Landlord-Generate-AI-Modal.png)
+![AI Description Generator](./frontend/public/screenshots/Landlord-Generate-AI-Modal.png)
 _🤖 **AI-Powered Feature**: Generate professional property descriptions using Google Gemini AI_
 
 ### 📱 Mobile Responsive
