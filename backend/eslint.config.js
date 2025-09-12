@@ -32,12 +32,11 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off', // Too noisy
-      '@typescript-eslint/no-unsafe-call': 'off', // Too noisy
-      '@typescript-eslint/no-unsafe-member-access': 'off', // Too noisy
-      '@typescript-eslint/no-unsafe-return': 'off', // Too noisy
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
       
-      // Unused imports/variables rules
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -46,9 +45,8 @@ export default tseslint.config(
           ignoreRestSiblings: true,
         },
       ],
-      'no-unused-vars': 'off', // Turn off base rule as it conflicts with TS version
+      'no-unused-vars': 'off',
       
-      // Import organization rules
       'sort-imports': [
         'error',
         {
@@ -70,10 +68,8 @@ export default tseslint.config(
     },
   },
   {
-    // Separate config for test files - more lenient rules
     files: ['**/*.spec.ts', '**/*.e2e-spec.ts', '**/test/**/*.ts'],
     rules: {
-      // Disable strict TypeScript rules for tests
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
@@ -82,7 +78,6 @@ export default tseslint.config(
       '@typescript-eslint/unbound-method': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       
-      // Allow unused vars in tests (sometimes needed for mocks)
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -92,7 +87,6 @@ export default tseslint.config(
         },
       ],
       
-      // Disable some unicorn rules for tests
       'unicorn/no-null': 'off',
       'unicorn/prefer-top-level-await': 'off',
       'unicorn/consistent-function-scoping': 'off',
