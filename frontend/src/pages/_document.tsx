@@ -4,22 +4,10 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <link rel="icon" type="image/x-icon" href="/home-favicon.png" />
-        <link
-          rel="home-favicon-icon"
-          sizes="180x180"
-          href="/home-favicon.png"
-        />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href="/home-favicon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
           href="/home-favicon.png"
         />
         <link rel="manifest" href="/site.webmanifest" />

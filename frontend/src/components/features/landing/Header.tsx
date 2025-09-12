@@ -32,15 +32,15 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 md:relative">
           <Link href="/" className="flex-shrink-0">
-            <div className="flex items-center space-x-1 w-8 h-8">
+            <div className="flex items-center space-x-2">
               <Image
                 src={logoImage}
                 alt="Rentsmart"
-                width={40}
-                height={40}
+                width={32}
+                height={32}
                 className="object-contain"
               />
-              <span className="text-xl font-bold text-secondary-violet font-jakarta leading-4 tracking-wide">
+              <span className="text-2xl font-bold text-secondary-violet font-jakarta leading-4 tracking-wide">
                 RentSmart<span className="text-red-500">.</span>
               </span>
             </div>
@@ -56,7 +56,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
                     href={item.href}
                     className={`flex items-center space-x-2 transition-all duration-200 font-medium px-4 py-2 rounded-md ${
                       isActive
-                        ? 'text-primary-violet bg-purple-100'
+                        ? 'text-primary-violet-dark bg-purple-100'
                         : 'text-primary-black hover:text-primary-violet hover:bg-purple-200'
                     }`}
                   >
@@ -143,7 +143,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
                         href={item.href}
                         className={`flex items-center space-x-3 transition-all duration-200 font-medium py-3 px-3 rounded-md ${
                           isActive
-                            ? 'text-primary-violet opacity-100 bg-purple-100'
+                            ? 'text-primary-violet-dark opacity-100 bg-purple-100'
                             : 'text-secondary-violet opacity-50 hover:text-primary-violet hover:opacity-100 hover:bg-purple-50'
                         }`}
                         onClick={() => setIsMobileMenuOpen(false)}

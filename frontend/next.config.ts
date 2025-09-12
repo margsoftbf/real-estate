@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   output: 'standalone',
+  productionBrowserSourceMaps: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+  },
 };
 
 export default nextConfig;

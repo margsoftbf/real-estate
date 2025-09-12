@@ -103,7 +103,7 @@ const RegisterForm = ({
         <div className="text-sm">
           <Link
             href="#"
-            className="font-medium text-primary-violet hover:text-primary-violet-dark"
+            className="font-medium text-primary-violet-dark hover:text-primary-violet"
           >
             Forgot Password?
           </Link>

@@ -67,7 +67,7 @@ const RegisterPage = () => {
               <h1 className="text-h3 font-bold text-primary-black text-center">
                 Create your account
               </h1>
-              <p className="mt-2 text-body-md text-primary-black/50 text-center">
+              <p className="mt-2 text-body-md text-gray-600 text-center">
                 Create your account to access all our powerful tools.
               </p>
 
@@ -94,7 +94,7 @@ const RegisterPage = () => {
                 Already have an account?{' '}
                 <Link
                   href="/login"
-                  className="font-medium text-primary-violet hover:text-primary-violet-dark"
+                  className="font-medium text-primary-violet-dark hover:text-primary-violet"
                 >
                   Login
                 </Link>

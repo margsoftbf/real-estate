@@ -63,7 +63,7 @@ const LoginPage = () => {
             <h1 className="text-h3 font-bold text-primary-black text-center">
               Welcome back
             </h1>
-            <p className="mt-2 text-body-md text-primary-black/50 text-center">
+            <p className="mt-2 text-body-md text-gray-600 text-center">
               Sign in to access your account and manage your properties.
             </p>
 
@@ -85,7 +85,7 @@ const LoginPage = () => {
               Don&apos;t have an account?{' '}
               <Link
                 href="/register"
-                className="font-medium text-primary-violet hover:text-primary-violet-dark underline"
+                className="font-medium text-primary-violet-dark hover:text-primary-violet underline"
               >
                 Sign up for free
               </Link>

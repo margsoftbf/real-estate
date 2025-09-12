@@ -60,7 +60,8 @@ const EditableInput = ({
             <button
               type="button"
               onClick={() => setPasswordVisible(!passwordVisible)}
-              className="absolute inset-y-0 right-0 top-1 pr-3 flex items-center text-sm leading-5"
+              className="absolute inset-y-0 right-0 top-1 pr-3 flex items-center text-sm leading-5 min-w-[44px] min-h-[44px]"
+              aria-label={passwordVisible ? "Hide password" : "Show password"}
             >
               {passwordVisible ? (
                 <EyeOff className="h-5 w-5 text-gray-500" />

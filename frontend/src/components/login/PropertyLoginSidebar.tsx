@@ -30,9 +30,9 @@ const PropertyLoginSidebar = () => {
       <div className="flex flex-col items-center justify-center h-full">
         <div className="max-w-sm">
           {randomProperty ? (
-            <PropertyCard property={randomProperty} />
+            <PropertyCard property={randomProperty} priority={true} />
           ) : (
-            <div className="w-full h-80 bg-gray-200 rounded-lg animate-pulse flex items-center justify-center">
+            <div className="w-full max-w-96 h-80 bg-gray-200 rounded-lg animate-pulse flex items-center justify-center">
               <span className="text-gray-500">Loading property...</span>
             </div>
           )}
