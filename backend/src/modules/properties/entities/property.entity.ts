@@ -59,7 +59,7 @@ export class Property {
   @Column('varchar', { unique: true })
   slug: string;
 
-  @ManyToOne(() => User, user => user.properties)
+  @ManyToOne(() => User, (user) => user.properties)
   owner: User;
 
   @Column('enum', { enum: PropertyType })
@@ -101,9 +101,9 @@ export class Property {
   @Column('boolean', { default: true })
   isActive: boolean;
 
-  @Column('enum', { 
-    enum: PropertyAvailabilityStatus, 
-    default: PropertyAvailabilityStatus.AVAILABLE 
+  @Column('enum', {
+    enum: PropertyAvailabilityStatus,
+    default: PropertyAvailabilityStatus.AVAILABLE,
   })
   availabilityStatus: PropertyAvailabilityStatus;
 

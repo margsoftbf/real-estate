@@ -1,7 +1,7 @@
 import { ApplicationStatus } from '../../entities/application.entity';
 import {
-  PropertyType,
   PropertyFeatures,
+  PropertyType,
 } from '../../../properties/entities/property.entity';
 
 export class ApplicationsLandlordReadOneDto {
@@ -14,6 +14,7 @@ export class ApplicationsLandlordReadOneDto {
   proposedRent: number | null;
   preferredMoveInDate: Date | null;
   landlordNotes: string | null;
+  isCurrentRenter: boolean;
   createdAt: Date;
   updatedAt: Date;
 

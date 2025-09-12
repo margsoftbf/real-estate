@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -41,11 +45,18 @@ export class ApplicationsTenantService {
     private usersUserService: UsersUserService,
   ) {}
 
-  async create(createApplicationDto: ApplicationsTenantCreateDto, userId: string): Promise<Application> {
-    const property = await this.propertyPublicService.findEntityBySlug(createApplicationDto.propertySlug);
+  async create(
+    createApplicationDto: ApplicationsTenantCreateDto,
+    userId: string,
+  ): Promise<Application> {
+    const property = await this.propertyPublicService.findEntityBySlug(
+      createApplicationDto.propertySlug,
+    );
 
     if (!property) {
-      throw new NotFoundException(ExceptionConstants.ApplicationsErrors.applicationPropertyNotFound);
+      throw new NotFoundException(
+        ExceptionConstants.ApplicationsErrors.applicationPropertyNotFound,
+      );
     }
 
     const existingApplication = await this.applicationsRepository.findOne({
@@ -57,12 +68,17 @@ export class ApplicationsTenantService {
     });
 
     if (existingApplication) {
-      throw new BadRequestException(ExceptionConstants.ApplicationsErrors.applicationAlreadyExists);
+      throw new BadRequestException(
+        ExceptionConstants.ApplicationsErrors.applicationAlreadyExists,
+      );
     }
 
     const applicant = await this.usersUserService.findById(userId);
-    
-    const applicantName = `${applicant?.firstName || ''}-${applicant?.lastName || ''}`.toLowerCase().replace(/\s+/g, '-');
+
+    const applicantName =
+      `${applicant?.firstName || ''}-${applicant?.lastName || ''}`
+        .toLowerCase()
+        .replaceAll(/\s+/g, '-');
     const slug = `${applicantName}-${property.slug}-${generateRandomString(6)}`;
 
     const application = this.applicationsRepository.create({
@@ -73,8 +89,9 @@ export class ApplicationsTenantService {
       applicantName: `${applicant?.firstName} ${applicant?.lastName}`,
       applicantEmail: applicant?.email,
       applicantPhone: applicant?.phoneNumber,
-      preferredMoveInDate: createApplicationDto.preferredMoveInDate ? 
-        new Date(createApplicationDto.preferredMoveInDate) : null,
+      preferredMoveInDate: createApplicationDto.preferredMoveInDate
+        ? new Date(createApplicationDto.preferredMoveInDate)
+        : null,
     });
 
     return this.applicationsRepository.save(application);
@@ -141,6 +158,7 @@ export class ApplicationsTenantService {
       proposedRent: app.proposedRent,
       preferredMoveInDate: app.preferredMoveInDate,
       landlordNotes: app.landlordNotes,
+      isCurrentRenter: app.isCurrentRenter,
       createdAt: app.createdAt,
       updatedAt: app.updatedAt,
       property: {

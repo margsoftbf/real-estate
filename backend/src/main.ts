@@ -10,7 +10,7 @@ async function bootstrap(): Promise<INestApplication> {
     app = await NestFactory.create(AppModule, {
       logger: ['error', 'warn', 'log'],
     });
-    
+
     app.enableCors(corsConfig);
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
@@ -18,6 +18,7 @@ async function bootstrap(): Promise<INestApplication> {
   return app;
 }
 
+// eslint-disable-next-line unicorn/no-anonymous-default-export
 export default async (req, res) => {
   try {
     if (req.method === 'OPTIONS') {

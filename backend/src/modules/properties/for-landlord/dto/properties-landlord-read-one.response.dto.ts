@@ -1,4 +1,8 @@
-import { PropertyType, PropertyFeatures, PropertyPriceHistory } from '../../entities/property.entity';
+import {
+  PropertyFeatures,
+  PropertyPriceHistory,
+  PropertyType,
+} from '../../entities/property.entity';
 
 export class PropertyLandlordReadOneDto {
   slug: string;

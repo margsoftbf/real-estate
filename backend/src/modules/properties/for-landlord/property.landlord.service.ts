@@ -1,7 +1,7 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,7 +11,10 @@ import {
   PaginateConfig,
   PaginateQuery,
 } from 'nestjs-paginate';
-import { Property, PropertyAvailabilityStatus } from '../entities/property.entity';
+import {
+  Property,
+  PropertyAvailabilityStatus,
+} from '../entities/property.entity';
 import { User } from '../../users/entities/user.entity';
 import { PropertiesLandlordCreateDto } from './dto/properties-landlord-create.dto';
 import { PropertiesLandlordUpdateDto } from './dto/properties-landlord-update.dto';
@@ -59,9 +62,9 @@ export class PropertyLandlordService {
       ? createPropertyDto.title
           .slice(0, 50)
           .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-|-$/g, '')
+          .replaceAll(/[^a-z0-9]+/g, '-')
+          .replaceAll(/-+/g, '-')
+          .replaceAll(/^-|-$/g, '')
       : 'property';
     const slug =
       createPropertyDto.slug || `${titleSlug}-${generateRandomString(8)}`;
@@ -186,7 +189,6 @@ export class PropertyLandlordService {
     updatePropertyDto: PropertiesLandlordUpdateDto,
     ownerId: string,
   ): Promise<PropertyLandlordReadOneDto> {
-
     const property = await this.propertyRepository.findOne({
       where: { slug },
       relations: ['owner'],
@@ -198,7 +200,10 @@ export class PropertyLandlordService {
       );
     }
 
-    if (updatePropertyDto.price !== undefined && updatePropertyDto.price !== property.price) {
+    if (
+      updatePropertyDto.price !== undefined &&
+      updatePropertyDto.price !== property.price
+    ) {
       const priceHistory = property.priceHistory || [];
       priceHistory.push({
         price: updatePropertyDto.price,

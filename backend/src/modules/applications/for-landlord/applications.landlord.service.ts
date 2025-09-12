@@ -73,8 +73,8 @@ export class ApplicationsLandlordService {
       .leftJoin('property.owner', 'owner')
       .leftJoin('application.applicant', 'applicant')
       .where('owner.id = :landlordId', { landlordId })
-      .andWhere('application.status = :status', {
-        status: ApplicationStatus.ACCEPTED,
+      .andWhere('application.isCurrentRenter = :isCurrentRenter', {
+        isCurrentRenter: true,
       });
 
     const paginatedResult = await paginate(
@@ -117,6 +117,7 @@ export class ApplicationsLandlordService {
         false,
         PropertyAvailabilityStatus.RENTED,
       );
+      updateApplicationDto.isCurrentRenter = true;
     }
 
     Object.assign(application, updateApplicationDto);
@@ -155,6 +156,7 @@ export class ApplicationsLandlordService {
       proposedRent: application.proposedRent,
       preferredMoveInDate: application.preferredMoveInDate,
       landlordNotes: application.landlordNotes,
+      isCurrentRenter: application.isCurrentRenter,
       createdAt: application.createdAt,
       updatedAt: application.updatedAt,
       property: {
@@ -194,6 +196,7 @@ export class ApplicationsLandlordService {
       message: app.message,
       proposedRent: app.proposedRent,
       preferredMoveInDate: app.preferredMoveInDate,
+      isCurrentRenter: app.isCurrentRenter,
       createdAt: app.createdAt,
       updatedAt: app.updatedAt,
       property: {

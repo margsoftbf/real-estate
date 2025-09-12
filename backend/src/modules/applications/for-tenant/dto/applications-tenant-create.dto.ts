@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsDecimal, IsDateString } from 'class-validator';
+import { IsDateString, IsDecimal, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class ApplicationsTenantCreateDto {
@@ -10,7 +10,7 @@ export class ApplicationsTenantCreateDto {
   message?: string;
 
   @IsOptional()
-  @Transform(({ value }) => parseFloat(value))
+  @Transform(({ value }) => Number.parseFloat(value))
   @IsDecimal({ decimal_digits: '0,2' })
   proposedRent?: number;
 

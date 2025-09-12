@@ -5,7 +5,12 @@ import { Property } from '../entities/property.entity';
 import { User } from '../../users/entities/user.entity';
 import { PropertiesAdminCreateDto } from './dto/properties-admin-create.dto';
 import { PropertiesAdminUpdateDto } from './dto/properties-admin-update.dto';
-import { FilterOperator, paginate, PaginateConfig, PaginateQuery } from 'nestjs-paginate';
+import {
+  FilterOperator,
+  paginate,
+  PaginateConfig,
+  PaginateQuery,
+} from 'nestjs-paginate';
 import { ExceptionConstants } from '../../../exceptions';
 
 export const findAllPropertiesAdminConfig: PaginateConfig<Property> = {
@@ -35,7 +40,10 @@ export class PropertyAdminService {
     private userRepository: Repository<User>,
   ) {}
 
-  async create(createPropertyDto: Omit<PropertiesAdminCreateDto, 'ownerId'>, ownerId: string) {
+  async create(
+    createPropertyDto: Omit<PropertiesAdminCreateDto, 'ownerId'>,
+    ownerId: string,
+  ) {
     const owner = await this.userRepository.findOne({ where: { id: ownerId } });
     if (!owner) {
       throw new NotFoundException(ExceptionConstants.UsersErrors.userNotFound);
@@ -72,7 +80,9 @@ export class PropertyAdminService {
     });
 
     if (!property) {
-      throw new NotFoundException(ExceptionConstants.PropertyErrors.propertyNotFound);
+      throw new NotFoundException(
+        ExceptionConstants.PropertyErrors.propertyNotFound,
+      );
     }
 
     return property;
@@ -88,5 +98,4 @@ export class PropertyAdminService {
     const property = await this.findOne(id);
     return this.propertyRepository.softRemove(property);
   }
-
 }

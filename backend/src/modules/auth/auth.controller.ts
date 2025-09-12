@@ -1,10 +1,10 @@
 import {
-  Controller,
-  Post,
   Body,
-  ValidationPipe,
+  Controller,
   HttpCode,
   HttpStatus,
+  Post,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';

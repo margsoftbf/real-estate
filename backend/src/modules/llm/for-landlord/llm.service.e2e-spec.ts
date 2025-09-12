@@ -5,12 +5,16 @@ import { LlmController } from './llm.controller';
 import { LlmService } from './llm.service';
 import { JwtAuthGuard } from '../../auth/jwt/jwt-auth.guard';
 import {
+  createAdminUser,
   createLandlordUser,
   createMockUser,
-  createAdminUser,
 } from '../../../../test/test-helpers';
 import { UserRole } from '../../users/entities/user.entity';
-import { GenerateDescriptionDto, ListingType, PropertyType } from './dto/generate-description.dto';
+import {
+  GenerateDescriptionDto,
+  ListingType,
+  PropertyType,
+} from './dto/generate-description.dto';
 
 describe('LlmController (e2e)', () => {
   let app: INestApplication;

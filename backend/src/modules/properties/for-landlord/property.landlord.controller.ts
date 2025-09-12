@@ -1,13 +1,12 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { PropertyLandlordService } from './property.landlord.service';
@@ -20,10 +19,15 @@ import { User } from '../../users/entities/user.entity';
 @Controller('landlord/properties')
 @UseGuards(JwtAuthGuard)
 export class PropertyLandlordController {
-  constructor(private readonly propertyLandlordService: PropertyLandlordService) {}
+  constructor(
+    private readonly propertyLandlordService: PropertyLandlordService,
+  ) {}
 
   @Post()
-  create(@Body() createPropertyDto: PropertiesLandlordCreateDto, @AuthUser() user: User) {
+  create(
+    @Body() createPropertyDto: PropertiesLandlordCreateDto,
+    @AuthUser() user: User,
+  ) {
     return this.propertyLandlordService.create(createPropertyDto, user.id);
   }
 
@@ -43,7 +47,11 @@ export class PropertyLandlordController {
     @Body() updatePropertyDto: PropertiesLandlordUpdateDto,
     @AuthUser() user: User,
   ) {
-    return this.propertyLandlordService.update(slug, updatePropertyDto, user.id);
+    return this.propertyLandlordService.update(
+      slug,
+      updatePropertyDto,
+      user.id,
+    );
   }
 
   @Delete(':slug')

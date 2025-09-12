@@ -8,6 +8,7 @@ export class ApplicationsTenantReadManyDto {
   proposedRent: number | null;
   preferredMoveInDate: Date | null;
   landlordNotes: string | null;
+  isCurrentRenter: boolean;
   createdAt: Date;
   updatedAt: Date;
 

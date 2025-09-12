@@ -1,21 +1,21 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PropertyAdminService } from './property.admin.service';
 import { PropertiesAdminCreateDto } from './dto/properties-admin-create.dto';
 import { PropertiesAdminUpdateDto } from './dto/properties-admin-update.dto';
 import { PaginateQuery } from 'nestjs-paginate';
 import { JwtAuthGuard } from '../../auth/jwt/jwt-auth.guard';
-import { AuthUser } from '../../auth/decorator/auth-user.decorator';
-import { User, UserRole } from '../../users/entities/user.entity';
+// import { AuthUser } from '../../auth/decorator/auth-user.decorator';
+// import { User, UserRole } from '../../users/entities/user.entity';
 
 @Controller('admin/properties')
 @UseGuards(JwtAuthGuard)
@@ -39,7 +39,10 @@ export class PropertyAdminController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePropertyDto: PropertiesAdminUpdateDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePropertyDto: PropertiesAdminUpdateDto,
+  ) {
     return this.propertyAdminService.update(id, updatePropertyDto);
   }
 
@@ -47,5 +50,4 @@ export class PropertyAdminController {
   remove(@Param('id') id: string) {
     return this.propertyAdminService.remove(id);
   }
-
 }

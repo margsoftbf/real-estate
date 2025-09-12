@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApplicationsTenantService } from './applications.tenant.service';
 import { ApplicationsTenantCreateDto } from './dto/applications-tenant-create.dto';
 import { JwtAuthGuard } from '../../auth/jwt/jwt-auth.guard';
@@ -9,7 +9,9 @@ import { Paginate } from 'nestjs-paginate';
 @Controller('tenant/applications')
 @UseGuards(JwtAuthGuard)
 export class ApplicationsTenantController {
-  constructor(private readonly applicationsTenantService: ApplicationsTenantService) {}
+  constructor(
+    private readonly applicationsTenantService: ApplicationsTenantService,
+  ) {}
 
   @Post()
   create(

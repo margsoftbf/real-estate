@@ -4,7 +4,6 @@ import {
   LlmRequest,
   LlmRequestData,
   LlmResponse,
-  LlmOptions,
   TypeOfResponse,
   TypeOfResponseObjectSchema,
 } from '../llm.interface';
@@ -12,7 +11,10 @@ import { MODEL } from '../const/llm-parameters';
 import { PROPERTY_DESCRIPTION_INSTRUCTION } from '../const/prompts';
 import { ResponseObjectSchemas } from '../schemas/response-schema';
 import { LlmRequestDto } from './dto/llm-request.dto';
-import { GenerateDescriptionDto, PropertyDescriptionResponse } from './dto/generate-description.dto';
+import {
+  GenerateDescriptionDto,
+  PropertyDescriptionResponse,
+} from './dto/generate-description.dto';
 
 @Injectable()
 export class LlmService {

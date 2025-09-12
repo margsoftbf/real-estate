@@ -1,17 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  INestApplication,
+  NotFoundException,
+} from '@nestjs/common';
 import * as request from 'supertest';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Application, ApplicationStatus } from '../entities/application.entity';
-import { Property } from '../../properties/entities/property.entity';
+import { ApplicationStatus } from '../entities/application.entity';
 import { ApplicationsPublicController } from './applications.public.controller';
 import { ApplicationsPublicService } from './applications.public.service';
 import {
+  createLandlordUser,
   createMockApplication,
   createMockProperty,
-  createLandlordUser,
-  createPropertyQueryBuilder,
 } from '../../../../test/test-helpers';
 
 describe('ApplicationsPublicController (e2e)', () => {
@@ -70,7 +71,9 @@ describe('ApplicationsPublicController (e2e)', () => {
       });
 
       // Mock service create method
-      applicationsPublicService.create.mockResolvedValue(mockCreatedApplication);
+      applicationsPublicService.create.mockResolvedValue(
+        mockCreatedApplication,
+      );
 
       const response = await request(app.getHttpServer())
         .post('/applications')
@@ -86,7 +89,9 @@ describe('ApplicationsPublicController (e2e)', () => {
         createApplicationDto.applicantEmail,
       );
       expect(response.body).toHaveProperty('status', ApplicationStatus.PENDING);
-      expect(applicationsPublicService.create).toHaveBeenCalledWith(createApplicationDto);
+      expect(applicationsPublicService.create).toHaveBeenCalledWith(
+        createApplicationDto,
+      );
     });
 
     it('should create application with minimal required fields', async () => {
@@ -108,7 +113,9 @@ describe('ApplicationsPublicController (e2e)', () => {
         status: ApplicationStatus.PENDING,
       });
 
-      applicationsPublicService.create.mockResolvedValue(mockCreatedApplication);
+      applicationsPublicService.create.mockResolvedValue(
+        mockCreatedApplication,
+      );
 
       const response = await request(app.getHttpServer())
         .post('/applications')
@@ -125,7 +132,9 @@ describe('ApplicationsPublicController (e2e)', () => {
       );
       expect(response.body).toHaveProperty('applicantPhone', null);
       expect(response.body).toHaveProperty('message', null);
-      expect(applicationsPublicService.create).toHaveBeenCalledWith(createApplicationDto);
+      expect(applicationsPublicService.create).toHaveBeenCalledWith(
+        createApplicationDto,
+      );
     });
 
     it('should return 404 for non-existent property', async () => {

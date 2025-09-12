@@ -32,6 +32,7 @@ export async function clearDB() {
 if (process.argv.includes('--script-mode')) {
   clearDB().catch((error) => {
     console.error('Error executing clearDB:', error);
+    // eslint-disable-next-line unicorn/no-process-exit
     process.exit(1);
   });
 }

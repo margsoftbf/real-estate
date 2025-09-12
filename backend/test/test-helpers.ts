@@ -1,9 +1,8 @@
 import { User, UserRole } from '../src/modules/users/entities/user.entity';
 import {
   Property,
-  PropertyType,
-  PropertyFeatures,
   PropertyAvailabilityStatus,
+  PropertyType,
 } from '../src/modules/properties/entities/property.entity';
 import {
   Application,
@@ -78,11 +77,11 @@ export const createMockProperty = (overrides?: Partial<Property>): Property => {
     owner: createLandlordUser(),
     type: PropertyType.RENT,
     availabilityStatus: PropertyAvailabilityStatus.AVAILABLE,
-    price: 2500.0,
+    price: 2500,
     city: 'Warsaw',
     country: 'Poland',
-    latitude: 52.237049,
-    longitude: 21.017532,
+    latitude: 52.237_049,
+    longitude: 21.017_532,
     title: 'Test Property',
     photos: ['https://example.com/photo1.jpg'],
     description: 'A beautiful test property',
@@ -95,7 +94,7 @@ export const createMockProperty = (overrides?: Partial<Property>): Property => {
     },
     priceHistory: [
       {
-        price: 2500.0,
+        price: 2500,
         date: new Date('2025-01-01T00:00:00Z'),
         reason: 'Initial listing',
       },
@@ -114,7 +113,7 @@ export const createMockPropertyForSale = (
 ): Property => {
   return createMockProperty({
     type: PropertyType.SELL,
-    price: 450000.0,
+    price: 450_000,
     title: 'Test House for Sale',
     features: {
       bedrooms: 3,
@@ -141,11 +140,12 @@ export const createMockApplication = (
     applicantPhone: '+48123456789',
     message: 'I am interested in renting this property',
     status: ApplicationStatus.PENDING,
-    proposedRent: 2400.0,
+    proposedRent: 2400,
     preferredMoveInDate: new Date('2025-03-01'),
     landlordNotes: null,
     createdAt: new Date('2025-01-01T00:00:00Z'),
     updatedAt: new Date('2025-01-01T00:00:00Z'),
+    isCurrentRenter: false,
     deletedAt: null,
     ...overrides,
   };
@@ -163,7 +163,7 @@ export const createMockQueryBuilder = (config?: {
     getOne: jest.fn().mockResolvedValue(config?.getOne ?? null),
     getMany: jest.fn().mockResolvedValue(config?.getMany ?? []),
   };
-  
+
   return mockBuilder as any;
 };
 

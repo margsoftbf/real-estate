@@ -1,16 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, NotFoundException, BadRequestException, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  INestApplication,
+  NotFoundException,
+  ValidationPipe,
+} from '@nestjs/common';
 import * as request from 'supertest';
 import { ApplicationsTenantController } from './applications.tenant.controller';
 import { ApplicationsTenantService } from './applications.tenant.service';
 import { JwtAuthGuard } from '../../auth/jwt';
-import { Application, ApplicationStatus } from '../entities/application.entity';
-import { ApplicationsTenantReadManyResponseDto } from './dto/applications-tenant-read-many.response.dto';
+import { ApplicationStatus } from '../entities/application.entity';
 import {
+  createLandlordUser,
   createMockApplication,
   createMockProperty,
   createMockUser,
-  createLandlordUser,
 } from '../../../../test/test-helpers';
 
 describe('ApplicationsTenantController (e2e)', () => {
@@ -49,9 +53,9 @@ describe('ApplicationsTenantController (e2e)', () => {
       .compile();
 
     app = module.createNestApplication();
-    
+
     app.useGlobalPipes(new ValidationPipe());
-    
+
     // Mock middleware to set user from header
     app.use('/tenant/applications', (req, res, next) => {
       if (req.headers.user) {
@@ -59,7 +63,7 @@ describe('ApplicationsTenantController (e2e)', () => {
       }
       next();
     });
-    
+
     await app.init();
 
     applicationsTenantService = module.get(ApplicationsTenantService);
@@ -85,25 +89,29 @@ describe('ApplicationsTenantController (e2e)', () => {
         status: ApplicationStatus.PENDING,
       });
 
-      applicationsTenantService.create.mockResolvedValue(mockCreatedApplication);
+      applicationsTenantService.create.mockResolvedValue(
+        mockCreatedApplication,
+      );
 
       const response = await request(app.getHttpServer())
         .post('/tenant/applications')
         .set('user', JSON.stringify(mockTenant))
         .send(createApplicationDto);
-      
+
       if (response.status !== 201) {
         console.log('Validation error:', response.body);
       }
-      
+
       expect(response.status).toBe(201);
 
-      expect(response.body).toEqual(expect.objectContaining({
-        id: mockCreatedApplication.id,
-        message: createApplicationDto.message,
-        proposedRent: null,
-        status: ApplicationStatus.PENDING,
-      }));
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          id: mockCreatedApplication.id,
+          message: createApplicationDto.message,
+          proposedRent: null,
+          status: ApplicationStatus.PENDING,
+        }),
+      );
       expect(applicationsTenantService.create).toHaveBeenCalledWith(
         createApplicationDto,
         mockTenant.id,
@@ -126,7 +134,9 @@ describe('ApplicationsTenantController (e2e)', () => {
         status: ApplicationStatus.PENDING,
       });
 
-      applicationsTenantService.create.mockResolvedValue(mockCreatedApplication);
+      applicationsTenantService.create.mockResolvedValue(
+        mockCreatedApplication,
+      );
 
       const response = await request(app.getHttpServer())
         .post('/tenant/applications')
@@ -134,10 +144,12 @@ describe('ApplicationsTenantController (e2e)', () => {
         .send(createApplicationDto)
         .expect(201);
 
-      expect(response.body).toEqual(expect.objectContaining({
-        id: mockCreatedApplication.id,
-        status: ApplicationStatus.PENDING,
-      }));
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          id: mockCreatedApplication.id,
+          status: ApplicationStatus.PENDING,
+        }),
+      );
       expect(applicationsTenantService.create).toHaveBeenCalledWith(
         createApplicationDto,
         mockTenant.id,
@@ -150,7 +162,7 @@ describe('ApplicationsTenantController (e2e)', () => {
       };
 
       applicationsTenantService.create.mockRejectedValue(
-        new NotFoundException('Property not found')
+        new NotFoundException('Property not found'),
       );
 
       await request(app.getHttpServer())
@@ -174,7 +186,7 @@ describe('ApplicationsTenantController (e2e)', () => {
       };
 
       applicationsTenantService.create.mockRejectedValue(
-        new BadRequestException('Cannot apply to your own property')
+        new BadRequestException('Cannot apply to your own property'),
       );
 
       await request(app.getHttpServer())
@@ -194,31 +206,34 @@ describe('ApplicationsTenantController (e2e)', () => {
       });
 
       const mockPaginatedResponse = {
-        data: [{
-          slug: mockTenantApplication.slug,
-          status: mockTenantApplication.status,
-          message: mockTenantApplication.message,
-          proposedRent: mockTenantApplication.proposedRent,
-          preferredMoveInDate: mockTenantApplication.preferredMoveInDate,
-          landlordNotes: mockTenantApplication.landlordNotes,
-          createdAt: mockTenantApplication.createdAt,
-          updatedAt: mockTenantApplication.updatedAt,
-          property: {
-            slug: mockProperty.slug,
-            title: mockProperty.title,
-            city: mockProperty.city,
-            country: mockProperty.country,
-            price: mockProperty.price,
-            photos: mockProperty.photos,
+        data: [
+          {
+            slug: mockTenantApplication.slug,
+            status: mockTenantApplication.status,
+            message: mockTenantApplication.message,
+            proposedRent: mockTenantApplication.proposedRent,
+            preferredMoveInDate: mockTenantApplication.preferredMoveInDate,
+            landlordNotes: mockTenantApplication.landlordNotes,
+            isCurrentRenter: mockTenantApplication.isCurrentRenter || false,
+            createdAt: mockTenantApplication.createdAt,
+            updatedAt: mockTenantApplication.updatedAt,
+            property: {
+              slug: mockProperty.slug,
+              title: mockProperty.title,
+              city: mockProperty.city,
+              country: mockProperty.country,
+              price: mockProperty.price,
+              photos: mockProperty.photos,
+            },
+            landlord: {
+              slug: mockLandlord.slug,
+              firstName: mockLandlord.firstName,
+              lastName: mockLandlord.lastName,
+              email: mockLandlord.email,
+              phoneNumber: mockLandlord.phoneNumber,
+            },
           },
-          landlord: {
-            slug: mockLandlord.slug,
-            firstName: mockLandlord.firstName,
-            lastName: mockLandlord.lastName,
-            email: mockLandlord.email,
-            phoneNumber: mockLandlord.phoneNumber,
-          },
-        }],
+        ],
         meta: {
           totalItems: 1,
           itemCount: 1,
@@ -233,20 +248,26 @@ describe('ApplicationsTenantController (e2e)', () => {
         },
       };
 
-      applicationsTenantService.findMyApplications.mockResolvedValue(mockPaginatedResponse);
+      applicationsTenantService.findMyApplications.mockResolvedValue(
+        mockPaginatedResponse,
+      );
 
       const response = await request(app.getHttpServer())
         .get('/tenant/applications')
         .set('user', JSON.stringify(mockTenant))
         .expect(200);
 
-      expect(response.body).toEqual(expect.objectContaining({
-        data: expect.arrayContaining([expect.objectContaining({
-          slug: mockTenantApplication.slug,
-          status: mockTenantApplication.status,
-        })]),
-        meta: expect.objectContaining({ totalItems: 1 }),
-      }));
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          data: expect.arrayContaining([
+            expect.objectContaining({
+              slug: mockTenantApplication.slug,
+              status: mockTenantApplication.status,
+            }),
+          ]),
+          meta: expect.objectContaining({ totalItems: 1 }),
+        }),
+      );
       expect(applicationsTenantService.findMyApplications).toHaveBeenCalledWith(
         expect.any(Object), // PaginateQuery
         mockTenant.id,
@@ -270,7 +291,9 @@ describe('ApplicationsTenantController (e2e)', () => {
         },
       };
 
-      applicationsTenantService.findMyApplications.mockResolvedValue(mockEmptyPaginatedResponse);
+      applicationsTenantService.findMyApplications.mockResolvedValue(
+        mockEmptyPaginatedResponse,
+      );
 
       const response = await request(app.getHttpServer())
         .get('/tenant/applications')
@@ -290,31 +313,34 @@ describe('ApplicationsTenantController (e2e)', () => {
       });
 
       const mockRentalsPaginatedResponse = {
-        data: [{
-          slug: mockAcceptedApplication.slug,
-          status: mockAcceptedApplication.status,
-          message: mockAcceptedApplication.message,
-          proposedRent: mockAcceptedApplication.proposedRent,
-          preferredMoveInDate: mockAcceptedApplication.preferredMoveInDate,
-          landlordNotes: mockAcceptedApplication.landlordNotes,
-          createdAt: mockAcceptedApplication.createdAt,
-          updatedAt: mockAcceptedApplication.updatedAt,
-          property: {
-            slug: mockProperty.slug,
-            title: mockProperty.title,
-            city: mockProperty.city,
-            country: mockProperty.country,
-            price: mockProperty.price,
-            photos: mockProperty.photos,
+        data: [
+          {
+            slug: mockAcceptedApplication.slug,
+            status: mockAcceptedApplication.status,
+            message: mockAcceptedApplication.message,
+            proposedRent: mockAcceptedApplication.proposedRent,
+            preferredMoveInDate: mockAcceptedApplication.preferredMoveInDate,
+            landlordNotes: mockAcceptedApplication.landlordNotes,
+            isCurrentRenter: mockAcceptedApplication.isCurrentRenter || true,
+            createdAt: mockAcceptedApplication.createdAt,
+            updatedAt: mockAcceptedApplication.updatedAt,
+            property: {
+              slug: mockProperty.slug,
+              title: mockProperty.title,
+              city: mockProperty.city,
+              country: mockProperty.country,
+              price: mockProperty.price,
+              photos: mockProperty.photos,
+            },
+            landlord: {
+              slug: mockLandlord.slug,
+              firstName: mockLandlord.firstName,
+              lastName: mockLandlord.lastName,
+              email: mockLandlord.email,
+              phoneNumber: mockLandlord.phoneNumber,
+            },
           },
-          landlord: {
-            slug: mockLandlord.slug,
-            firstName: mockLandlord.firstName,
-            lastName: mockLandlord.lastName,
-            email: mockLandlord.email,
-            phoneNumber: mockLandlord.phoneNumber,
-          },
-        }],
+        ],
         meta: {
           totalItems: 1,
           itemCount: 1,
@@ -329,20 +355,26 @@ describe('ApplicationsTenantController (e2e)', () => {
         },
       };
 
-      applicationsTenantService.findMyRentals.mockResolvedValue(mockRentalsPaginatedResponse);
+      applicationsTenantService.findMyRentals.mockResolvedValue(
+        mockRentalsPaginatedResponse,
+      );
 
       const response = await request(app.getHttpServer())
         .get('/tenant/applications/rentals')
         .set('user', JSON.stringify(mockTenant))
         .expect(200);
 
-      expect(response.body).toEqual(expect.objectContaining({
-        data: expect.arrayContaining([expect.objectContaining({
-          slug: mockAcceptedApplication.slug,
-          status: mockAcceptedApplication.status,
-        })]),
-        meta: expect.objectContaining({ totalItems: 1 }),
-      }));
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          data: expect.arrayContaining([
+            expect.objectContaining({
+              slug: mockAcceptedApplication.slug,
+              status: mockAcceptedApplication.status,
+            }),
+          ]),
+          meta: expect.objectContaining({ totalItems: 1 }),
+        }),
+      );
       expect(applicationsTenantService.findMyRentals).toHaveBeenCalledWith(
         expect.any(Object), // PaginateQuery
         mockTenant.id,
@@ -366,7 +398,9 @@ describe('ApplicationsTenantController (e2e)', () => {
         },
       };
 
-      applicationsTenantService.findMyRentals.mockResolvedValue(mockEmptyRentalsPaginatedResponse);
+      applicationsTenantService.findMyRentals.mockResolvedValue(
+        mockEmptyRentalsPaginatedResponse,
+      );
 
       const response = await request(app.getHttpServer())
         .get('/tenant/applications/rentals')

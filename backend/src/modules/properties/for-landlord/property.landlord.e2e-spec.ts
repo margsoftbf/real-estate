@@ -9,8 +9,8 @@ import { PropertyLandlordController } from './property.landlord.controller';
 import { PropertyLandlordService } from './property.landlord.service';
 import { JwtAuthGuard } from '../../auth/jwt';
 import {
-  createMockProperty,
   createLandlordUser,
+  createMockProperty,
 } from '../../../../test/test-helpers';
 
 jest.mock('nestjs-paginate', () => ({

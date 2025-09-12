@@ -43,7 +43,10 @@ export class Application {
   @Column('text', { nullable: true })
   message: string | null;
 
-  @Column('enum', { enum: ApplicationStatus, default: ApplicationStatus.PENDING })
+  @Column('enum', {
+    enum: ApplicationStatus,
+    default: ApplicationStatus.PENDING,
+  })
   status: ApplicationStatus;
 
   @Column('decimal', { precision: 10, scale: 2, nullable: true })
@@ -54,6 +57,9 @@ export class Application {
 
   @Column('text', { nullable: true })
   landlordNotes: string | null;
+
+  @Column('boolean', { default: false })
+  isCurrentRenter: boolean;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   createdAt: Date;

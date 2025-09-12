@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application, ApplicationStatus } from '../entities/application.entity';
@@ -16,17 +20,23 @@ export class ApplicationsPublicService {
     private propertiesRepository: Repository<Property>,
   ) {}
 
-  async create(createApplicationDto: ApplicationsPublicCreateDto): Promise<Application> {
+  async create(
+    createApplicationDto: ApplicationsPublicCreateDto,
+  ): Promise<Application> {
     const property = await this.propertiesRepository.findOne({
       where: { slug: createApplicationDto.propertySlug },
     });
 
     if (!property) {
-      throw new NotFoundException(ExceptionConstants.ApplicationsErrors.applicationPropertyNotFound);
+      throw new NotFoundException(
+        ExceptionConstants.ApplicationsErrors.applicationPropertyNotFound,
+      );
     }
 
     if (!property.isActive) {
-      throw new BadRequestException(ExceptionConstants.ApplicationsErrors.applicationPropertyNotAvailable);
+      throw new BadRequestException(
+        ExceptionConstants.ApplicationsErrors.applicationPropertyNotAvailable,
+      );
     }
 
     const existingApplication = await this.applicationsRepository.findOne({
@@ -38,10 +48,14 @@ export class ApplicationsPublicService {
     });
 
     if (existingApplication) {
-      throw new BadRequestException(ExceptionConstants.ApplicationsErrors.applicationAlreadyExists);
+      throw new BadRequestException(
+        ExceptionConstants.ApplicationsErrors.applicationAlreadyExists,
+      );
     }
 
-    const applicantName = createApplicationDto.applicantName.toLowerCase().replace(/\s+/g, '-');
+    const applicantName = createApplicationDto.applicantName
+      .toLowerCase()
+      .replaceAll(/\s+/g, '-');
     const slug = `${applicantName}-${property.slug}-${generateRandomString(6)}`;
 
     const application = this.applicationsRepository.create({
@@ -49,8 +63,9 @@ export class ApplicationsPublicService {
       slug,
       property,
       applicant: null,
-      preferredMoveInDate: createApplicationDto.preferredMoveInDate ? 
-        new Date(createApplicationDto.preferredMoveInDate) : null,
+      preferredMoveInDate: createApplicationDto.preferredMoveInDate
+        ? new Date(createApplicationDto.preferredMoveInDate)
+        : null,
     });
 
     return this.applicationsRepository.save(application);

@@ -1,4 +1,4 @@
-import { IsOptional, IsEnum, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
 import { ApplicationStatus } from '../../entities/application.entity';
 
 export class ApplicationsLandlordUpdateDto {
@@ -9,4 +9,8 @@ export class ApplicationsLandlordUpdateDto {
   @IsOptional()
   @IsString()
   landlordNotes?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isCurrentRenter?: boolean;
 }

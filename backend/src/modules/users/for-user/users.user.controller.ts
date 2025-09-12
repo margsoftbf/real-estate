@@ -1,5 +1,5 @@
-import { Controller, Get, Patch, UseGuards, Query, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersUserService } from './users.user.service';
 import { JwtAuthGuard } from '../../auth/jwt';
 import { UserReadInfoDto } from './dto/user-read-info-response.dto';

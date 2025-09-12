@@ -80,6 +80,6 @@ export class User {
   @DeleteDateColumn({ nullable: true, type: 'timestamp with time zone' })
   deletedAt: Date | null;
 
-  @OneToMany(() => Property, property => property.owner)
+  @OneToMany(() => Property, (property) => property.owner)
   properties: Property[];
 }

@@ -10,6 +10,7 @@ export class ApplicationsLandlordReadManyDto {
   message: string | null;
   proposedRent: number | null;
   preferredMoveInDate: Date | null;
+  isCurrentRenter: boolean;
   createdAt: Date;
   updatedAt: Date;
 

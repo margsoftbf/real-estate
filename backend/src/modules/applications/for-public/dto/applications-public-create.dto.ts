@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsEmail, IsDateString } from 'class-validator';
+import { IsDateString, IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class ApplicationsPublicCreateDto {
   @IsString()

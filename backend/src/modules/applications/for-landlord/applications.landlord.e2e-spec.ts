@@ -1,17 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, NotFoundException, ValidationPipe } from '@nestjs/common';
+import {
+  INestApplication,
+  NotFoundException,
+  ValidationPipe,
+} from '@nestjs/common';
 import * as request from 'supertest';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Application, ApplicationStatus } from '../entities/application.entity';
-import { Property } from '../../properties/entities/property.entity';
+import { ApplicationStatus } from '../entities/application.entity';
 import { ApplicationsLandlordController } from './applications.landlord.controller';
 import { ApplicationsLandlordService } from './applications.landlord.service';
 import { JwtAuthGuard } from '../../auth/jwt';
 import {
+  createLandlordUser,
   createMockApplication,
   createMockProperty,
-  createLandlordUser,
   createMockUser,
 } from '../../../../test/test-helpers';
 
@@ -48,17 +49,16 @@ describe('ApplicationsLandlordController (e2e)', () => {
       .compile();
 
     app = module.createNestApplication();
-    
+
     app.useGlobalPipes(new ValidationPipe());
-    
-    // Mock middleware to set user from header
+
     app.use('/landlord/applications', (req, res, next) => {
       if (req.headers.user) {
         req.user = JSON.parse(req.headers.user as string);
       }
       next();
     });
-    
+
     await app.init();
 
     applicationsLandlordService = module.get(ApplicationsLandlordService);
@@ -91,19 +91,23 @@ describe('ApplicationsLandlordController (e2e)', () => {
         .expect(200);
 
       expect(response.body.data).toHaveLength(1);
-      expect(response.body.data[0]).toEqual(expect.objectContaining({
-        id: mockApplication.id,
-        slug: mockApplication.slug,
-        status: mockApplication.status,
-        applicantName: mockApplication.applicantName,
-        applicantEmail: mockApplication.applicantEmail,
-      }));
-      expect(response.body.meta).toEqual(expect.objectContaining({
-        itemsPerPage: 10,
-        totalItems: 1,
-        currentPage: 1,
-        totalPages: 1,
-      }));
+      expect(response.body.data[0]).toEqual(
+        expect.objectContaining({
+          id: mockApplication.id,
+          slug: mockApplication.slug,
+          status: mockApplication.status,
+          applicantName: mockApplication.applicantName,
+          applicantEmail: mockApplication.applicantEmail,
+        }),
+      );
+      expect(response.body.meta).toEqual(
+        expect.objectContaining({
+          itemsPerPage: 10,
+          totalItems: 1,
+          currentPage: 1,
+          totalPages: 1,
+        }),
+      );
       expect(
         applicationsLandlordService.findMyPropertyApplications,
       ).toHaveBeenCalledWith(expect.any(Object), 'landlord-id');
@@ -148,12 +152,14 @@ describe('ApplicationsLandlordController (e2e)', () => {
           applicantEmail: mockAcceptedApplication.applicantEmail,
         }),
       ]);
-      expect(response.body.meta).toEqual(expect.objectContaining({
-        itemsPerPage: 10,
-        totalItems: 1,
-        currentPage: 1,
-        totalPages: 1,
-      }));
+      expect(response.body.meta).toEqual(
+        expect.objectContaining({
+          itemsPerPage: 10,
+          totalItems: 1,
+          currentPage: 1,
+          totalPages: 1,
+        }),
+      );
       expect(applicationsLandlordService.findMyRenters).toHaveBeenCalledWith(
         expect.any(Object),
         'landlord-id',
@@ -170,13 +176,15 @@ describe('ApplicationsLandlordController (e2e)', () => {
         .set('user', JSON.stringify(mockLandlord))
         .expect(200);
 
-      expect(response.body).toEqual(expect.objectContaining({
-        id: mockApplication.id,
-        slug: mockApplication.slug,
-        status: mockApplication.status,
-        applicantName: mockApplication.applicantName,
-        applicantEmail: mockApplication.applicantEmail,
-      }));
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          id: mockApplication.id,
+          slug: mockApplication.slug,
+          status: mockApplication.status,
+          applicantName: mockApplication.applicantName,
+          applicantEmail: mockApplication.applicantEmail,
+        }),
+      );
       expect(applicationsLandlordService.findOne).toHaveBeenCalledWith(
         mockApplication.slug,
         'landlord-id',
@@ -185,7 +193,7 @@ describe('ApplicationsLandlordController (e2e)', () => {
 
     it('should return 404 for non-existent application', async () => {
       applicationsLandlordService.findOne.mockRejectedValue(
-        new NotFoundException('Application not found')
+        new NotFoundException('Application not found'),
       );
 
       await request(app.getHttpServer())
@@ -236,7 +244,7 @@ describe('ApplicationsLandlordController (e2e)', () => {
       };
 
       applicationsLandlordService.updateApplication.mockRejectedValue(
-        new NotFoundException('Application not found')
+        new NotFoundException('Application not found'),
       );
 
       await request(app.getHttpServer())
