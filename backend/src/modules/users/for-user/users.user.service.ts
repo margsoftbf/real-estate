@@ -64,4 +64,10 @@ export class UsersUserService {
 
     return this.readUserInfo(userId);
   }
+
+  async findById(userId: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { id: userId },
+    });
+  }
 }

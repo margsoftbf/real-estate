@@ -11,7 +11,7 @@ import {
   PaginateConfig,
   PaginateQuery,
 } from 'nestjs-paginate';
-import { Property } from '../entities/property.entity';
+import { Property, PropertyAvailabilityStatus } from '../entities/property.entity';
 import { User } from '../../users/entities/user.entity';
 import { PropertiesLandlordCreateDto } from './dto/properties-landlord-create.dto';
 import { PropertiesLandlordUpdateDto } from './dto/properties-landlord-update.dto';
@@ -212,6 +212,17 @@ export class PropertyLandlordService {
     await this.propertyRepository.save(property);
 
     return this.findOne(slug, ownerId);
+  }
+
+  async updateAvailabilityStatus(
+    propertyId: string,
+    isActive: boolean,
+    availabilityStatus: PropertyAvailabilityStatus,
+  ) {
+    await this.propertyRepository.update(
+      { id: propertyId },
+      { isActive, availabilityStatus },
+    );
   }
 
   async remove(slug: string, ownerId: string) {

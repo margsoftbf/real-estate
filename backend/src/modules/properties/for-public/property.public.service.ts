@@ -312,6 +312,12 @@ export class PropertyPublicService {
       }
     });
   }
+
+  async findEntityBySlug(slug: string): Promise<Property | null> {
+    return this.propertyRepository.findOne({
+      where: { slug, isActive: true },
+    });
+  }
 }
 
 export const findAllPropertiesPublicConfig: PaginateConfig<Property> = {
