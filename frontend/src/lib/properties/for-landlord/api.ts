@@ -7,58 +7,6 @@ import {
 } from '@/types/properties/public-types';
 
 
-export interface PropertyLandlordCreateDto {
-  slug?: string;
-  type: PropertyType;
-  price: number;
-  city: string;
-  country: string;
-  title?: string;
-  photos?: string[];
-  description?: string;
-  features?: PropertyFeatures;
-  isPopular?: boolean;
-  isActive?: boolean;
-  latitude?: number;
-  longitude?: number;
-  priceChangeReason?: string;
-}
-
-export type PropertyLandlordUpdateDto = Partial<PropertyLandlordCreateDto>;
-
-export interface PropertyLandlordDto {
-  slug: string;
-  type: PropertyType;
-  price: number;
-  city: string;
-  country: string;
-  title: string | null;
-  photos: string[];
-  description: string | null;
-  latitude: number;
-  longitude: number;
-  features: PropertyFeatures | null;
-  priceHistory: PropertyPriceHistory[];
-  isPopular: boolean;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface LandlordPropertyQuery {
-  page?: number;
-  limit?: number;
-  sortBy?: string;
-  search?: string;
-  filter?: {
-    type?: PropertyType;
-    city?: string;
-    country?: string;
-    isPopular?: boolean;
-    isActive?: boolean;
-  };
-}
-
 class PropertiesLandlordApi extends BaseApiClient {
   private readonly baseEndpoint = '/landlord/properties';
 
@@ -115,3 +63,55 @@ class PropertiesLandlordApi extends BaseApiClient {
 }
 
 export const propertiesLandlordApi = new PropertiesLandlordApi();
+
+export interface PropertyLandlordCreateDto {
+  slug?: string;
+  type: PropertyType;
+  price: number;
+  city: string;
+  country: string;
+  title?: string;
+  photos?: string[];
+  description?: string;
+  features?: PropertyFeatures;
+  isPopular?: boolean;
+  isActive?: boolean;
+  latitude?: number;
+  longitude?: number;
+  priceChangeReason?: string;
+}
+
+export type PropertyLandlordUpdateDto = Partial<PropertyLandlordCreateDto>;
+
+export interface PropertyLandlordDto {
+  slug: string;
+  type: PropertyType;
+  price: number;
+  city: string;
+  country: string;
+  title: string | null;
+  photos: string[];
+  description: string | null;
+  latitude: number;
+  longitude: number;
+  features: PropertyFeatures | null;
+  priceHistory: PropertyPriceHistory[];
+  isPopular: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LandlordPropertyQuery {
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  search?: string;
+  filter?: {
+    type?: PropertyType;
+    city?: string;
+    country?: string;
+    isPopular?: boolean;
+    isActive?: boolean;
+  };
+}

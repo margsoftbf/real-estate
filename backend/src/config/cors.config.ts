@@ -2,7 +2,7 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 
 export const allowedOrigins = [
   'https://real-estate-six-tawny-67.vercel.app',
-  'https://real-estate.marcingarski.com'
+  'https://real-estate.marcingarski.com',
 ];
 
 export const isOriginAllowed = (origin?: string): boolean => {

@@ -60,7 +60,7 @@ const LoginForm = ({
       <div className="flex items-center justify-end text-sm mt-4 lg:mt-8">
         <Link
           href="#"
-          className="font-medium text-primary-violet hover:text-primary-violet-dark"
+          className="font-medium text-primary-violet-dark hover:text-primary-violet"
         >
           Forgot Password?
         </Link>

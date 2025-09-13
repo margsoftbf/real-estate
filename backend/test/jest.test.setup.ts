@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 
-const originalLog = console.log;
+const _originalLog = console.log;
 const originalError = console.error;
 
 console.error = (...args: any[]) => {

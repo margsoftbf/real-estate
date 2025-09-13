@@ -119,8 +119,8 @@ export class PropertyPublicService {
       .andWhere('property.type = :type', { type: PropertyType.RENT });
 
     if (query['filter.city$eq']) {
-      queryBuilder.andWhere('property.city = :city', { 
-        city: query['filter.city$eq'] 
+      queryBuilder.andWhere('property.city = :city', {
+        city: query['filter.city$eq'],
       });
       delete query['filter.city$eq'];
     }
@@ -131,15 +131,11 @@ export class PropertyPublicService {
       ...findAllPropertiesPublicConfig,
       filterableColumns: {
         ...findAllPropertiesPublicConfig.filterableColumns,
-      }
+      },
     };
     delete (configForRent.filterableColumns as any).city;
 
-    const paginatedResult = await paginate(
-      query,
-      queryBuilder,
-      configForRent,
-    );
+    const paginatedResult = await paginate(query, queryBuilder, configForRent);
 
     const mappedProperties: PropertyPublicReadManyDto[] =
       paginatedResult.data.map((property) => ({
@@ -180,11 +176,10 @@ export class PropertyPublicService {
       .where('property.isActive = :isActive', { isActive: true })
       .andWhere('property.deletedAt IS NULL')
       .andWhere('property.type = :type', { type: PropertyType.SELL });
-    
-    
-      if (query['filter.city$eq']) {
-      queryBuilder.andWhere('property.city = :city', { 
-        city: query['filter.city$eq'] 
+
+    if (query['filter.city$eq']) {
+      queryBuilder.andWhere('property.city = :city', {
+        city: query['filter.city$eq'],
       });
       delete query['filter.city$eq'];
     }
@@ -195,16 +190,12 @@ export class PropertyPublicService {
       ...findAllPropertiesPublicConfig,
       filterableColumns: {
         ...findAllPropertiesPublicConfig.filterableColumns,
-      }
+      },
     };
     delete (configForSell.filterableColumns as any).city;
 
-    const paginatedResult = await paginate(
-      query,
-      queryBuilder,
-      configForSell,
-    );
-    
+    const paginatedResult = await paginate(query, queryBuilder, configForSell);
+
     const mappedProperties: PropertyPublicReadManyDto[] =
       paginatedResult.data.map((property) => ({
         slug: property.slug,
@@ -261,7 +252,7 @@ export class PropertyPublicService {
       'yearBuilt',
     ];
 
-    booleanFilters.forEach((field) => {
+    for (const field of booleanFilters) {
       const filterKey = `filter.features.${field}`;
       if (query[filterKey] !== undefined) {
         const boolValue = query[filterKey].toString();
@@ -275,9 +266,9 @@ export class PropertyPublicService {
         }
         delete query[filterKey];
       }
-    });
+    }
 
-    stringFilters.forEach((field) => {
+    for (const field of stringFilters) {
       const filterKey = `filter.features.${field}`;
       if (query[filterKey]) {
         queryBuilder.andWhere(`property.features->>'${field}' = :${field}`, {
@@ -285,9 +276,9 @@ export class PropertyPublicService {
         });
         delete query[filterKey];
       }
-    });
+    }
 
-    rangeFilters.forEach((field) => {
+    for (const field of rangeFilters) {
       const gteKey = `filter.features.${field}$gte`;
       const lteKey = `filter.features.${field}$lte`;
 
@@ -295,7 +286,7 @@ export class PropertyPublicService {
         queryBuilder.andWhere(
           `(property.features->>'${field}')::int >= :min${field}`,
           {
-            [`min${field}`]: parseInt(query[gteKey].toString()),
+            [`min${field}`]: Number.parseInt(query[gteKey].toString()),
           },
         );
         delete query[gteKey];
@@ -305,11 +296,17 @@ export class PropertyPublicService {
         queryBuilder.andWhere(
           `(property.features->>'${field}')::int <= :max${field}`,
           {
-            [`max${field}`]: parseInt(query[lteKey].toString()),
+            [`max${field}`]: Number.parseInt(query[lteKey].toString()),
           },
         );
         delete query[lteKey];
       }
+    }
+  }
+
+  async findEntityBySlug(slug: string): Promise<Property | null> {
+    return this.propertyRepository.findOne({
+      where: { slug, isActive: true },
     });
   }
 }

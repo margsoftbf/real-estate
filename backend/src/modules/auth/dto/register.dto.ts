@@ -1,11 +1,11 @@
 import {
-  IsEmail,
-  IsString,
-  IsEnum,
   IsBoolean,
-  MinLength,
+  IsEmail,
+  IsEnum,
   IsOptional,
+  IsString,
   MaxLength,
+  MinLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { UserRole } from '../../users/entities/user.entity';

@@ -38,9 +38,10 @@ const SearchBar = ({
           />
           <button
             type="submit"
-            className={`absolute right-1 top-1/2 transform -translate-y-1/2 bg-primary-violet flex items-center justify-center rounded-md hover:brightness-120 transition-all ${
+            className={`absolute right-1 top-1/2 transform -translate-y-1/2 bg-primary-violet-dark flex items-center justify-center rounded-md hover:brightness-120 transition-all ${
               isCompact ? 'w-8 h-8' : 'w-10 h-10'
             }`}
+            aria-label="Search properties"
           >
             <SearchOutline
               className={isCompact ? 'w-3 h-3' : 'w-4 h-4'}
@@ -74,7 +75,7 @@ const SearchBar = ({
           )}
           <button
             type="submit"
-            className="flex items-center gap-2 bg-primary-violet text-white px-4 py-3 h-full hover:brightness-110 transition-all rounded-lg cursor-pointer"
+            className="flex items-center gap-2 bg-primary-violet-dark text-white px-4 py-3 h-full hover:brightness-110 transition-all rounded-lg cursor-pointer"
           >
             <SearchOutline className="w-4 h-4" color="white" />
             <span className="text-sm font-medium">Search</span>

@@ -11,22 +11,16 @@ interface HeroSearchBarProps {
 const HeroSearchBar = ({ className = '' }: HeroSearchBarProps) => {
   const [activeTab, setActiveTab] = useState('Rent');
   const [searchValue, setSearchValue] = useState('');
-  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const router = useRouter();
 
-  const handleCitySelect = (city: string, coords?: { lat: number; lng: number }) => {
+  const handleCitySelect = (city: string) => {
     setSearchValue(city);
-    setCoordinates(coords || null);
   };
 
   const handleBrowse = () => {
     const targetPage = activeTab.toLowerCase() === 'rent' ? '/rent' : '/buy';
     if (searchValue.trim()) {
-      const params = new URLSearchParams({ city: searchValue.trim() });
-      if (coordinates) {
-        params.append('lat', coordinates.lat.toString());
-        params.append('lng', coordinates.lng.toString());
-      }
+      const params = new URLSearchParams({ search: searchValue.trim() });
       router.push(`${targetPage}?${params.toString()}`);
     } else {
       router.push(targetPage);

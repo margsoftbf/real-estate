@@ -16,7 +16,7 @@ export class PropertyCronService {
   @Cron(CronExpression.EVERY_WEEK)
   async handleWeeklyPropertyUpdate() {
     this.logger.log('Running weekly property update cron job');
-    
+
     try {
       const properties = await this.propertyRepository.find({
         take: 10,
@@ -28,10 +28,11 @@ export class PropertyCronService {
         return;
       }
 
-      const propertyToUpdate = properties[Math.floor(Math.random() * properties.length)];
-      
+      const propertyToUpdate =
+        properties[Math.floor(Math.random() * properties.length)];
+
       propertyToUpdate.updatedAt = new Date();
-      
+
       if (propertyToUpdate.isPopular) {
         propertyToUpdate.isPopular = false;
       } else {
@@ -40,8 +41,9 @@ export class PropertyCronService {
 
       await this.propertyRepository.save(propertyToUpdate);
 
-      this.logger.log(`Updated property ${propertyToUpdate.id} - isPopular: ${propertyToUpdate.isPopular}`);
-      
+      this.logger.log(
+        `Updated property ${propertyToUpdate.id} - isPopular: ${propertyToUpdate.isPopular}`,
+      );
     } catch (error) {
       this.logger.error('Error during weekly property update:', error);
     }

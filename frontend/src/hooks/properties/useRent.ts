@@ -1,10 +1,9 @@
-import { propertiesApi } from '@/lib/properties/api';
-import { usePropertySearch, UsePropertySearchReturn } from './usePropertySearch';
+import { usePropertySearchWithURL } from './usePropertySearchWithURL';
 
-export const useRent = (): UsePropertySearchReturn => {
-  return usePropertySearch({
-    apiCall: (query) => propertiesApi.findRentProperties(query),
+export const useRent = () => {
+  return usePropertySearchWithURL({
+    type: 'rent',
     routePath: 'rent',
-    enableInitialLoad: false,
+    defaultLimit: 12,
   });
 };

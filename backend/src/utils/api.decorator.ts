@@ -1,5 +1,10 @@
 import { applyDecorators, Type } from '@nestjs/common';
-import { ApiExtraModels, ApiOkResponse, ApiQuery, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiQuery,
+  getSchemaPath,
+} from '@nestjs/swagger';
 
 export interface PaginationMeta {
   page: number;
@@ -15,7 +20,9 @@ export interface PaginatedResponse<T> {
   meta: PaginationMeta;
 }
 
-export const ApiOkPaginatedResponse = <DTO extends Type<unknown>>(dataDto: DTO) => {
+export const ApiOkPaginatedResponse = <DTO extends Type<unknown>>(
+  dataDto: DTO,
+) => {
   return applyDecorators(
     ApiExtraModels(dataDto),
     ApiOkResponse({

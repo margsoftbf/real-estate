@@ -11,4 +11,5 @@ async function bootstrap() {
   const port = process.env.PORT || 3001;
   await app.listen(port);
 }
+// eslint-disable-next-line @typescript-eslint/no-floating-promises, unicorn/prefer-top-level-await
 bootstrap();

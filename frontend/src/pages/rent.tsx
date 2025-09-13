@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import PublicLayout from '@/components/layout/PublicLayout';
 import PropertyCard from '@/components/shared/Property/PropertyCard';
 import Breadcrumbs from '@/components/shared/Breadcrumbs';
@@ -12,35 +11,88 @@ import ErrorState from '@/components/shared/ErrorState';
 import EmptyState from '@/components/shared/EmptyState';
 import { useRent } from '@/hooks/properties';
 import PropertySearchSection from '@/components/shared/Property/PropertySearchSection';
+import { PropertyFilters } from '@/lib/properties/api';
+
+// Convert PropertyFilters to FilterModal format
+const convertToModalFilters = (filters: PropertyFilters) => ({
+  minPrice: filters.minPrice?.toString() || '',
+  maxPrice: filters.maxPrice?.toString() || '',
+  city: filters.city || '',
+  minBedrooms: filters.minBedrooms?.toString() || '',
+  maxBedrooms: filters.maxBedrooms?.toString() || '',
+  minBathrooms: filters.minBathrooms?.toString() || '',
+  maxBathrooms: filters.maxBathrooms?.toString() || '',
+  minArea: filters.minArea?.toString() || '',
+  maxArea: filters.maxArea?.toString() || '',
+  minParkingSpaces: filters.minParkingSpaces?.toString() || '',
+  maxParkingSpaces: filters.maxParkingSpaces?.toString() || '',
+  minYearBuilt: filters.minYearBuilt?.toString() || '',
+  maxYearBuilt: filters.maxYearBuilt?.toString() || '',
+  homeType: filters.homeType || '',
+  laundry: filters.laundry || '',
+  heating: filters.heating || '',
+  furnished: filters.furnished ?? null,
+  petsAllowed: filters.petsAllowed ?? null,
+  smokingAllowed: filters.smokingAllowed ?? null,
+  balcony: filters.balcony ?? null,
+  garden: filters.garden ?? null,
+  garage: filters.garage ?? null,
+  elevator: filters.elevator ?? null,
+  airConditioning: filters.airConditioning ?? null,
+  dishwasher: filters.dishwasher ?? null,
+  washerDryer: filters.washerDryer ?? null,
+  internet: filters.internet ?? null,
+  cable: filters.cable ?? null,
+});
+
+// Convert FilterModal format back to PropertyFilters
+const convertFromModalFilters = (modalFilters: Record<string, string | boolean | null>): PropertyFilters => {
+  const filters: PropertyFilters = {};
+  
+  Object.entries(modalFilters).forEach(([key, value]) => {
+    if (value !== '' && value !== null) {
+      if (key.startsWith('min') || key.startsWith('max')) {
+        filters[key] = typeof value === 'string' ? Number(value) : undefined;
+      } else if (typeof value === 'boolean') {
+        filters[key] = value;
+      } else {
+        filters[key] = value;
+      }
+    }
+  });
+  
+  return filters;
+};
 
 const RentPage = () => {
-  const router = useRouter();
   const {
-    state,
+    properties,
     isLoading,
     error,
-    optimisticProperties,
-    dispatch,
-    loadPropertiesWithParams,
-    handleRouterSearch,
-    handleSearch: handleSearchFromHook,
-    handleFilterChange,
-    handleApplyFilters,
-    handleClearFilters,
+    totalPages,
+    currentPage,
+    currentSearch,
+    currentFilters,
+    setSearch,
+    setFilters,
+    setPage,
+    clearFilters,
   } = useRent();
 
+  const [searchInput, setSearchInput] = React.useState(currentSearch);
+  const [isFilterModalOpen, setIsFilterModalOpen] = React.useState(false);
+
   useEffect(() => {
-    handleRouterSearch(router.query, router);
-  }, [router.isReady, router.query.city]); // eslint-disable-line react-hooks/exhaustive-deps
+    setSearchInput(currentSearch);
+  }, [currentSearch]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSearchFromHook(state.searchTerm, router);
+    setSearch(searchInput);
   };
 
   const handlePageChange = (page: number) => {
-    dispatch({ type: 'SET_PAGE', payload: page });
-    loadPropertiesWithParams(page);
+    setPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -73,29 +125,20 @@ const RentPage = () => {
         </div>
 
         <PropertySearchSection
-          searchTerm={state.searchTerm}
-          onSearchTermChange={(value) =>
-            dispatch({ type: 'SET_SEARCH_TERM', payload: value })
-          }
+          searchTerm={searchInput}
+          onSearchTermChange={setSearchInput}
           onSubmit={handleSearch}
-          onFiltersClick={() =>
-            dispatch({ type: 'SET_FILTER_MODAL_OPEN', payload: true })
-          }
+          onFiltersClick={() => setIsFilterModalOpen(true)}
         />
 
         <ActiveFiltersSection
-          appliedSearchTerm={state.appliedSearchTerm}
-          filters={state.filters}
-          onSearchTermClear={() => {
-            dispatch({ type: 'SET_SEARCH_TERM', payload: '' });
-            dispatch({ type: 'APPLY_SEARCH', payload: '' });
-            dispatch({ type: 'SET_PAGE', payload: 1 });
-          }}
+          appliedSearchTerm={currentSearch}
+          filters={currentFilters as Record<string, string | boolean | null>}
+          onSearchTermClear={() => setSearch('')}
           onFilterChange={(key, value) => {
-            handleFilterChange(key, value);
-            dispatch({ type: 'SET_PAGE', payload: 1 });
+            setFilters({ ...currentFilters, [key]: value });
           }}
-          onClearAll={handleClearFilters}
+          onClearAll={clearFilters}
           basePath="rent"
         />
 
@@ -103,21 +146,21 @@ const RentPage = () => {
           <LoadingState />
         ) : error ? (
           <ErrorState
-            error={error}
-            onRetry={() => loadPropertiesWithParams()}
+            error={error.message || 'Failed to load properties'}
+            onRetry={() => window.location.reload()}
           />
-        ) : optimisticProperties.length === 0 ? (
+        ) : properties.length === 0 ? (
           <EmptyState />
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {optimisticProperties.map((property) => (
+              {properties.map((property) => (
                 <PropertyCard key={property.slug} property={property} />
               ))}
             </div>
             <Pagination
-              currentPage={state.currentPage}
-              totalPages={state.totalPages}
+              currentPage={currentPage}
+              totalPages={totalPages}
               onPageChange={handlePageChange}
             />
           </>
@@ -125,14 +168,15 @@ const RentPage = () => {
       </div>
 
       <FilterModal
-        isOpen={state.isFilterModalOpen}
-        onClose={() =>
-          dispatch({ type: 'SET_FILTER_MODAL_OPEN', payload: false })
-        }
-        filters={state.filters}
-        onFilterChange={handleFilterChange}
-        onApplyFilters={handleApplyFilters}
-        onClearFilters={handleClearFilters}
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        filters={convertToModalFilters(currentFilters)}
+        onFilterChange={(key, value) => {
+          const updatedModalFilters = { ...convertToModalFilters(currentFilters), [key]: value };
+          setFilters(convertFromModalFilters(updatedModalFilters));
+        }}
+        onApplyFilters={() => setIsFilterModalOpen(false)}
+        onClearFilters={clearFilters}
       />
     </PublicLayout>
   );

@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PropertyType, PropertyFeatures, PropertyPriceHistory } from '../../entities/property.entity';
+import {
+  PropertyFeatures,
+  PropertyPriceHistory,
+  PropertyType,
+} from '../../entities/property.entity';
 
 class PropertyOwnerDto {
   @ApiProperty()

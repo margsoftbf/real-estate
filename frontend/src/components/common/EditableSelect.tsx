@@ -125,7 +125,7 @@ const EditableSelect: React.FC<EditableSelectProps> = ({
                 className={`
                   w-full px-4 py-3 text-left text-body-md hover:bg-purple-100 
                   transition-colors duration-150 flex items-center justify-between
-                  ${!selectedValue ? 'bg-purple-100 text-primary-violet font-medium' : 'text-primary-black'}
+                  ${!selectedValue ? 'bg-purple-100 text-primary-violet-dark font-medium' : 'text-primary-black'}
                 `}
               >
                 {placeholder}
@@ -140,7 +140,7 @@ const EditableSelect: React.FC<EditableSelectProps> = ({
                     w-full px-4 py-3 text-left text-body-md hover:bg-purple-100 
                     transition-colors duration-150 flex items-center justify-between cursor-pointer
                     ${index === options.length - 1 ? 'rounded-b-lg' : ''}
-                    ${selectedValue === option.value ? 'bg-purple-100 text-primary-violet font-medium' : 'text-primary-black'}
+                    ${selectedValue === option.value ? 'bg-purple-100 text-primary-violet-dark font-medium' : 'text-primary-black'}
                   `}
                 >
                   {option.label}

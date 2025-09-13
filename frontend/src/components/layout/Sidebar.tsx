@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
                 href={item.url}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive(item.url)
-                    ? 'bg-purple-100 text-primary-violet'
+                    ? 'bg-purple-100 text-primary-violet-dark'
                     : 'text-secondary-violet opacity-50 hover:bg-gray-200'
                 }`}
                 onClick={onClose}
@@ -89,7 +89,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
                   href={item.url}
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                     isActive(item.url)
-                      ? 'bg-purple-100 text-primary-violet'
+                      ? 'bg-purple-100 text-primary-violet-dark'
                       : 'text-secondary-violet opacity-50 hover:bg-gray-200'
                   }`}
                   onClick={onClose}

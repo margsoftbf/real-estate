@@ -16,7 +16,7 @@ const BackToResultsButton: React.FC<BackToResultsButtonProps> = ({
         <div className="px-4 py-3">
           <button
             onClick={onClick}
-            className="flex items-center gap-1 text-primary-violet font-medium font-jakarta cursor-pointer"
+            className="flex items-center gap-1 text-primary-violet-dark font-medium font-jakarta cursor-pointer"
           >
             <ChevronLeftOutline className="w-5 h-5" />
             <span>Back to results</span>
@@ -30,7 +30,7 @@ const BackToResultsButton: React.FC<BackToResultsButtonProps> = ({
     <div className="hidden lg:block max-w-7xl mx-auto px-4 sm:px-6 pt-6">
       <button
         onClick={onClick}
-        className="flex items-center gap-2 text-primary-violet font-medium mb-6 cursor-pointer"
+        className="flex items-center gap-2 text-primary-violet-dark font-medium mb-6 cursor-pointer"
       >
         <ChevronLeftOutline className="w-5 h-5" />
         <span>Back to results</span>

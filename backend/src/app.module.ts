@@ -7,6 +7,7 @@ import { DatabaseModule } from './db/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { PropertiesModule } from './modules/properties/properties.module';
+import { ApplicationsModule } from './modules/applications/applications.module';
 import { LlmModule } from './modules/llm/llm.module';
 
 @Module({
@@ -20,6 +21,7 @@ import { LlmModule } from './modules/llm/llm.module';
     AuthModule,
     UsersModule,
     PropertiesModule,
+    ApplicationsModule,
     LlmModule,
   ],
   controllers: [AppController],

@@ -3,10 +3,13 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Property, PropertyType } from '../entities/property.entity';
+import { Property } from '../entities/property.entity';
 import { PropertyPublicController } from './property.public.controller';
 import { PropertyPublicService } from './property.public.service';
-import { createMockProperty, createLandlordUser } from '../../../../test/test-helpers';
+import {
+  createLandlordUser,
+  createMockProperty,
+} from '../../../../test/test-helpers';
 
 // Mock paginate function
 jest.mock('nestjs-paginate', () => ({
@@ -21,18 +24,18 @@ describe('PropertyPublicController (e2e)', () => {
   let propertyRepository: jest.Mocked<Repository<Property>>;
 
   const mockLandlord = createLandlordUser();
-  const mockProperty = createMockProperty({ 
+  const mockProperty = createMockProperty({
     owner: mockLandlord,
-    isActive: true, 
-    isPopular: true 
+    isActive: true,
+    isPopular: true,
   });
-  const mockProperty2 = createMockProperty({ 
+  const mockProperty2 = createMockProperty({
     id: 'property-2-id',
     slug: 'second-property-slug',
     owner: mockLandlord,
-    isActive: true, 
+    isActive: true,
     isPopular: false,
-    title: 'Second Property'
+    title: 'Second Property',
   });
 
   beforeEach(async () => {
@@ -106,7 +109,7 @@ describe('PropertyPublicController (e2e)', () => {
           owner: expect.objectContaining({
             email: mockLandlord.email,
           }),
-        })
+        }),
       );
       expect(response.body.meta.totalItems).toBe(2);
     });
@@ -114,7 +117,12 @@ describe('PropertyPublicController (e2e)', () => {
     it('should handle search query parameters', async () => {
       const searchResults = {
         data: [mockProperty],
-        meta: { itemsPerPage: 10, totalItems: 1, currentPage: 1, totalPages: 1 },
+        meta: {
+          itemsPerPage: 10,
+          totalItems: 1,
+          currentPage: 1,
+          totalPages: 1,
+        },
         links: { current: '/properties?search=Warsaw' },
       };
 
@@ -130,7 +138,12 @@ describe('PropertyPublicController (e2e)', () => {
     it('should handle filter parameters', async () => {
       const filteredResults = {
         data: [mockProperty],
-        meta: { itemsPerPage: 10, totalItems: 1, currentPage: 1, totalPages: 1 },
+        meta: {
+          itemsPerPage: 10,
+          totalItems: 1,
+          currentPage: 1,
+          totalPages: 1,
+        },
         links: { current: '/properties?filter.type=rent&filter.city=Warsaw' },
       };
 
@@ -162,7 +175,12 @@ describe('PropertyPublicController (e2e)', () => {
     it('should handle sorting parameters', async () => {
       const sortedResults = {
         data: [mockProperty2, mockProperty],
-        meta: { itemsPerPage: 10, totalItems: 2, currentPage: 1, totalPages: 1 },
+        meta: {
+          itemsPerPage: 10,
+          totalItems: 2,
+          currentPage: 1,
+          totalPages: 1,
+        },
         links: { current: '/properties?sortBy=price:ASC' },
       };
 
@@ -175,7 +193,6 @@ describe('PropertyPublicController (e2e)', () => {
       expect(paginate).toHaveBeenCalled();
     });
   });
-
 
   describe('GET /properties/:slug', () => {
     it('should return property by slug', async () => {
@@ -198,7 +215,7 @@ describe('PropertyPublicController (e2e)', () => {
             phoneNumber: mockLandlord.phoneNumber,
             avatarUrl: mockLandlord.avatarUrl,
           }),
-        })
+        }),
       );
 
       expect(propertyRepository.findOne).toHaveBeenCalledWith({
@@ -222,7 +239,7 @@ describe('PropertyPublicController (e2e)', () => {
         owner: mockLandlord,
         isActive: false,
       });
-      
+
       propertyRepository.findOne.mockResolvedValue(null); // Service filters inactive
 
       const response = await request(app.getHttpServer())

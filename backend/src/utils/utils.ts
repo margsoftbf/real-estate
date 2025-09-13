@@ -25,7 +25,7 @@ export const getPaginationParams = (
 ): { skip: number; take: number; page: number; limit: number } => {
   const normalizedPage = Math.max(1, page);
   const normalizedLimit = Math.min(100, Math.max(1, limit));
-  
+
   return {
     skip: (normalizedPage - 1) * normalizedLimit,
     take: normalizedLimit,
@@ -40,7 +40,7 @@ export const createPaginationMeta = (
   limit: number,
 ) => {
   const totalPages = Math.ceil(total / limit);
-  
+
   return {
     page,
     limit,

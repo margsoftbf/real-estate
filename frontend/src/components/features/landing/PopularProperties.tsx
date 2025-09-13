@@ -20,7 +20,7 @@ const PopularProperties = () => {
       try {
         setIsLoading(true);
         const response = await propertiesApi.findAll({
-          filter: {
+          filters: {
             isPopular: true,
           },
           limit: 6,
@@ -95,13 +95,13 @@ const PopularProperties = () => {
                 className="w-full"
               >
                 <CarouselContent className="-ml-4">
-                  {properties.map((property) => (
+                  {properties.map((property, index) => (
                     <CarouselItem
                       key={property.slug}
                       className="pl-4 basis-full sm:basis-1/2"
                     >
                       <div className="p-1">
-                        <PropertyCard property={property} />
+                        <PropertyCard property={property} priority={index === 0} />
                       </div>
                     </CarouselItem>
                   ))}
@@ -110,8 +110,8 @@ const PopularProperties = () => {
             </div>
 
             <div className="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {properties.map((property) => (
-                <PropertyCard key={property.slug} property={property} />
+              {properties.map((property, index) => (
+                <PropertyCard key={property.slug} property={property} priority={index === 0} />
               ))}
             </div>
           </>

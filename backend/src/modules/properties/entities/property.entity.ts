@@ -14,6 +14,12 @@ export enum PropertyType {
   RENT = 'rent',
 }
 
+export enum PropertyAvailabilityStatus {
+  AVAILABLE = 'available',
+  RENTED = 'rented',
+  ARCHIVED = 'archived',
+}
+
 export interface PropertyFeatures {
   bedrooms?: number;
   bathrooms?: number;
@@ -53,7 +59,7 @@ export class Property {
   @Column('varchar', { unique: true })
   slug: string;
 
-  @ManyToOne(() => User, user => user.properties)
+  @ManyToOne(() => User, (user) => user.properties)
   owner: User;
 
   @Column('enum', { enum: PropertyType })
@@ -94,6 +100,12 @@ export class Property {
 
   @Column('boolean', { default: true })
   isActive: boolean;
+
+  @Column('enum', {
+    enum: PropertyAvailabilityStatus,
+    default: PropertyAvailabilityStatus.AVAILABLE,
+  })
+  availabilityStatus: PropertyAvailabilityStatus;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   createdAt: Date;

@@ -1,5 +1,13 @@
 import { User, UserRole } from '../src/modules/users/entities/user.entity';
-import { Property, PropertyType, PropertyFeatures } from '../src/modules/properties/entities/property.entity';
+import {
+  Property,
+  PropertyAvailabilityStatus,
+  PropertyType,
+} from '../src/modules/properties/entities/property.entity';
+import {
+  Application,
+  ApplicationStatus,
+} from '../src/modules/applications/entities/application.entity';
 
 export const createMockUser = (overrides?: Partial<User>): User => {
   return {
@@ -68,11 +76,12 @@ export const createMockProperty = (overrides?: Partial<Property>): Property => {
     slug: 'test-property-slug',
     owner: createLandlordUser(),
     type: PropertyType.RENT,
-    price: 2500.00,
+    availabilityStatus: PropertyAvailabilityStatus.AVAILABLE,
+    price: 2500,
     city: 'Warsaw',
     country: 'Poland',
-    latitude: 52.237049,
-    longitude: 21.017532,
+    latitude: 52.237_049,
+    longitude: 21.017_532,
     title: 'Test Property',
     photos: ['https://example.com/photo1.jpg'],
     description: 'A beautiful test property',
@@ -85,7 +94,7 @@ export const createMockProperty = (overrides?: Partial<Property>): Property => {
     },
     priceHistory: [
       {
-        price: 2500.00,
+        price: 2500,
         date: new Date('2025-01-01T00:00:00Z'),
         reason: 'Initial listing',
       },
@@ -99,10 +108,12 @@ export const createMockProperty = (overrides?: Partial<Property>): Property => {
   };
 };
 
-export const createMockPropertyForSale = (overrides?: Partial<Property>): Property => {
+export const createMockPropertyForSale = (
+  overrides?: Partial<Property>,
+): Property => {
   return createMockProperty({
     type: PropertyType.SELL,
-    price: 450000.00,
+    price: 450_000,
     title: 'Test House for Sale',
     features: {
       bedrooms: 3,
@@ -114,4 +125,56 @@ export const createMockPropertyForSale = (overrides?: Partial<Property>): Proper
     },
     ...overrides,
   });
+};
+
+export const createMockApplication = (
+  overrides?: Partial<Application>,
+): Application => {
+  return {
+    id: '660e8400-e29b-41d4-a716-446655440000',
+    slug: 'test-application-slug',
+    property: createMockProperty(),
+    applicant: createMockUser(),
+    applicantName: 'John Doe',
+    applicantEmail: 'john.doe@example.com',
+    applicantPhone: '+48123456789',
+    message: 'I am interested in renting this property',
+    status: ApplicationStatus.PENDING,
+    proposedRent: 2400,
+    preferredMoveInDate: new Date('2025-03-01'),
+    landlordNotes: null,
+    createdAt: new Date('2025-01-01T00:00:00Z'),
+    updatedAt: new Date('2025-01-01T00:00:00Z'),
+    isCurrentRenter: false,
+    deletedAt: null,
+    ...overrides,
+  };
+};
+
+// Query Builder Mock Helpers - Simple and type-safe approach
+export const createMockQueryBuilder = (config?: {
+  getOne?: any;
+  getMany?: any[];
+}) => {
+  const mockBuilder = {
+    where: jest.fn().mockReturnThis(),
+    leftJoinAndSelect: jest.fn().mockReturnThis(),
+    andWhere: jest.fn().mockReturnThis(),
+    getOne: jest.fn().mockResolvedValue(config?.getOne ?? null),
+    getMany: jest.fn().mockResolvedValue(config?.getMany ?? []),
+  };
+
+  return mockBuilder as any;
+};
+
+export const createPropertyQueryBuilder = (property?: Property | null) =>
+  createMockQueryBuilder({ getOne: property });
+
+export const createApplicationQueryBuilder = (
+  applications?: Application | Application[] | null,
+) => {
+  if (Array.isArray(applications)) {
+    return createMockQueryBuilder({ getMany: applications });
+  }
+  return createMockQueryBuilder({ getOne: applications });
 };

@@ -12,9 +12,10 @@ import { PropertyPublicDto } from '@/types/properties';
 
 type PropertyCardProps = {
   property: PropertyPublicDto;
+  priority?: boolean;
 };
 
-const PropertyCard = ({ property }: PropertyCardProps) => {
+const PropertyCard = ({ property, priority = false }: PropertyCardProps) => {
   const firstPhoto = property.photos?.[0];
   const hasPhoto = !!firstPhoto;
   const priceText = property.type === 'rent' ? '/month' : '';
@@ -23,7 +24,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
   const area = property.features?.area ? `${property.features.area} m²` : 'N/A';
 
   return (
-    <Link href={`/properties/${property.slug}`}>
+    <Link href={`/properties/${property.slug}`} className="block min-h-[44px]">
       <div className="bg-white rounded-lg shadow-md overflow-hidden w-full max-w-96 mx-auto cursor-pointer hover:shadow-lg transition-all duration-300 hover:border-primary-violet-dark border border-transparent">
         <div className="relative h-48">
           {hasPhoto ? (
@@ -34,6 +35,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover"
+                priority={priority}
               />
               <div className="absolute w-full h-full bg-gradient-to-b from-black/30 to-transparent"></div>
             </>
@@ -59,14 +61,14 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
                   {priceText}
                 </span>
               </p>
-              <h3 className="text-body-lg font-bold text-gray-900 mt-1 line-clamp-1 mb-2">
+              <h2 className="text-body-lg font-bold text-gray-900 mt-1 line-clamp-1 mb-2">
                 {property.title || 'Untitled Property'}
-              </h3>
+              </h2>
               <p className="text-gray-500 text-sm line-clamp-1">
                 {property.city}, {property.country}
               </p>
             </div>
-            <button className="p-2 rounded-full border border-gray-200 hover:bg-primary-violet hover:cursor-pointer transition-all duration-300 group">
+            <button className="p-3 rounded-full border border-gray-200 hover:bg-primary-violet hover:cursor-pointer transition-all duration-300 group min-w-[44px] min-h-[44px] flex items-center justify-center">
               <HeartOutline
                 className="w-5 h-5 text-primary-violet group-hover:text-white transition-all duration-300"
                 aria-label="Add to favorites"

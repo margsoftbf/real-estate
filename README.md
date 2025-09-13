@@ -15,6 +15,38 @@ App still in progress but enough to show skills.
 - 📱 **Fully Responsive** - Seamless experience on desktop, tablet, and mobile devices
 - 🎨 **Modern UI/UX** - Beautiful interface with smooth animations and intuitive design
 
+## 🚀 Tech Stack
+
+### Frontend
+
+- **Framework**: Next.js 15.3.3 with Turbopack
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **State Management**: TanStack Query (React Query)
+- **Forms**: React Hook Form with Zod validation
+- **Animations**: Framer Motion
+- **Icons**: Custom SVG icons + Lucide React
+
+### Backend
+
+- **Framework**: NestJS with TypeScript
+- **Database**: PostgreSQL with TypeORM
+- **Authentication**: Supabase integration
+- **AI Integration**: Google Gemini API for content generation
+- **Testing**: Jest with comprehensive test suite
+- **Deployment**: Vercel-ready configuration
+
+### Infrastructure
+
+- **Database**: PostgreSQL with TypeORM
+- **Authentication**: Supabase integration
+- **Cache**: Redis
+- **Containerization**: Docker & Docker Compose
+- **Deployment**: Vercel
+- **CI/CD**: GitHub Actions
+- **Package Manager**: Yarn
+- **Monorepo**: Organized frontend/backend structure
+
 ## 🌐 Live Demo
 
 **Live Application**: [https://real-estate.marcingarski.com/](https://real-estate.marcingarski.com/)
@@ -68,37 +100,6 @@ _🤖 **AI-Powered Feature**: Generate professional property descriptions using 
 
 _The application is fully responsive and works seamlessly on all devices (mobile screenshots available upon request)_
 
-## 🚀 Tech Stack
-
-### Frontend
-
-- **Framework**: Next.js 15.3.3 with Turbopack
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **State Management**: TanStack Query (React Query)
-- **Forms**: React Hook Form with Zod validation
-- **Animations**: Framer Motion
-- **Icons**: Custom SVG icons + Lucide React
-
-### Backend
-
-- **Framework**: NestJS with TypeScript
-- **Database**: PostgreSQL with TypeORM
-- **Authentication**: Supabase integration
-- **AI Integration**: Google Gemini API for content generation
-- **Testing**: Jest with comprehensive test suite
-- **Deployment**: Vercel-ready configuration
-
-### Infrastructure
-
-- **Database**: PostgreSQL with TypeORM
-- **Authentication**: Supabase integration
-- **Cache**: Redis
-- **Containerization**: Docker & Docker Compose
-- **Deployment**: Vercel
-- **CI/CD**: GitHub Actions
-- **Package Manager**: Yarn
-- **Monorepo**: Organized frontend/backend structure
 
 ## 🏗️ Quick Start
 

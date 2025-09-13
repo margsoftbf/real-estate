@@ -31,7 +31,7 @@ const Breadcrumbs = ({ items, className = '' }: BreadcrumbsProps) => {
             <span
               className={
                 index === items.length - 1
-                  ? 'text-primary-violet font-medium'
+                  ? 'text-primary-violet-dark font-medium'
                   : 'text-gray-600'
               }
             >

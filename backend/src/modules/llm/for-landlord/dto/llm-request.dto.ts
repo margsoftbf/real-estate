@@ -1,13 +1,12 @@
 import {
+  IsNumber,
   IsObject,
   IsOptional,
   IsString,
-  IsNumber,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { LlmOptions, LlmRequestData } from '../../llm.interface';
-
 
 export class LlmRequestDataDto implements LlmRequestData {
   @IsString()

@@ -84,9 +84,10 @@ const Hero = () => {
               src={heroMapImage}
               alt="Property locations map"
               className="absolute inset-0 w-full h-full object-cover rounded-none"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 1024px) 0vw, 50vw"
               priority
               fill
+              fetchPriority="high"
             />
             <DotOutlineInsideBold className="absolute z-30 right-64 top-20 w-16 h-16" />
             <HouseDot className="absolute z-30 right-56 top-88 w-16 h-24" />
@@ -94,7 +95,7 @@ const Hero = () => {
 
             {!isLoadingProperties && mockProperty1 && (
               <div className="absolute top-40 left-2 z-40 transform scale-80">
-                <PropertyCard property={mockProperty1} />
+                <PropertyCard property={mockProperty1} priority={true} />
               </div>
             )}
 

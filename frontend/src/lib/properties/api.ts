@@ -2,134 +2,89 @@ import { BaseApiClient } from '@/lib/base-api';
 import { BasePaginatedResponse } from '@/types/api';
 import { PropertyPublicDto } from '@/types/properties/public-types';
 
+export interface PropertyFilters {
+  [key: string]: string | number | boolean | null | undefined;
+  minPrice?: number;
+  maxPrice?: number;
+  city?: string;
+  minBedrooms?: number;
+  maxBedrooms?: number;
+  minBathrooms?: number;
+  maxBathrooms?: number;
+  minArea?: number;
+  maxArea?: number;
+  minParkingSpaces?: number;
+  maxParkingSpaces?: number;
+  minYearBuilt?: number;
+  maxYearBuilt?: number;
+  homeType?: 'house' | 'condo' | 'apartment' | 'townhouse' | 'studio';
+  laundry?: 'in-unit' | 'shared' | 'none';
+  heating?: 'central' | 'electric' | 'gas' | 'oil' | 'none';
+  furnished?: boolean;
+  petsAllowed?: boolean;
+  smokingAllowed?: boolean;
+  balcony?: boolean;
+  garden?: boolean;
+  garage?: boolean;
+  elevator?: boolean;
+  airConditioning?: boolean;
+  dishwasher?: boolean;
+  washerDryer?: boolean;
+  internet?: boolean;
+  cable?: boolean;
+  isPopular?: boolean;
+}
+
 export interface PropertyQuery {
   page?: number;
   limit?: number;
   sortBy?: string;
   search?: string;
-  filter?: {
-    type?: string;
-    city?: string;
-    country?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    isPopular?: boolean;
-    'features.bedrooms'?: number;
-    'features.minBedrooms'?: number;
-    'features.maxBedrooms'?: number;
-    'features.bathrooms'?: number;
-    'features.minBathrooms'?: number;
-    'features.maxBathrooms'?: number;
-    'features.minArea'?: number;
-    'features.maxArea'?: number;
-    'features.parkingSpaces'?: number;
-    'features.minParkingSpaces'?: number;
-    'features.maxParkingSpaces'?: number;
-    'features.homeType'?:
-      | 'house'
-      | 'condo'
-      | 'apartment'
-      | 'townhouse'
-      | 'studio';
-    'features.laundry'?: 'in-unit' | 'shared' | 'none';
-    'features.heating'?: 'central' | 'electric' | 'gas' | 'oil' | 'none';
-    'features.minYearBuilt'?: number;
-    'features.maxYearBuilt'?: number;
-    'features.furnished'?: boolean;
-    'features.petsAllowed'?: boolean;
-    'features.smokingAllowed'?: boolean;
-    'features.balcony'?: boolean;
-    'features.garden'?: boolean;
-    'features.garage'?: boolean;
-    'features.elevator'?: boolean;
-    'features.airConditioning'?: boolean;
-    'features.dishwasher'?: boolean;
-    'features.washerDryer'?: boolean;
-    'features.internet'?: boolean;
-    'features.cable'?: boolean;
-  };
+  filters?: PropertyFilters;
 }
 
-class PropertiesApi extends BaseApiClient {
-  async findAll(
-    query: PropertyQuery = {}
-  ): Promise<BasePaginatedResponse<PropertyPublicDto>> {
-    const searchParams = new URLSearchParams();
+const buildQueryParams = (query: PropertyQuery): string => {
+  const searchParams = new URLSearchParams();
 
-    if (query.page) searchParams.append('page', query.page.toString());
-    if (query.limit) searchParams.append('limit', query.limit.toString());
-    if (query.sortBy) searchParams.append('sortBy', query.sortBy);
-    if (query.search) searchParams.append('search', query.search);
+  if (query.page) searchParams.append('page', query.page.toString());
+  if (query.limit) searchParams.append('limit', query.limit.toString());
+  if (query.sortBy) searchParams.append('sortBy', query.sortBy);
+  if (query.search) searchParams.append('search', query.search);
 
-    if (query.filter) {
-      Object.entries(query.filter).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
+  if (query.filters) {
+    Object.entries(query.filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        if (key.startsWith('min') || key.startsWith('max')) {
+          const filterKey = key.startsWith('min') 
+            ? `filter.${key.replace('min', '').toLowerCase()}$gte`
+            : `filter.${key.replace('max', '').toLowerCase()}$lte`;
+          searchParams.append(filterKey, value.toString());
+        } else {
           searchParams.append(`filter.${key}`, value.toString());
         }
-      });
-    }
+      }
+    });
+  }
 
-    const queryString = searchParams.toString();
+  return searchParams.toString();
+};
+
+class PropertiesApi extends BaseApiClient {
+  async findAll(query: PropertyQuery = {}): Promise<BasePaginatedResponse<PropertyPublicDto>> {
+    const queryString = buildQueryParams(query);
     const endpoint = `/properties${queryString ? `?${queryString}` : ''}`;
-
     return this.request<BasePaginatedResponse<PropertyPublicDto>>(endpoint);
   }
 
-  async findRentProperties(
-    query: Record<string, string | number | boolean | undefined> = {}
-  ): Promise<BasePaginatedResponse<PropertyPublicDto>> {
-    const searchParams = new URLSearchParams();
-
-    if (query.page) searchParams.append('page', String(query.page));
-    if (query.limit) searchParams.append('limit', String(query.limit));
-    if (query.sortBy) searchParams.append('sortBy', String(query.sortBy));
-    if (query.search) searchParams.append('search', String(query.search));
-
-    Object.entries(query).forEach(([key, value]) => {
-      if (
-        key !== 'page' &&
-        key !== 'limit' &&
-        key !== 'sortBy' &&
-        key !== 'search' &&
-        value !== undefined &&
-        value !== null
-      ) {
-        searchParams.append(key, String(value));
-      }
-    });
-
-    const queryString = searchParams.toString();
+  async findRentProperties(query: PropertyQuery = {}): Promise<BasePaginatedResponse<PropertyPublicDto>> {
+    const queryString = buildQueryParams(query);
     const endpoint = `/properties/rent${queryString ? `?${queryString}` : ''}`;
-
     return this.request<BasePaginatedResponse<PropertyPublicDto>>(endpoint);
   }
 
-  async findBuyProperties(
-    query: Record<string, string | number | boolean | undefined> = {}
-  ): Promise<BasePaginatedResponse<PropertyPublicDto>> {
-    const searchParams = new URLSearchParams();
-
-    if (query.page) searchParams.append('page', String(query.page));
-    if (query.limit) searchParams.append('limit', String(query.limit));
-    if (query.sortBy) searchParams.append('sortBy', String(query.sortBy));
-    if (query.search) searchParams.append('search', String(query.search));
-
-    Object.entries(query).forEach(([key, value]) => {
-      if (
-        key !== 'page' &&
-        key !== 'limit' &&
-        key !== 'sortBy' &&
-        key !== 'search' &&
-        value !== undefined &&
-        value !== null
-      ) {
-        searchParams.append(key, String(value));
-      }
-    });
-
-    const queryString = searchParams.toString();
+  async findBuyProperties(query: PropertyQuery = {}): Promise<BasePaginatedResponse<PropertyPublicDto>> {
+    const queryString = buildQueryParams(query);
     const endpoint = `/properties/buy${queryString ? `?${queryString}` : ''}`;
-
     return this.request<BasePaginatedResponse<PropertyPublicDto>>(endpoint);
   }
 

@@ -62,7 +62,7 @@ const PropertyOwner = ({ property }: PropertyOwnerProps) => {
           >
             <a
               href={`${item.label === 'Phone number' ? `tel:${item.value}` : `mailto:${item.value}`}`}
-              className="flex items-center font-semibold text-sm text-primary-violet hover:text-primary-violet-dark"
+              className="flex items-center font-semibold text-sm text-primary-violet-dark hover:text-primary-violet"
             >
               {item.icon}
               {item.value}

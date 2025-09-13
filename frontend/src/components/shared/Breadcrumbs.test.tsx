@@ -69,6 +69,6 @@ describe('Breadcrumbs', () => {
     render(<Breadcrumbs items={items} />);
     
     const currentItem = screen.getByText('Current');
-    expect(currentItem).toHaveClass('text-primary-violet', 'font-medium');
+    expect(currentItem).toHaveClass('text-primary-violet-dark', 'font-medium');
   });
 });

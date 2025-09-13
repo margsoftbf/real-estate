@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { User, UserRole } from '../entities/user.entity';
+import { User } from '../entities/user.entity';
 import { UsersUserController } from './users.user.controller';
 import { UsersUserService } from './users.user.service';
 import { JwtAuthGuard } from '../../auth/jwt';
@@ -13,10 +13,10 @@ import { createMockUser } from '../../../../test/test-helpers';
 describe('UsersUserController (e2e)', () => {
   let app: INestApplication;
   let userRepository: jest.Mocked<Repository<User>>;
-  let jwtService: JwtService;
+  let _jwtService: JwtService;
 
   const mockUser = createMockUser();
-  const mockToken = 'mock.jwt.token';
+  const _mockToken = 'mock.jwt.token';
 
   beforeEach(async () => {
     const mockUserRepository = {
@@ -57,7 +57,7 @@ describe('UsersUserController (e2e)', () => {
     await app.init();
 
     userRepository = module.get(getRepositoryToken(User));
-    jwtService = module.get(JwtService);
+    _jwtService = module.get(JwtService);
   });
 
   afterAll(async () => {
@@ -97,9 +97,7 @@ describe('UsersUserController (e2e)', () => {
     it('should return 404 when user not found', async () => {
       userRepository.findOne.mockResolvedValue(null);
 
-      await request(app.getHttpServer())
-        .get('/users/userinfo')
-        .expect(404);
+      await request(app.getHttpServer()).get('/users/userinfo').expect(404);
     });
   });
 
@@ -112,7 +110,7 @@ describe('UsersUserController (e2e)', () => {
 
     it('should update user info', async () => {
       const updatedUser = { ...mockUser, ...updateData };
-      
+
       userRepository.findOne
         .mockResolvedValueOnce(mockUser)
         .mockResolvedValueOnce(updatedUser);
@@ -139,7 +137,7 @@ describe('UsersUserController (e2e)', () => {
 
     it('should validate request body', async () => {
       userRepository.findOne.mockResolvedValue(mockUser);
-      
+
       const invalidData = {
         firstName: '',
         email: 'invalid-email',

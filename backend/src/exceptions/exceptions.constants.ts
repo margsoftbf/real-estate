@@ -112,4 +112,23 @@ export class ExceptionConstants {
       message: 'User account is inactive',
     },
   };
+
+  public static readonly ApplicationsErrors = {
+    applicationNotFound: {
+      code: 80_001,
+      message: 'Application not found',
+    },
+    applicationAlreadyExists: {
+      code: 80_002,
+      message: 'Application already exists',
+    },
+    applicationPropertyNotFound: {
+      code: 80_003,
+      message: 'Application property not found',
+    },
+    applicationPropertyNotAvailable: {
+      code: 80_004,
+      message: 'Application property is not available',
+    },
+  };
 }
