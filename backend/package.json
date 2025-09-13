@@ -13,7 +13,6 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "vercel-build": "yarn build",
     "typeorm": "ts-node --project ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "yarn run typeorm migration:generate -d ./src/db/data-source.ts",
     "migration:run": "yarn run typeorm migration:run --transaction each -d ./src/db/data-source.ts",

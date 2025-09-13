@@ -1,18 +1,19 @@
 {
   "version": 2,
-  "buildCommand": "yarn build",
-  "devCommand": "yarn start:dev",
-  "installCommand": "yarn install",
-  "outputDirectory": "dist",
-  "functions": {
-    "dist/main.js": {
-      "maxDuration": 30
+  "builds": [
+    {
+      "src": "src/main.ts",
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "runtime": "nodejs18.x"
+      }
     }
-  },
+  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/dist/main.js",
+      "dest": "src/main.ts",
       "headers": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
