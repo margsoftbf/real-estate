@@ -1,10 +1,9 @@
-import { propertiesApi } from '@/lib/properties/api';
-import { usePropertySearch, UsePropertySearchReturn } from './usePropertySearch';
+import { usePropertySearchWithURL } from './usePropertySearchWithURL';
 
-export const useBuy = (): UsePropertySearchReturn => {
-  return usePropertySearch({
-    apiCall: (query) => propertiesApi.findBuyProperties(query),
+export const useBuy = () => {
+  return usePropertySearchWithURL({
+    type: 'buy',
     routePath: 'buy',
-    enableInitialLoad: false,
+    defaultLimit: 12,
   });
 };

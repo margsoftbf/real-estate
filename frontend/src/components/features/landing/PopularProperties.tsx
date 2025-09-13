@@ -20,7 +20,7 @@ const PopularProperties = () => {
       try {
         setIsLoading(true);
         const response = await propertiesApi.findAll({
-          filter: {
+          filters: {
             isPopular: true,
           },
           limit: 6,
