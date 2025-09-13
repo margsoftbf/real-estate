@@ -20,7 +20,7 @@ import {
 import { PropertyPublicService } from '../../properties/for-public/property.public.service';
 import { UsersUserService } from '../../users/for-user/users.user.service';
 import { generateRandomString } from '../../../utils/utils';
-import { ExceptionConstants } from '@/exceptions';
+import { ExceptionConstants } from '../../../exceptions/exceptions.constants';
 
 export const applicationsTenantPaginateConfig: PaginateConfig<Application> = {
   sortableColumns: ['createdAt', 'status', 'proposedRent'],
