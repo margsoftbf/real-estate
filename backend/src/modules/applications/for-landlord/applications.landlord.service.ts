@@ -11,7 +11,7 @@ import { Application, ApplicationStatus } from '../entities/application.entity';
 import { ApplicationsLandlordUpdateDto } from './dto/applications-landlord-update.dto';
 import { PropertyAvailabilityStatus } from '../../properties/entities/property.entity';
 import { PropertyLandlordService } from '../../properties/for-landlord/property.landlord.service';
-import { ExceptionConstants } from '@/exceptions';
+import { ExceptionConstants } from '../../../exceptions/exceptions.constants';
 import {
   ApplicationsLandlordReadManyDto,
   ApplicationsLandlordReadManyResponseDto,

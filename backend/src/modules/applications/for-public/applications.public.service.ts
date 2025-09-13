@@ -9,7 +9,7 @@ import { Application, ApplicationStatus } from '../entities/application.entity';
 import { ApplicationsPublicCreateDto } from './dto/applications-public-create.dto';
 import { Property } from '../../properties/entities/property.entity';
 import { generateRandomString } from '../../../utils/utils';
-import { ExceptionConstants } from '@/exceptions';
+import { ExceptionConstants } from '../../../exceptions/exceptions.constants';
 
 @Injectable()
 export class ApplicationsPublicService {
