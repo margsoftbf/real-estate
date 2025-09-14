@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/contexts/ToastContext';
 import {
   propertiesLandlordApi,
@@ -11,14 +12,12 @@ import {
   validateUpdateListing,
   validateField,
 } from '@/validation/listingValidation';
+import { propertyQueryKeys } from '@/lib/properties/query-keys';
 
 interface FormState {
   formData: PropertyLandlordUpdateDto;
   validationErrors: Record<string, string>;
-  isSubmitting: boolean;
-  isLoading: boolean;
   property: PropertyLandlordDto | null;
-  error: string | null;
 }
 
 interface InputHandlers {
@@ -42,7 +41,11 @@ interface UseEditListingForm
   extends FormState,
     InputHandlers,
     PhotoHandlers,
-    FormActions {}
+    FormActions {
+  isSubmitting: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
 
 const initialFormData: PropertyLandlordUpdateDto = {
   type: PropertyType.RENT,
@@ -63,55 +66,121 @@ export const useEditListing = (
   slug: string | string[] | undefined
 ): UseEditListingForm => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { showSuccess, showError } = useToast();
 
-  const [property, setProperty] = useState<PropertyLandlordDto | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] =
     useState<PropertyLandlordUpdateDto>(initialFormData);
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const propertySlug = typeof slug === 'string' ? slug : undefined;
+
+  const {
+    data: property,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: propertyQueryKeys.landlord.detail(propertySlug || ''),
+    queryFn: () => propertiesLandlordApi.findOne(propertySlug!),
+    enabled: !!propertySlug,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const updatePropertyMutation = useMutation({
+    mutationFn: (data: PropertyLandlordUpdateDto) =>
+      propertiesLandlordApi.update(propertySlug!, data),
+    onSuccess: (updatedProperty) => {
+      queryClient.invalidateQueries({ queryKey: propertyQueryKeys.landlord.all() });
+      queryClient.setQueryData(
+        propertyQueryKeys.landlord.detail(propertySlug!),
+        updatedProperty
+      );
+      showSuccess('Listing updated successfully!');
+      router.push('/landlord/my-listings');
+    },
+    onError: () => {
+      showError('Failed to update listing. Please try again.');
+    },
+  });
+
+  const updatePriceMutation = useMutation({
+    mutationFn: ({ price, reason }: { price: number; reason: string }) =>
+      propertiesLandlordApi.update(propertySlug!, {
+        price,
+        priceChangeReason: reason,
+      }),
+    onMutate: async ({ price }) => {
+      await queryClient.cancelQueries({
+        queryKey: propertyQueryKeys.landlord.detail(propertySlug!),
+      });
+
+      const previousProperty = queryClient.getQueryData(
+        propertyQueryKeys.landlord.detail(propertySlug!)
+      );
+
+      queryClient.setQueryData(
+        propertyQueryKeys.landlord.detail(propertySlug!),
+        (old: PropertyLandlordDto | undefined) =>
+          old ? { ...old, price } : undefined
+      );
+
+      setFormData(prev => ({ ...prev, price }));
+
+      return { previousProperty };
+    },
+    onSuccess: (updatedProperty) => {
+      queryClient.invalidateQueries({ queryKey: propertyQueryKeys.landlord.all() });
+      queryClient.setQueryData(
+        propertyQueryKeys.landlord.detail(propertySlug!),
+        updatedProperty
+      );
+      showSuccess(`Price updated to $${updatedProperty.price.toLocaleString()} successfully!`);
+    },
+    onError: (error: unknown, variables, context) => {
+      if (context?.previousProperty) {
+        queryClient.setQueryData(
+          propertyQueryKeys.landlord.detail(propertySlug!),
+          context.previousProperty
+        );
+        setFormData(prev => ({ ...prev, price: (context.previousProperty as PropertyLandlordDto).price }));
+      }
+
+      console.error('Price update error:', error);
+      const errorMessage = error && typeof error === 'object' && 'response' in error
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
+        : undefined;
+      showError(
+        errorMessage || 'Failed to update price. Please try again.'
+      );
+    },
+  });
 
   useEffect(() => {
-    const fetchProperty = async () => {
-      if (!slug || typeof slug !== 'string') return;
-
-      try {
-        setIsLoading(true);
-        const propertyData = await propertiesLandlordApi.findOne(slug);
-        setProperty(propertyData);
-        setFormData({
-          type: propertyData.type,
-          price: propertyData.price,
-          city: propertyData.city,
-          country: propertyData.country,
-          latitude:
-            typeof propertyData.latitude === 'string'
-              ? parseFloat(propertyData.latitude)
-              : propertyData.latitude,
-          longitude:
-            typeof propertyData.longitude === 'string'
-              ? parseFloat(propertyData.longitude)
-              : propertyData.longitude,
-          title: propertyData.title || '',
-          description: propertyData.description || '',
-          photos: propertyData.photos.length > 0 ? propertyData.photos : [''],
-          features: propertyData.features || {},
-          isPopular: propertyData.isPopular,
-          isActive: propertyData.isActive,
-        });
-      } catch {
-        setError('Failed to load property');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProperty();
-  }, [slug]);
+    if (property) {
+      setFormData({
+        type: property.type,
+        price: property.price,
+        city: property.city,
+        country: property.country,
+        latitude:
+          typeof property.latitude === 'string'
+            ? parseFloat(property.latitude)
+            : property.latitude,
+        longitude:
+          typeof property.longitude === 'string'
+            ? parseFloat(property.longitude)
+            : property.longitude,
+        title: property.title || '',
+        description: property.description || '',
+        photos: property.photos.length > 0 ? property.photos : [''],
+        features: property.features || {},
+        isPopular: property.isPopular,
+        isActive: property.isActive,
+      });
+    }
+  }, [property]);
 
   const handleChange = (field: string, value: string | number | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -233,41 +302,13 @@ export const useEditListing = (
   };
 
   const handlePriceChange = async (newPrice: number, reason: string) => {
-    if (!slug || typeof slug !== 'string') return;
-    
-    setIsSubmitting(true);
-    
-    try {
-      await propertiesLandlordApi.update(slug, {
-        price: newPrice,
-        priceChangeReason: reason,
-      });
-      
-      // Update the property state with new price
-      if (property) {
-        setProperty({ ...property, price: newPrice });
-      }
-      
-      // Update form data
-      setFormData(prev => ({ ...prev, price: newPrice }));
-      
-      showSuccess(`Price updated to $${newPrice.toLocaleString()} successfully!`);
-    } catch (error: unknown) {
-      console.error('Price update error:', error);
-      const errorMessage = error && typeof error === 'object' && 'response' in error 
-        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-        : undefined;
-      showError(
-        errorMessage || 'Failed to update price. Please try again.'
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    if (!propertySlug) return;
+    updatePriceMutation.mutate({ price: newPrice, reason });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!slug || typeof slug !== 'string') return;
+    if (!propertySlug) return;
 
     const filteredPhotos =
       formData.photos?.filter((photo) => photo.trim() !== '') || [];
@@ -295,27 +336,17 @@ export const useEditListing = (
       return;
     }
 
-    setIsSubmitting(true);
     setValidationErrors({});
-
-    try {
-      await propertiesLandlordApi.update(slug, dataToValidate);
-      showSuccess('Listing updated successfully!');
-      router.push('/landlord/my-listings');
-    } catch {
-      showError('Failed to update listing. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    updatePropertyMutation.mutate(dataToValidate);
   };
 
   return {
     formData,
     validationErrors,
-    isSubmitting,
+    isSubmitting: updatePropertyMutation.isPending || updatePriceMutation.isPending,
     isLoading,
-    property,
-    error,
+    property: property || null,
+    error: error ? 'Failed to load property' : null,
 
     handleChange,
     handleCity,
@@ -324,7 +355,7 @@ export const useEditListing = (
     handlePhoto,
     addPhoto,
     removePhoto,
-    
+
     handlePriceChange,
     handleSubmit,
   };

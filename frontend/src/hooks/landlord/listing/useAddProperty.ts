@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/contexts/ToastContext';
 import {
   propertiesLandlordApi,
@@ -12,11 +13,11 @@ import {
   validateCreateListing,
   validateField,
 } from '@/validation/listingValidation';
+import { propertyQueryKeys } from '@/lib/properties/query-keys';
 
 interface FormState {
   formData: PropertyLandlordCreateDto;
   validationErrors: Record<string, string>;
-  isSubmitting: boolean;
 }
 
 interface InputHandlers {
@@ -46,7 +47,9 @@ interface AIData {
   price?: number;
 }
 
-interface UseAddPropertyForm extends FormState, InputHandlers, PhotoHandlers, FormActions {}
+interface UseAddPropertyForm extends FormState, InputHandlers, PhotoHandlers, FormActions {
+  isSubmitting: boolean;
+}
 
 const initialFormData: PropertyLandlordCreateDto = {
   type: PropertyType.RENT,
@@ -85,6 +88,7 @@ const initialFormData: PropertyLandlordCreateDto = {
 
 export const useAddProperty = (): UseAddPropertyForm => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { showSuccess, showError } = useToast();
 
   const [formData, setFormData] =
@@ -92,7 +96,23 @@ export const useAddProperty = (): UseAddPropertyForm => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const createPropertyMutation = useMutation({
+    mutationFn: (data: PropertyLandlordCreateDto) =>
+      propertiesLandlordApi.create(data),
+    onSuccess: (newProperty) => {
+      queryClient.invalidateQueries({ queryKey: propertyQueryKeys.landlord.all() });
+      queryClient.setQueryData(
+        propertyQueryKeys.landlord.detail(newProperty.slug),
+        newProperty
+      );
+      showSuccess('Listing created successfully!');
+      router.push('/landlord/my-listings');
+    },
+    onError: () => {
+      showError('Failed to create listing. Please try again.');
+    },
+  });
 
   const handleChange = (field: string, value: string | number | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -119,7 +139,6 @@ export const useAddProperty = (): UseAddPropertyForm => {
       }
     }
   };
-
 
   const handleCity = (city: string, coords?: { lat: number; lng: number }) => {
     setFormData((prev) => ({
@@ -186,7 +205,7 @@ export const useAddProperty = (): UseAddPropertyForm => {
         return;
       }
     }
-    
+
     setValidationErrors((prev) => {
       const { [fieldKey]: _, ...rest } = prev;
       void _;
@@ -257,39 +276,28 @@ export const useAddProperty = (): UseAddPropertyForm => {
       return;
     }
 
-    setIsSubmitting(true);
     setValidationErrors({});
-
-    try {
-      await propertiesLandlordApi.create(dataToValidate);
-      showSuccess('Listing created successfully!');
-      router.push('/landlord/my-listings');
-    } catch {
-      showError('Failed to create listing. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    createPropertyMutation.mutate(dataToValidate);
   };
 
   const resetForm = () => {
     setFormData(initialFormData);
     setValidationErrors({});
-    setIsSubmitting(false);
   };
 
   return {
     formData,
     validationErrors,
-    isSubmitting,
-    
+    isSubmitting: createPropertyMutation.isPending,
+
     handleChange,
     handleCity,
     handleFeature,
-    
+
     handlePhoto,
     addPhoto,
     removePhoto,
-    
+
     handleSubmit,
     handleAI,
     resetForm,

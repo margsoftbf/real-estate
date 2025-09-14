@@ -2,6 +2,7 @@ import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { propertiesApi, PropertyFilters } from '@/lib/properties/api';
 import { PropertyPublicDto } from '@/types/properties/public-types';
 import { BasePaginatedResponse } from '@/types/api';
+import { propertyQueryKeys } from '@/lib/properties/query-keys';
 
 export interface UsePropertiesQueryOptions {
   page?: number;
@@ -16,30 +17,41 @@ export const usePropertiesQuery = (options: UsePropertiesQueryOptions = {}) => {
   const { page = 1, limit = 12, enabled = true, ...queryParams } = options;
 
   return useQuery({
-    queryKey: ['properties', { page, limit, ...queryParams }],
+    queryKey: propertyQueryKeys.list({ page, limit, ...queryParams }),
     queryFn: () => propertiesApi.findAll({ page, limit, ...queryParams }),
     enabled,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5 minut - dane są świeże przez 5 minut
   });
 };
 
-export const useRentPropertiesQuery = (options: UsePropertiesQueryOptions = {}) => {
+export const useRentPropertiesQuery = (
+  options: UsePropertiesQueryOptions = {}
+) => {
   const { page = 1, limit = 12, enabled = true, ...queryParams } = options;
 
+  const queryKey = propertyQueryKeys.rent.list({ page, limit, ...queryParams });
+
   return useQuery({
-    queryKey: ['properties', 'rent', { page, limit, ...queryParams }],
-    queryFn: () => propertiesApi.findRentProperties({ page, limit, ...queryParams }),
+    queryKey,
+    queryFn: () =>
+      propertiesApi.findRentProperties({ page, limit, ...queryParams }),
     enabled,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 2 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
   });
 };
 
-export const useBuyPropertiesQuery = (options: UsePropertiesQueryOptions = {}) => {
+export const useBuyPropertiesQuery = (
+  options: UsePropertiesQueryOptions = {}
+) => {
   const { page = 1, limit = 12, enabled = true, ...queryParams } = options;
 
   return useQuery({
-    queryKey: ['properties', 'buy', { page, limit, ...queryParams }],
-    queryFn: () => propertiesApi.findBuyProperties({ page, limit, ...queryParams }),
+    queryKey: propertyQueryKeys.buy.list({ page, limit, ...queryParams }),
+    queryFn: () =>
+      propertiesApi.findBuyProperties({ page, limit, ...queryParams }),
     enabled,
     staleTime: 5 * 60 * 1000,
   });
@@ -47,7 +59,7 @@ export const useBuyPropertiesQuery = (options: UsePropertiesQueryOptions = {}) =
 
 export const usePropertyBySlugQuery = (slug: string, enabled = true) => {
   return useQuery({
-    queryKey: ['properties', 'slug', slug],
+    queryKey: propertyQueryKeys.detail(slug),
     queryFn: () => propertiesApi.findBySlug(slug),
     enabled: enabled && !!slug,
     staleTime: 10 * 60 * 1000,
@@ -72,8 +84,13 @@ export const useInfinitePropertiesQuery = (
   };
 
   return useInfiniteQuery({
-    queryKey: ['properties', type, 'infinite', { limit, ...queryParams }],
-    queryFn: ({ pageParam = 1 }) => 
+    queryKey:
+      type === 'rent'
+        ? propertyQueryKeys.infinite.rent({ limit, ...queryParams })
+        : type === 'buy'
+          ? propertyQueryKeys.infinite.buy({ limit, ...queryParams })
+          : propertyQueryKeys.infinite.list({ limit, ...queryParams }),
+    queryFn: ({ pageParam = 1 }) =>
       queryFn(type)({ page: pageParam, limit, ...queryParams }),
     enabled,
     initialPageParam: 1,
@@ -90,17 +107,24 @@ export const usePropertySearch = (
   type: 'all' | 'rent' | 'buy' = 'all',
   initialOptions: UsePropertiesQueryOptions = {}
 ) => {
-  const rentQuery = useRentPropertiesQuery(type === 'rent' ? initialOptions : { ...initialOptions, enabled: false });
-  const buyQuery = useBuyPropertiesQuery(type === 'buy' ? initialOptions : { ...initialOptions, enabled: false });
-  const allQuery = usePropertiesQuery(type === 'all' ? initialOptions : { ...initialOptions, enabled: false });
+  const rentQuery = useRentPropertiesQuery(
+    type === 'rent' ? initialOptions : { ...initialOptions, enabled: false }
+  );
+  const buyQuery = useBuyPropertiesQuery(
+    type === 'buy' ? initialOptions : { ...initialOptions, enabled: false }
+  );
+  const allQuery = usePropertiesQuery(
+    type === 'all' ? initialOptions : { ...initialOptions, enabled: false }
+  );
 
-  const query = type === 'rent' ? rentQuery : type === 'buy' ? buyQuery : allQuery;
+  const query =
+    type === 'rent' ? rentQuery : type === 'buy' ? buyQuery : allQuery;
 
   return {
     ...query,
     properties: query.data?.data || [],
-    totalPages: query.data?.meta.totalPages || 1,
-    currentPage: query.data?.meta.currentPage || 1,
-    totalItems: query.data?.meta.totalItems || 0,
+    totalPages: query.data?.meta?.totalPages || 1,
+    currentPage: query.data?.meta?.currentPage || 1,
+    totalItems: query.data?.meta?.totalItems || 0,
   };
 };

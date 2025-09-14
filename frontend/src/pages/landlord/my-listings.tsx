@@ -3,6 +3,7 @@ import Head from 'next/head';
 import AppLayout from '@/components/layout/AppLayout';
 import { useUser } from '@/hooks/auth/useUser';
 import { useMyListings } from '@/hooks/landlord/useMyListings';
+import { Filters } from '@/types/landlord/filters';
 import LoadingState from '@/components/shared/LoadingState';
 import FilterModal from '@/components/shared/FilterModal';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
@@ -29,16 +30,16 @@ const MyListingsPage = () => {
     showFilters,
     setShowFilters,
     filters,
-    handleFilterChange,
+    setFilters,
     handleClearFilters,
     deleteDialog,
     openDeleteDialog,
     closeDeleteDialog,
     confirmDelete,
     handleSearch,
-    fetchProperties,
+    refetch,
+    setCurrentPage,
     formatPrice,
-    sortProperties,
   } = useMyListings();
 
   if (userLoading) {
@@ -82,57 +83,22 @@ const MyListingsPage = () => {
           totalPages={totalPages}
           searchQuery={searchQuery}
           onDeleteProperty={openDeleteDialog}
-          onPageChange={(page) =>
-            fetchProperties(page, searchQuery, activeTab, filters)
-          }
+          onPageChange={setCurrentPage}
           formatPrice={formatPrice}
-          sortProperties={sortProperties}
-          onRetry={() =>
-            fetchProperties(currentPage, searchQuery, activeTab, filters)
-          }
+          onRetry={refetch}
         />
 
         <FilterModal
           isOpen={showFilters}
           onClose={() => setShowFilters(false)}
           filters={filters}
-          onFilterChange={handleFilterChange}
-          onApplyFilters={() => {
-            fetchProperties(1, searchQuery, activeTab, filters);
+          onApplyFilters={(appliedFilters) => {
+            setFilters(appliedFilters as Filters);
             setShowFilters(false);
           }}
           onClearFilters={() => {
             handleClearFilters();
-            fetchProperties(1, searchQuery, activeTab, {
-              minPrice: '',
-              maxPrice: '',
-              city: '',
-              minBedrooms: '',
-              maxBedrooms: '',
-              minBathrooms: '',
-              maxBathrooms: '',
-              minArea: '',
-              maxArea: '',
-              minParkingSpaces: '',
-              maxParkingSpaces: '',
-              minYearBuilt: '',
-              maxYearBuilt: '',
-              homeType: '',
-              laundry: '',
-              heating: '',
-              furnished: null,
-              petsAllowed: null,
-              smokingAllowed: null,
-              balcony: null,
-              garden: null,
-              garage: null,
-              elevator: null,
-              airConditioning: null,
-              dishwasher: null,
-              washerDryer: null,
-              internet: null,
-              cable: null,
-            });
+            setShowFilters(false);
           }}
         />
 

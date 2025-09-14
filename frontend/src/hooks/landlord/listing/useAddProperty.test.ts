@@ -1,5 +1,7 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useToast } from '@/contexts/ToastContext';
 import { useAddProperty } from './useAddProperty';
@@ -21,6 +23,22 @@ const mockToast = {
   showError: vi.fn(),
 };
 
+// Test wrapper with QueryClient
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+
+  const TestWrapper = ({ children }: { children: React.ReactNode }) =>
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
+
+  TestWrapper.displayName = 'TestWrapper';
+  return TestWrapper;
+};
+
 describe('useAddProperty', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -29,7 +47,9 @@ describe('useAddProperty', () => {
   });
 
   it('should initialize with default form data', () => {
-    const { result } = renderHook(() => useAddProperty());
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
 
     expect(result.current.formData.type).toBe(PropertyType.RENT);
     expect(result.current.formData.price).toBe(0);
@@ -40,7 +60,9 @@ describe('useAddProperty', () => {
   });
 
   it('should handle input changes correctly', () => {
-    const { result } = renderHook(() => useAddProperty());
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
 
     act(() => {
       result.current.handleChange('title', 'Test Property');
@@ -50,8 +72,10 @@ describe('useAddProperty', () => {
   });
 
   it('should handle city selection with coordinates', () => {
-    const { result } = renderHook(() => useAddProperty());
-    const coordinates = { lat: 40.7128, lng: -74.0060 };
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
+    const coordinates = { lat: 40.7128, lng: -74.006 };
 
     act(() => {
       result.current.handleCity('New York', coordinates);
@@ -59,11 +83,13 @@ describe('useAddProperty', () => {
 
     expect(result.current.formData.city).toBe('New York');
     expect(result.current.formData.latitude).toBe(40.7128);
-    expect(result.current.formData.longitude).toBe(-74.0060);
+    expect(result.current.formData.longitude).toBe(-74.006);
   });
 
   it('should handle feature changes correctly', () => {
-    const { result } = renderHook(() => useAddProperty());
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
 
     act(() => {
       result.current.handleFeature('bedrooms', 2);
@@ -73,7 +99,9 @@ describe('useAddProperty', () => {
   });
 
   it('should add photo fields correctly', () => {
-    const { result } = renderHook(() => useAddProperty());
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
 
     act(() => {
       result.current.addPhoto();
@@ -83,7 +111,9 @@ describe('useAddProperty', () => {
   });
 
   it('should remove photo fields correctly', () => {
-    const { result } = renderHook(() => useAddProperty());
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
 
     // First add a photo field
     act(() => {
@@ -99,7 +129,9 @@ describe('useAddProperty', () => {
   });
 
   it('should handle AI generated data correctly', () => {
-    const { result } = renderHook(() => useAddProperty());
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
     const aiData = {
       title: 'AI Generated Title',
       description: 'AI Generated Description',
@@ -111,14 +143,20 @@ describe('useAddProperty', () => {
     });
 
     expect(result.current.formData.title).toBe('AI Generated Title');
-    expect(result.current.formData.description).toBe('AI Generated Description');
+    expect(result.current.formData.description).toBe(
+      'AI Generated Description'
+    );
     expect(result.current.formData.price).toBe(1500);
-    expect(mockToast.showSuccess).toHaveBeenCalledWith('AI description applied!');
+    expect(mockToast.showSuccess).toHaveBeenCalledWith(
+      'AI description applied!'
+    );
   });
 
   it('should handle form submission successfully', async () => {
-    const { result } = renderHook(() => useAddProperty());
-    
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
+
     // Set up valid form data
     act(() => {
       result.current.handleChange('title', 'Test Property Title');
@@ -137,25 +175,35 @@ describe('useAddProperty', () => {
     });
 
     expect(propertiesLandlordApi.create).toHaveBeenCalled();
-    expect(mockToast.showSuccess).toHaveBeenCalledWith('Listing created successfully!');
+    expect(mockToast.showSuccess).toHaveBeenCalledWith(
+      'Listing created successfully!'
+    );
     expect(mockRouter.push).toHaveBeenCalledWith('/landlord/my-listings');
   });
 
   it('should handle form submission with validation errors', async () => {
-    const { result } = renderHook(() => useAddProperty());
-    
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
+
     const mockEvent = { preventDefault: vi.fn() } as unknown as React.FormEvent;
 
     await act(async () => {
       await result.current.handleSubmit(mockEvent);
     });
 
-    expect(Object.keys(result.current.validationErrors).length).toBeGreaterThan(0);
-    expect(mockToast.showError).toHaveBeenCalledWith('Please fix the validation errors before submitting');
+    expect(Object.keys(result.current.validationErrors).length).toBeGreaterThan(
+      0
+    );
+    expect(mockToast.showError).toHaveBeenCalledWith(
+      'Please fix the validation errors before submitting'
+    );
   });
 
   it('should reset form correctly', () => {
-    const { result } = renderHook(() => useAddProperty());
+    const { result } = renderHook(() => useAddProperty(), {
+      wrapper: createWrapper(),
+    });
 
     // Make some changes
     act(() => {
