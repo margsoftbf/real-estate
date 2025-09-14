@@ -13,7 +13,6 @@ import { useRent } from '@/hooks/properties';
 import PropertySearchSection from '@/components/shared/Property/PropertySearchSection';
 import { PropertyFilters } from '@/lib/properties/api';
 
-
 const convertToModalFilters = (filters: PropertyFilters) => ({
   minPrice: filters.minPrice?.toString() || '',
   maxPrice: filters.maxPrice?.toString() || '',
@@ -46,22 +45,27 @@ const convertToModalFilters = (filters: PropertyFilters) => ({
 });
 
 // Convert FilterModal format back to PropertyFilters
-const convertFromModalFilters = (modalFilters: Record<string, string | boolean | null>): PropertyFilters => {
-  const filters: Record<string, string | number | boolean | null | undefined> = {};
+const convertFromModalFilters = (
+  modalFilters: Record<string, string | boolean | null>
+): PropertyFilters => {
+  const filters: PropertyFilters = {};
 
   Object.entries(modalFilters).forEach(([key, value]) => {
-    if (value !== '' && value !== null) {
+    if (value !== '' && value !== null && value !== undefined) {
       if (key.startsWith('min') || key.startsWith('max')) {
-        filters[key] = typeof value === 'string' ? Number(value) : undefined;
+        const numValue = typeof value === 'string' ? Number(value) : value;
+        if (!isNaN(Number(numValue))) {
+          (filters as Record<string, number>)[key] = Number(numValue);
+        }
       } else if (typeof value === 'boolean') {
-        filters[key] = value;
-      } else {
-        filters[key] = value;
+        (filters as Record<string, boolean>)[key] = value;
+      } else if (typeof value === 'string' && value !== '') {
+        (filters as Record<string, string>)[key] = value;
       }
     }
   });
 
-  return filters as PropertyFilters;
+  return filters;
 };
 
 const RentPage = () => {
@@ -81,19 +85,22 @@ const RentPage = () => {
 
   const [searchInput, setSearchInput] = React.useState(currentSearch);
   const [isFilterModalOpen, setIsFilterModalOpen] = React.useState(false);
-  const [modalFilters, setModalFilters] = React.useState(convertToModalFilters(currentFilters));
+  const [modalFilters, setModalFilters] = React.useState(
+    convertToModalFilters(currentFilters)
+  );
 
   useEffect(() => {
     setSearchInput(currentSearch);
   }, [currentSearch]);
-
 
   const handleOpenFilterModal = () => {
     setModalFilters(convertToModalFilters(currentFilters));
     setIsFilterModalOpen(true);
   };
 
-  const handleApplyFilters = (appliedFilters: Record<string, string | boolean | null>) => {
+  const handleApplyFilters = (
+    appliedFilters: Record<string, string | boolean | null>
+  ) => {
     const convertedFilters = convertFromModalFilters(appliedFilters);
     setFilters(convertedFilters);
     setIsFilterModalOpen(false);
@@ -154,7 +161,10 @@ const RentPage = () => {
           filters={currentFilters as Record<string, string | boolean | null>}
           onSearchTermClear={() => setSearch('')}
           onFilterChange={(key, value) => {
-            const updatedFilters: Record<string, string | number | boolean | null | undefined> = { ...currentFilters };
+            const updatedFilters: Record<
+              string,
+              string | number | boolean | null | undefined
+            > = { ...currentFilters };
             if (value === '' || value === null) {
               delete updatedFilters[key];
             } else {

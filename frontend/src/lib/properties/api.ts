@@ -58,20 +58,28 @@ const buildQueryParams = (query: PropertyQuery): string => {
           const baseKey = key.replace(/^(min|max)/, '').toLowerCase();
           const operator = key.startsWith('min') ? '$gte' : '$lte';
 
-          // Map feature fields to features.* format for backend
-          const featureMapping: Record<string, string> = {
-            bedrooms: 'features.bedrooms',
-            bathrooms: 'features.bathrooms',
-            area: 'features.area',
-            parkingspaces: 'features.parkingSpaces',
-            yearbuilt: 'features.yearBuilt',
-          };
-          const finalKey = featureMapping[baseKey] || baseKey;
+          // Special handling for price fields
+          if (baseKey === 'price') {
+            searchParams.append(
+              `filter.price`,
+              `${operator}:${value.toString()}`
+            );
+          } else {
+            // Map feature fields to features.* format for backend
+            const featureMapping: Record<string, string> = {
+              bedrooms: 'features.bedrooms',
+              bathrooms: 'features.bathrooms',
+              area: 'features.area',
+              parkingspaces: 'features.parkingSpaces',
+              yearbuilt: 'features.yearBuilt',
+            };
+            const finalKey = featureMapping[baseKey] || baseKey;
 
-          searchParams.append(
-            `filter.${finalKey}${operator}`,
-            value.toString()
-          );
+            searchParams.append(
+              `filter.${finalKey}${operator}`,
+              value.toString()
+            );
+          }
         } else {
           // Map feature fields to features.* format for boolean/string features
           const featureMapping: Record<string, string> = {
