@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CloseOutline } from '@/assets/icons';
 import Button from '@/components/ui/Button/Button';
 import EditableInput from '@/components/common/EditableInput';
@@ -43,8 +43,7 @@ interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
   filters: Filters;
-  onFilterChange: (key: string, value: string | boolean | null) => void;
-  onApplyFilters: () => void;
+  onApplyFilters: (filters: Record<string, string | boolean | null>) => void;
   onClearFilters: () => void;
 }
 
@@ -102,15 +101,17 @@ const FilterModal = ({
   isOpen,
   onClose,
   filters,
-  onFilterChange,
   onApplyFilters,
 }: FilterModalProps) => {
   const [localFilters, setLocalFilters] = useState<Filters>(filters);
+  const previousIsOpenRef = useRef<boolean>(false);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !previousIsOpenRef.current) {
+      // Modal just opened - initialize with current filters
       setLocalFilters(filters);
     }
+    previousIsOpenRef.current = isOpen;
   }, [isOpen, filters]);
 
   if (!isOpen) return null;
@@ -120,10 +121,7 @@ const FilterModal = ({
   };
 
   const handleApply = () => {
-    Object.keys(localFilters).forEach(key => {
-      onFilterChange(key, localFilters[key as keyof Filters]);
-    });
-    onApplyFilters();
+    onApplyFilters(localFilters as unknown as Record<string, string | boolean | null>);
     onClose();
   };
 
@@ -184,7 +182,7 @@ const FilterModal = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div className="fixed inset-0 z-[9999] overflow-y-auto">
       <div
         className="fixed inset-0 bg-black/70 transition-opacity"
         onClick={onClose}

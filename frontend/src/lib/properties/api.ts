@@ -55,12 +55,45 @@ const buildQueryParams = (query: PropertyQuery): string => {
     Object.entries(query.filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         if (key.startsWith('min') || key.startsWith('max')) {
-          const filterKey = key.startsWith('min') 
-            ? `filter.${key.replace('min', '').toLowerCase()}$gte`
-            : `filter.${key.replace('max', '').toLowerCase()}$lte`;
-          searchParams.append(filterKey, value.toString());
+          const baseKey = key.replace(/^(min|max)/, '').toLowerCase();
+          const operator = key.startsWith('min') ? '$gte' : '$lte';
+
+          // Map feature fields to features.* format for backend
+          const featureMapping: Record<string, string> = {
+            bedrooms: 'features.bedrooms',
+            bathrooms: 'features.bathrooms',
+            area: 'features.area',
+            parkingspaces: 'features.parkingSpaces',
+            yearbuilt: 'features.yearBuilt',
+          };
+          const finalKey = featureMapping[baseKey] || baseKey;
+
+          searchParams.append(
+            `filter.${finalKey}${operator}`,
+            value.toString()
+          );
         } else {
-          searchParams.append(`filter.${key}`, value.toString());
+          // Map feature fields to features.* format for boolean/string features
+          const featureMapping: Record<string, string> = {
+            hometype: 'features.homeType',
+            laundry: 'features.laundry',
+            heating: 'features.heating',
+            furnished: 'features.furnished',
+            petsallowed: 'features.petsAllowed',
+            smokingallowed: 'features.smokingAllowed',
+            balcony: 'features.balcony',
+            garden: 'features.garden',
+            garage: 'features.garage',
+            elevator: 'features.elevator',
+            airconditioning: 'features.airConditioning',
+            dishwasher: 'features.dishwasher',
+            washerdryer: 'features.washerDryer',
+            internet: 'features.internet',
+            cable: 'features.cable',
+          };
+          const finalKey = featureMapping[key.toLowerCase()] || key;
+
+          searchParams.append(`filter.${finalKey}`, value.toString());
         }
       }
     });
@@ -70,19 +103,25 @@ const buildQueryParams = (query: PropertyQuery): string => {
 };
 
 class PropertiesApi extends BaseApiClient {
-  async findAll(query: PropertyQuery = {}): Promise<BasePaginatedResponse<PropertyPublicDto>> {
+  async findAll(
+    query: PropertyQuery = {}
+  ): Promise<BasePaginatedResponse<PropertyPublicDto>> {
     const queryString = buildQueryParams(query);
     const endpoint = `/properties${queryString ? `?${queryString}` : ''}`;
     return this.request<BasePaginatedResponse<PropertyPublicDto>>(endpoint);
   }
 
-  async findRentProperties(query: PropertyQuery = {}): Promise<BasePaginatedResponse<PropertyPublicDto>> {
+  async findRentProperties(
+    query: PropertyQuery = {}
+  ): Promise<BasePaginatedResponse<PropertyPublicDto>> {
     const queryString = buildQueryParams(query);
     const endpoint = `/properties/rent${queryString ? `?${queryString}` : ''}`;
     return this.request<BasePaginatedResponse<PropertyPublicDto>>(endpoint);
   }
 
-  async findBuyProperties(query: PropertyQuery = {}): Promise<BasePaginatedResponse<PropertyPublicDto>> {
+  async findBuyProperties(
+    query: PropertyQuery = {}
+  ): Promise<BasePaginatedResponse<PropertyPublicDto>> {
     const queryString = buildQueryParams(query);
     const endpoint = `/properties/buy${queryString ? `?${queryString}` : ''}`;
     return this.request<BasePaginatedResponse<PropertyPublicDto>>(endpoint);

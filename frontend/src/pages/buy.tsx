@@ -47,8 +47,8 @@ const convertToModalFilters = (filters: PropertyFilters) => ({
 
 // Convert FilterModal format back to PropertyFilters
 const convertFromModalFilters = (modalFilters: Record<string, string | boolean | null>): PropertyFilters => {
-  const filters: PropertyFilters = {};
-  
+  const filters: Record<string, string | number | boolean | null | undefined> = {};
+
   Object.entries(modalFilters).forEach(([key, value]) => {
     if (value !== '' && value !== null) {
       if (key.startsWith('min') || key.startsWith('max')) {
@@ -60,8 +60,8 @@ const convertFromModalFilters = (modalFilters: Record<string, string | boolean |
       }
     }
   });
-  
-  return filters;
+
+  return filters as PropertyFilters;
 };
 
 const BuyPage = () => {
@@ -81,10 +81,27 @@ const BuyPage = () => {
 
   const [searchInput, setSearchInput] = React.useState(currentSearch);
   const [isFilterModalOpen, setIsFilterModalOpen] = React.useState(false);
+  const [modalFilters, setModalFilters] = React.useState(convertToModalFilters(currentFilters));
 
   useEffect(() => {
     setSearchInput(currentSearch);
   }, [currentSearch]);
+
+
+  const handleOpenFilterModal = () => {
+    setModalFilters(convertToModalFilters(currentFilters));
+    setIsFilterModalOpen(true);
+  };
+
+  const handleApplyFilters = (appliedFilters: Record<string, string | boolean | null>) => {
+    setFilters(convertFromModalFilters(appliedFilters));
+    setIsFilterModalOpen(false);
+  };
+
+  const handleClearFilters = () => {
+    clearFilters();
+    setIsFilterModalOpen(false);
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,7 +143,7 @@ const BuyPage = () => {
           searchTerm={searchInput}
           onSearchTermChange={setSearchInput}
           onSubmit={handleSearch}
-          onFiltersClick={() => setIsFilterModalOpen(true)}
+          onFiltersClick={handleOpenFilterModal}
         />
 
         <ActiveFiltersSection
@@ -134,7 +151,13 @@ const BuyPage = () => {
           filters={currentFilters as Record<string, string | boolean | null>}
           onSearchTermClear={() => setSearch('')}
           onFilterChange={(key, value) => {
-            setFilters({ ...currentFilters, [key]: value });
+            const updatedFilters: Record<string, string | number | boolean | null | undefined> = { ...currentFilters };
+            if (value === '' || value === null) {
+              delete updatedFilters[key];
+            } else {
+              updatedFilters[key] = value;
+            }
+            setFilters(updatedFilters as PropertyFilters);
           }}
           onClearAll={clearFilters}
           basePath="buy"
@@ -168,13 +191,9 @@ const BuyPage = () => {
       <FilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
-        filters={convertToModalFilters(currentFilters)}
-        onFilterChange={(key, value) => {
-          const updatedModalFilters = { ...convertToModalFilters(currentFilters), [key]: value };
-          setFilters(convertFromModalFilters(updatedModalFilters));
-        }}
-        onApplyFilters={() => setIsFilterModalOpen(false)}
-        onClearFilters={clearFilters}
+        filters={modalFilters}
+        onApplyFilters={handleApplyFilters}
+        onClearFilters={handleClearFilters}
       />
     </PublicLayout>
   );

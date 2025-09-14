@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUser } from '@/hooks/auth/useUser';
 import { propertiesLandlordApi } from '@/lib/properties/for-landlord/api';
 import type {
@@ -7,6 +8,7 @@ import type {
   LandlordPropertyQuery,
 } from '@/lib/properties/for-landlord/api';
 import { PropertyType } from '@/types/properties/public-types';
+import { propertyQueryKeys } from '@/lib/properties/query-keys';
 
 interface Filters {
   [key: string]: string | boolean | null;
@@ -72,221 +74,135 @@ interface UseMyListingsReturn {
   };
   openDeleteDialog: (slug: string, title: string) => void;
   closeDeleteDialog: () => void;
-  confirmDelete: () => Promise<void>;
+  confirmDelete: () => void;
 
   handleSearch: (e: React.FormEvent) => void;
-  fetchProperties: (
-    page?: number,
-    search?: string,
-    typeFilter?: PropertyType | 'all',
-    filtersToUse?: Filters
-  ) => Promise<void>;
+  refetch: () => void;
+  setCurrentPage: (page: number) => void;
 
   formatPrice: (price: number) => string;
-  sortProperties: (properties: PropertyLandlordDto[]) => PropertyLandlordDto[];
 }
+
+const emptyFilters: Filters = {
+  minPrice: '',
+  maxPrice: '',
+  city: '',
+  minBedrooms: '',
+  maxBedrooms: '',
+  minBathrooms: '',
+  maxBathrooms: '',
+  minArea: '',
+  maxArea: '',
+  minParkingSpaces: '',
+  maxParkingSpaces: '',
+  minYearBuilt: '',
+  maxYearBuilt: '',
+  homeType: '',
+  laundry: '',
+  heating: '',
+  furnished: null,
+  petsAllowed: null,
+  smokingAllowed: null,
+  balcony: null,
+  garden: null,
+  garage: null,
+  elevator: null,
+  airConditioning: null,
+  dishwasher: null,
+  washerDryer: null,
+  internet: null,
+  cable: null,
+};
 
 export const useMyListings = (): UseMyListingsReturn => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: userInfo, isLoading: userLoading } = useUser();
 
-  const emptyFilters: Filters = useMemo(
-    () => ({
-      minPrice: '',
-      maxPrice: '',
-      city: '',
-      minBedrooms: '',
-      maxBedrooms: '',
-      minBathrooms: '',
-      maxBathrooms: '',
-      minArea: '',
-      maxArea: '',
-      minParkingSpaces: '',
-      maxParkingSpaces: '',
-      minYearBuilt: '',
-      maxYearBuilt: '',
-      homeType: '',
-      laundry: '',
-      heating: '',
-      furnished: null,
-      petsAllowed: null,
-      smokingAllowed: null,
-      balcony: null,
-      garden: null,
-      garage: null,
-      elevator: null,
-      airConditioning: null,
-      dishwasher: null,
-      washerDryer: null,
-      internet: null,
-      cable: null,
-    }),
-    []
-  );
-
-  const [properties, setProperties] = useState<PropertyLandlordDto[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const [rentCount, setRentCount] = useState(0);
-  const [saleCount, setSaleCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<PropertyType | 'all'>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'price' | 'status' | 'date'>(
-    'date'
-  );
+  const [sortBy, setSortBy] = useState<'name' | 'price' | 'status' | 'date'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState<Filters>({
-    minPrice: '',
-    maxPrice: '',
-    city: '',
-    minBedrooms: '',
-    maxBedrooms: '',
-    minBathrooms: '',
-    maxBathrooms: '',
-    minArea: '',
-    maxArea: '',
-    minParkingSpaces: '',
-    maxParkingSpaces: '',
-    minYearBuilt: '',
-    maxYearBuilt: '',
-    homeType: '',
-    laundry: '',
-    heating: '',
-    furnished: null,
-    petsAllowed: null,
-    smokingAllowed: null,
-    balcony: null,
-    garden: null,
-    garage: null,
-    elevator: null,
-    airConditioning: null,
-    dishwasher: null,
-    washerDryer: null,
-    internet: null,
-    cable: null,
-  });
+  const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [deleteDialog, setDeleteDialog] = useState({
     isOpen: false,
     propertySlug: null as string | null,
     propertyTitle: '',
   });
 
-  useEffect(() => {
-    if (!userLoading && userInfo && userInfo.role !== 'landlord') {
-      router.replace('/dashboard');
-    }
-  }, [userInfo, userLoading, router]);
+  const queryParams = useMemo(() => {
+    const filter: Record<string, string | number | boolean> =
+      activeTab !== 'all' ? { type: activeTab } : {};
 
-  const fetchProperties = useCallback(
-    async (
-      page = 1,
-      search = '',
-      typeFilter: PropertyType | 'all' = 'all',
-      filtersToUse = filters
-    ) => {
-      try {
-        setIsLoading(true);
-        setError(null);
+    if (filters.minPrice) filter['price$gte'] = Number(filters.minPrice);
+    if (filters.maxPrice) filter['price$lte'] = Number(filters.maxPrice);
+    if (filters.city) filter.city = filters.city;
 
-        const filter: Record<string, string | number | boolean> =
-          typeFilter !== 'all' ? { type: typeFilter } : {};
+    if (filters.minBedrooms)
+      filter['features.bedrooms$gte'] = Number(filters.minBedrooms);
+    if (filters.maxBedrooms)
+      filter['features.bedrooms$lte'] = Number(filters.maxBedrooms);
+    if (filters.minBathrooms)
+      filter['features.bathrooms$gte'] = Number(filters.minBathrooms);
+    if (filters.maxBathrooms)
+      filter['features.bathrooms$lte'] = Number(filters.maxBathrooms);
+    if (filters.minArea)
+      filter['features.area$gte'] = Number(filters.minArea);
+    if (filters.maxArea)
+      filter['features.area$lte'] = Number(filters.maxArea);
+    if (filters.minParkingSpaces)
+      filter['features.parkingSpaces$gte'] = Number(filters.minParkingSpaces);
+    if (filters.maxParkingSpaces)
+      filter['features.parkingSpaces$lte'] = Number(filters.maxParkingSpaces);
+    if (filters.minYearBuilt)
+      filter['features.yearBuilt$gte'] = Number(filters.minYearBuilt);
+    if (filters.maxYearBuilt)
+      filter['features.yearBuilt$lte'] = Number(filters.maxYearBuilt);
 
-        if (filtersToUse.minPrice)
-          filter['price$gte'] = Number(filtersToUse.minPrice);
-        if (filtersToUse.maxPrice)
-          filter['price$lte'] = Number(filtersToUse.maxPrice);
-        if (filtersToUse.city) filter.city = filtersToUse.city;
+    if (filters.homeType) filter['features.homeType'] = filters.homeType;
+    if (filters.laundry) filter['features.laundry'] = filters.laundry;
+    if (filters.heating) filter['features.heating'] = filters.heating;
 
-        if (filtersToUse.minBedrooms)
-          filter['features.bedrooms$gte'] = Number(filtersToUse.minBedrooms);
-        if (filtersToUse.maxBedrooms)
-          filter['features.bedrooms$lte'] = Number(filtersToUse.maxBedrooms);
-        if (filtersToUse.minBathrooms)
-          filter['features.bathrooms$gte'] = Number(filtersToUse.minBathrooms);
-        if (filtersToUse.maxBathrooms)
-          filter['features.bathrooms$lte'] = Number(filtersToUse.maxBathrooms);
-        if (filtersToUse.minArea)
-          filter['features.area$gte'] = Number(filtersToUse.minArea);
-        if (filtersToUse.maxArea)
-          filter['features.area$lte'] = Number(filtersToUse.maxArea);
-        if (filtersToUse.minParkingSpaces)
-          filter['features.parkingSpaces$gte'] = Number(
-            filtersToUse.minParkingSpaces
-          );
-        if (filtersToUse.maxParkingSpaces)
-          filter['features.parkingSpaces$lte'] = Number(
-            filtersToUse.maxParkingSpaces
-          );
-        if (filtersToUse.minYearBuilt)
-          filter['features.yearBuilt$gte'] = Number(filtersToUse.minYearBuilt);
-        if (filtersToUse.maxYearBuilt)
-          filter['features.yearBuilt$lte'] = Number(filtersToUse.maxYearBuilt);
+    if (filters.furnished !== null) filter['features.furnished'] = filters.furnished;
+    if (filters.petsAllowed !== null) filter['features.petsAllowed'] = filters.petsAllowed;
+    if (filters.smokingAllowed !== null) filter['features.smokingAllowed'] = filters.smokingAllowed;
+    if (filters.balcony !== null) filter['features.balcony'] = filters.balcony;
+    if (filters.garden !== null) filter['features.garden'] = filters.garden;
+    if (filters.garage !== null) filter['features.garage'] = filters.garage;
+    if (filters.elevator !== null) filter['features.elevator'] = filters.elevator;
+    if (filters.airConditioning !== null) filter['features.airConditioning'] = filters.airConditioning;
+    if (filters.dishwasher !== null) filter['features.dishwasher'] = filters.dishwasher;
+    if (filters.washerDryer !== null) filter['features.washerDryer'] = filters.washerDryer;
+    if (filters.internet !== null) filter['features.internet'] = filters.internet;
+    if (filters.cable !== null) filter['features.cable'] = filters.cable;
 
-        if (filtersToUse.homeType)
-          filter['features.homeType'] = filtersToUse.homeType;
-        if (filtersToUse.laundry)
-          filter['features.laundry'] = filtersToUse.laundry;
-        if (filtersToUse.heating)
-          filter['features.heating'] = filtersToUse.heating;
+    const query: LandlordPropertyQuery = {
+      page: currentPage,
+      limit: 10,
+      search: searchQuery || undefined,
+      filter: Object.keys(filter).length > 0 ? filter : undefined,
+    };
 
-        if (filtersToUse.furnished !== null)
-          filter['features.furnished'] = filtersToUse.furnished;
-        if (filtersToUse.petsAllowed !== null)
-          filter['features.petsAllowed'] = filtersToUse.petsAllowed;
-        if (filtersToUse.smokingAllowed !== null)
-          filter['features.smokingAllowed'] = filtersToUse.smokingAllowed;
-        if (filtersToUse.balcony !== null)
-          filter['features.balcony'] = filtersToUse.balcony;
-        if (filtersToUse.garden !== null)
-          filter['features.garden'] = filtersToUse.garden;
-        if (filtersToUse.garage !== null)
-          filter['features.garage'] = filtersToUse.garage;
-        if (filtersToUse.elevator !== null)
-          filter['features.elevator'] = filtersToUse.elevator;
-        if (filtersToUse.airConditioning !== null)
-          filter['features.airConditioning'] = filtersToUse.airConditioning;
-        if (filtersToUse.dishwasher !== null)
-          filter['features.dishwasher'] = filtersToUse.dishwasher;
-        if (filtersToUse.washerDryer !== null)
-          filter['features.washerDryer'] = filtersToUse.washerDryer;
-        if (filtersToUse.internet !== null)
-          filter['features.internet'] = filtersToUse.internet;
-        if (filtersToUse.cable !== null)
-          filter['features.cable'] = filtersToUse.cable;
+    return query;
+  }, [currentPage, searchQuery, activeTab, filters]);
 
-        const query: LandlordPropertyQuery = {
-          page,
-          limit: 10,
-          search: search || undefined,
-          filter: Object.keys(filter).length > 0 ? filter : undefined,
-        };
+  const {
+    data: propertiesData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: propertyQueryKeys.landlord.list(queryParams as Record<string, unknown>),
+    queryFn: () => propertiesLandlordApi.findAll(queryParams),
+    enabled: !userLoading && userInfo?.role === 'landlord',
+    staleTime: 5 * 60 * 1000,
+  });
 
-        const response = await propertiesLandlordApi.findAll(query);
-
-        setProperties(response.data);
-        setTotalPages(
-          Math.ceil(
-            (response.meta?.totalItems || 0) /
-              (response.meta?.itemsPerPage || 10)
-          )
-        );
-        setCurrentPage(page);
-      } catch {
-        setError('Failed to load properties. Please try again.');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const fetchCounts = useCallback(async () => {
-    try {
+  const { data: countsData } = useQuery({
+    queryKey: propertyQueryKeys.landlord.counts(),
+    queryFn: async () => {
       const [allResponse, rentResponse, saleResponse] = await Promise.all([
         propertiesLandlordApi.findAll({ page: 1, limit: 1 }),
         propertiesLandlordApi.findAll({
@@ -301,29 +217,66 @@ export const useMyListings = (): UseMyListingsReturn => {
         }),
       ]);
 
-      setTotalCount(allResponse.meta?.totalItems || 0);
-      setRentCount(rentResponse.meta?.totalItems || 0);
-      setSaleCount(saleResponse.meta?.totalItems || 0);
-    } catch {
+      return {
+        totalCount: allResponse.meta?.totalItems || 0,
+        rentCount: rentResponse.meta?.totalItems || 0,
+        saleCount: saleResponse.meta?.totalItems || 0,
+      };
+    },
+    enabled: !userLoading && userInfo?.role === 'landlord',
+    staleTime: 5 * 60 * 1000,
+  });
 
-    }
-  }, []);
+  const deletePropertyMutation = useMutation({
+    mutationFn: (slug: string) => propertiesLandlordApi.remove(slug),
+    onMutate: async (slug) => {
+      await queryClient.cancelQueries({ queryKey: propertyQueryKeys.landlord.all() });
 
-  useEffect(() => {
-    if (userInfo?.role === 'landlord') {
-      fetchCounts();
-    }
-  }, [userInfo, fetchCounts]);
+      const previousQueries = new Map();
 
-  useEffect(() => {
-    if (userInfo?.role === 'landlord') {
-      fetchProperties(1, '', activeTab, emptyFilters);
-    }
-  }, [userInfo, fetchProperties, activeTab, emptyFilters]);
+      queryClient.getQueriesData({ queryKey: propertyQueryKeys.landlord.lists() }).forEach(([queryKey, data]) => {
+        previousQueries.set(queryKey, data);
+
+        if (data && typeof data === 'object' && 'data' in data) {
+          const paginatedData = data as { data: PropertyLandlordDto[]; meta?: unknown };
+          queryClient.setQueryData(queryKey, {
+            ...paginatedData,
+            data: paginatedData.data.filter((property) => property.slug !== slug),
+          });
+        }
+      });
+
+      return { previousQueries, deletedSlug: slug };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: propertyQueryKeys.landlord.counts() });
+      closeDeleteDialog();
+    },
+    onError: (error, variables, context) => {
+      if (context?.previousQueries) {
+        context.previousQueries.forEach((data, queryKey) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: propertyQueryKeys.landlord.all() });
+    },
+  });
+
+  if (!userLoading && userInfo && userInfo.role !== 'landlord') {
+    router.replace('/dashboard');
+  }
+
+  const properties = propertiesData?.data || [];
+  const totalPages = Math.ceil(
+    (propertiesData?.meta?.totalItems || 0) /
+      (propertiesData?.meta?.itemsPerPage || 10)
+  );
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchProperties(1, searchQuery, activeTab, filters);
+    setCurrentPage(1);
   };
 
   const openDeleteDialog = (slug: string, title: string) => {
@@ -342,16 +295,9 @@ export const useMyListings = (): UseMyListingsReturn => {
     });
   };
 
-  const confirmDelete = async () => {
-    if (!deleteDialog.propertySlug) return;
-
-    try {
-      await propertiesLandlordApi.remove(deleteDialog.propertySlug);
-      await fetchProperties(currentPage, searchQuery, activeTab, filters);
-      fetchCounts();
-      closeDeleteDialog();
-    } catch {
-      setError('Failed to delete property. Please try again.');
+  const confirmDelete = () => {
+    if (deleteDialog.propertySlug) {
+      deletePropertyMutation.mutate(deleteDialog.propertySlug);
     }
   };
 
@@ -401,26 +347,33 @@ export const useMyListings = (): UseMyListingsReturn => {
       ...prev,
       [key]: value,
     }));
+    setCurrentPage(1);
   };
 
   const handleClearFilters = () => {
     setFilters(emptyFilters);
+    setCurrentPage(1);
+  };
+
+  const handleTabChange = (tab: PropertyType | 'all') => {
+    setActiveTab(tab);
+    setCurrentPage(1);
   };
 
   return {
-    properties,
+    properties: sortProperties(properties),
     isLoading,
-    error,
+    error: error ? 'Failed to load properties. Please try again.' : null,
     totalPages,
     currentPage,
-    totalCount,
-    rentCount,
-    saleCount,
+    totalCount: countsData?.totalCount || 0,
+    rentCount: countsData?.rentCount || 0,
+    saleCount: countsData?.saleCount || 0,
 
     searchQuery,
     setSearchQuery,
     activeTab,
-    setActiveTab,
+    setActiveTab: handleTabChange,
     sortBy,
     setSortBy,
     sortOrder,
@@ -438,9 +391,9 @@ export const useMyListings = (): UseMyListingsReturn => {
     confirmDelete,
 
     handleSearch,
-    fetchProperties,
+    refetch,
+    setCurrentPage,
 
     formatPrice,
-    sortProperties,
   };
 };

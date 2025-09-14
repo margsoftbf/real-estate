@@ -19,7 +19,6 @@ interface PropertyListContainerProps {
   onDeleteProperty: (slug: string, title: string) => void;
   onPageChange: (page: number) => void;
   formatPrice: (price: number) => string;
-  sortProperties: (properties: PropertyLandlordDto[]) => PropertyLandlordDto[];
   onRetry: () => void;
 }
 
@@ -32,7 +31,6 @@ const PropertyListContainer = ({
   onDeleteProperty,
   onPageChange,
   formatPrice,
-  sortProperties,
   onRetry,
 }: PropertyListContainerProps) => {
   const router = useRouter();
@@ -74,7 +72,7 @@ const PropertyListContainer = ({
     <>
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
         <div className="divide-y divide-gray-100">
-          {sortProperties(properties).map((property) => (
+          {properties.map((property) => (
             <PropertyListItem
               key={property.slug}
               property={property}

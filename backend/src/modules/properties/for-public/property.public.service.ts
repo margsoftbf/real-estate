@@ -125,6 +125,24 @@ export class PropertyPublicService {
       delete query['filter.city$eq'];
     }
 
+    // Handle price filters manually
+    if (query['filter.price']) {
+      const priceFilter = query['filter.price'];
+
+      if (typeof priceFilter === 'string' && priceFilter.startsWith('$lte:')) {
+        const maxPrice = Number.parseInt(priceFilter.replace('$lte:', ''), 10);
+        queryBuilder.andWhere('property.price <= :maxPrice', { maxPrice });
+        delete query['filter.price'];
+      } else if (
+        typeof priceFilter === 'string' &&
+        priceFilter.startsWith('$gte:')
+      ) {
+        const minPrice = Number.parseInt(priceFilter.replace('$gte:', ''), 10);
+        queryBuilder.andWhere('property.price >= :minPrice', { minPrice });
+        delete query['filter.price'];
+      }
+    }
+
     this.applyFeaturesFilters(query, queryBuilder);
 
     const configForRent = {
@@ -182,6 +200,24 @@ export class PropertyPublicService {
         city: query['filter.city$eq'],
       });
       delete query['filter.city$eq'];
+    }
+
+    // Handle price filters manually (same as rent)
+    if (query['filter.price']) {
+      const priceFilter = query['filter.price'];
+
+      if (typeof priceFilter === 'string' && priceFilter.startsWith('$lte:')) {
+        const maxPrice = Number.parseInt(priceFilter.replace('$lte:', ''), 10);
+        queryBuilder.andWhere('property.price <= :maxPrice', { maxPrice });
+        delete query['filter.price'];
+      } else if (
+        typeof priceFilter === 'string' &&
+        priceFilter.startsWith('$gte:')
+      ) {
+        const minPrice = Number.parseInt(priceFilter.replace('$gte:', ''), 10);
+        queryBuilder.andWhere('property.price >= :minPrice', { minPrice });
+        delete query['filter.price'];
+      }
     }
 
     this.applyFeaturesFilters(query, queryBuilder);

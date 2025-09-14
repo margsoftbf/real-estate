@@ -36,9 +36,9 @@ const MyListingsPage = () => {
     closeDeleteDialog,
     confirmDelete,
     handleSearch,
-    fetchProperties,
+    refetch,
+    setCurrentPage,
     formatPrice,
-    sortProperties,
   } = useMyListings();
 
   if (userLoading) {
@@ -82,14 +82,9 @@ const MyListingsPage = () => {
           totalPages={totalPages}
           searchQuery={searchQuery}
           onDeleteProperty={openDeleteDialog}
-          onPageChange={(page) =>
-            fetchProperties(page, searchQuery, activeTab, filters)
-          }
+          onPageChange={setCurrentPage}
           formatPrice={formatPrice}
-          sortProperties={sortProperties}
-          onRetry={() =>
-            fetchProperties(currentPage, searchQuery, activeTab, filters)
-          }
+          onRetry={refetch}
         />
 
         <FilterModal
@@ -98,41 +93,11 @@ const MyListingsPage = () => {
           filters={filters}
           onFilterChange={handleFilterChange}
           onApplyFilters={() => {
-            fetchProperties(1, searchQuery, activeTab, filters);
             setShowFilters(false);
           }}
           onClearFilters={() => {
             handleClearFilters();
-            fetchProperties(1, searchQuery, activeTab, {
-              minPrice: '',
-              maxPrice: '',
-              city: '',
-              minBedrooms: '',
-              maxBedrooms: '',
-              minBathrooms: '',
-              maxBathrooms: '',
-              minArea: '',
-              maxArea: '',
-              minParkingSpaces: '',
-              maxParkingSpaces: '',
-              minYearBuilt: '',
-              maxYearBuilt: '',
-              homeType: '',
-              laundry: '',
-              heating: '',
-              furnished: null,
-              petsAllowed: null,
-              smokingAllowed: null,
-              balcony: null,
-              garden: null,
-              garage: null,
-              elevator: null,
-              airConditioning: null,
-              dishwasher: null,
-              washerDryer: null,
-              internet: null,
-              cable: null,
-            });
+            setShowFilters(false);
           }}
         />
 
