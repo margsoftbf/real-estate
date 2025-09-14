@@ -46,6 +46,7 @@ export const usePropertySearchWithURL = ({
         'washerDryer',
         'internet',
         'cable',
+        'isPopular',
       ];
 
       Object.entries(filterParams).forEach(([key, value]) => {
@@ -57,7 +58,12 @@ export const usePropertySearchWithURL = ({
             }
           } else if (booleanFields.includes(key)) {
             (filters as Record<string, boolean>)[key] = value === 'true';
-          } else {
+          } else if (
+            key === 'city' ||
+            key === 'homeType' ||
+            key === 'laundry' ||
+            key === 'heating'
+          ) {
             (filters as Record<string, string>)[key] = value;
           }
         }
