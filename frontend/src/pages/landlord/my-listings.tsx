@@ -3,6 +3,7 @@ import Head from 'next/head';
 import AppLayout from '@/components/layout/AppLayout';
 import { useUser } from '@/hooks/auth/useUser';
 import { useMyListings } from '@/hooks/landlord/useMyListings';
+import { Filters } from '@/types/landlord/filters';
 import LoadingState from '@/components/shared/LoadingState';
 import FilterModal from '@/components/shared/FilterModal';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
@@ -29,7 +30,7 @@ const MyListingsPage = () => {
     showFilters,
     setShowFilters,
     filters,
-    handleFilterChange,
+    setFilters,
     handleClearFilters,
     deleteDialog,
     openDeleteDialog,
@@ -91,8 +92,8 @@ const MyListingsPage = () => {
           isOpen={showFilters}
           onClose={() => setShowFilters(false)}
           filters={filters}
-          onFilterChange={handleFilterChange}
-          onApplyFilters={() => {
+          onApplyFilters={(appliedFilters) => {
+            setFilters(appliedFilters as Filters);
             setShowFilters(false);
           }}
           onClearFilters={() => {

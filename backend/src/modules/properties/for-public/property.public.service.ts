@@ -38,31 +38,8 @@ export class PropertyPublicService {
       findAllPropertiesPublicConfig,
     );
 
-    const mappedProperties: PropertyPublicReadManyDto[] =
-      paginatedResult.data.map((property) => ({
-        slug: property.slug,
-        type: property.type,
-        price: property.price,
-        city: property.city,
-        country: property.country,
-        title: property.title,
-        photos: property.photos,
-        description: property.description,
-        features: property.features,
-        isPopular: property.isPopular,
-        createdAt: property.createdAt,
-        updatedAt: property.updatedAt,
-        owner: {
-          firstName: property.owner.firstName,
-          lastName: property.owner.lastName,
-          email: property.owner.email,
-          phoneNumber: property.owner.phoneNumber,
-          avatarUrl: property.owner.avatarUrl,
-        },
-      }));
-
     return {
-      data: mappedProperties,
+      data: this.mapPropertiesToDto(paginatedResult.data),
       meta: paginatedResult.meta,
       links: paginatedResult.links,
     };
@@ -111,98 +88,53 @@ export class PropertyPublicService {
   async findRentProperties(
     query: PaginateQuery,
   ): Promise<PropertyPublicReadManyResponseDto> {
-    const queryBuilder = this.propertyRepository
-      .createQueryBuilder('property')
-      .leftJoinAndSelect('property.owner', 'owner')
-      .where('property.isActive = :isActive', { isActive: true })
-      .andWhere('property.deletedAt IS NULL')
-      .andWhere('property.type = :type', { type: PropertyType.RENT });
-
-    if (query['filter.city$eq']) {
-      queryBuilder.andWhere('property.city = :city', {
-        city: query['filter.city$eq'],
-      });
-      delete query['filter.city$eq'];
-    }
-
-    // Handle price filters manually
-    if (query['filter.price']) {
-      const priceFilter = query['filter.price'];
-
-      if (typeof priceFilter === 'string' && priceFilter.startsWith('$lte:')) {
-        const maxPrice = Number.parseInt(priceFilter.replace('$lte:', ''), 10);
-        queryBuilder.andWhere('property.price <= :maxPrice', { maxPrice });
-        delete query['filter.price'];
-      } else if (
-        typeof priceFilter === 'string' &&
-        priceFilter.startsWith('$gte:')
-      ) {
-        const minPrice = Number.parseInt(priceFilter.replace('$gte:', ''), 10);
-        queryBuilder.andWhere('property.price >= :minPrice', { minPrice });
-        delete query['filter.price'];
-      }
-    }
-
-    this.applyFeaturesFilters(query, queryBuilder);
-
-    const configForRent = {
-      ...findAllPropertiesPublicConfig,
-      filterableColumns: {
-        ...findAllPropertiesPublicConfig.filterableColumns,
-      },
-    };
-    delete (configForRent.filterableColumns as any).city;
-
-    const paginatedResult = await paginate(query, queryBuilder, configForRent);
-
-    const mappedProperties: PropertyPublicReadManyDto[] =
-      paginatedResult.data.map((property) => ({
-        slug: property.slug,
-        type: property.type,
-        price: property.price,
-        city: property.city,
-        country: property.country,
-        title: property.title,
-        photos: property.photos,
-        description: property.description,
-        features: property.features,
-        isPopular: property.isPopular,
-        createdAt: property.createdAt,
-        updatedAt: property.updatedAt,
-        owner: {
-          firstName: property.owner.firstName,
-          lastName: property.owner.lastName,
-          email: property.owner.email,
-          phoneNumber: property.owner.phoneNumber,
-          avatarUrl: property.owner.avatarUrl,
-        },
-      }));
-
-    return {
-      data: mappedProperties,
-      meta: paginatedResult.meta,
-      links: paginatedResult.links,
-    };
+    return this.findPropertiesByType(query, PropertyType.RENT);
   }
 
   async findSellProperties(
     query: PaginateQuery,
   ): Promise<PropertyPublicReadManyResponseDto> {
-    const queryBuilder = this.propertyRepository
+    return this.findPropertiesByType(query, PropertyType.SELL);
+  }
+
+  private async findPropertiesByType(
+    query: PaginateQuery,
+    propertyType: PropertyType,
+  ): Promise<PropertyPublicReadManyResponseDto> {
+    const queryBuilder = this.createBaseQueryBuilder(propertyType);
+    this.applyCityFilter(query, queryBuilder);
+    this.applyPriceFilters(query, queryBuilder);
+    this.applyFeaturesFilters(query, queryBuilder);
+
+    const config = this.getPaginateConfig();
+    const paginatedResult = await paginate(query, queryBuilder, config);
+
+    return {
+      data: this.mapPropertiesToDto(paginatedResult.data),
+      meta: paginatedResult.meta,
+      links: paginatedResult.links,
+    };
+  }
+
+  private createBaseQueryBuilder(propertyType: PropertyType) {
+    return this.propertyRepository
       .createQueryBuilder('property')
       .leftJoinAndSelect('property.owner', 'owner')
       .where('property.isActive = :isActive', { isActive: true })
       .andWhere('property.deletedAt IS NULL')
-      .andWhere('property.type = :type', { type: PropertyType.SELL });
+      .andWhere('property.type = :type', { type: propertyType });
+  }
 
+  private applyCityFilter(query: PaginateQuery, queryBuilder: any): void {
     if (query['filter.city$eq']) {
       queryBuilder.andWhere('property.city = :city', {
         city: query['filter.city$eq'],
       });
       delete query['filter.city$eq'];
     }
+  }
 
-    // Handle price filters manually (same as rent)
+  private applyPriceFilters(query: PaginateQuery, queryBuilder: any): void {
     if (query['filter.price']) {
       const priceFilter = query['filter.price'];
 
@@ -219,47 +151,41 @@ export class PropertyPublicService {
         delete query['filter.price'];
       }
     }
+  }
 
-    this.applyFeaturesFilters(query, queryBuilder);
+  private mapPropertiesToDto(properties: any[]): PropertyPublicReadManyDto[] {
+    return properties.map((property) => ({
+      slug: property.slug,
+      type: property.type,
+      price: property.price,
+      city: property.city,
+      country: property.country,
+      title: property.title,
+      photos: property.photos,
+      description: property.description,
+      features: property.features,
+      isPopular: property.isPopular,
+      createdAt: property.createdAt,
+      updatedAt: property.updatedAt,
+      owner: {
+        firstName: property.owner.firstName,
+        lastName: property.owner.lastName,
+        email: property.owner.email,
+        phoneNumber: property.owner.phoneNumber,
+        avatarUrl: property.owner.avatarUrl,
+      },
+    }));
+  }
 
-    const configForSell = {
+  private getPaginateConfig() {
+    const config = {
       ...findAllPropertiesPublicConfig,
       filterableColumns: {
         ...findAllPropertiesPublicConfig.filterableColumns,
       },
     };
-    delete (configForSell.filterableColumns as any).city;
-
-    const paginatedResult = await paginate(query, queryBuilder, configForSell);
-
-    const mappedProperties: PropertyPublicReadManyDto[] =
-      paginatedResult.data.map((property) => ({
-        slug: property.slug,
-        type: property.type,
-        price: property.price,
-        city: property.city,
-        country: property.country,
-        title: property.title,
-        photos: property.photos,
-        description: property.description,
-        features: property.features,
-        isPopular: property.isPopular,
-        createdAt: property.createdAt,
-        updatedAt: property.updatedAt,
-        owner: {
-          firstName: property.owner.firstName,
-          lastName: property.owner.lastName,
-          email: property.owner.email,
-          phoneNumber: property.owner.phoneNumber,
-          avatarUrl: property.owner.avatarUrl,
-        },
-      }));
-
-    return {
-      data: mappedProperties,
-      meta: paginatedResult.meta,
-      links: paginatedResult.links,
-    };
+    delete (config.filterableColumns as any).city;
+    return config;
   }
 
   private applyFeaturesFilters(query: PaginateQuery, queryBuilder: any): void {
